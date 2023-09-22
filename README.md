@@ -278,6 +278,17 @@ Once the relays, generators, and battery inverters have values displayed in the 
 
 Provide detailed examples of how to use different parts of your project. You can also include GIFs or images to demonstrate its features.
 
+
+### Troubleshooting/FAQ
+
+If the app is not behaving as expected here are some things to check.
+* Log Files
+  * **UNEXPECTED CONDITIONS** : Congratulations! You found an unanticipated combination of relay and fsm states that has not been handled. Please open a bug report. 
+
+**FAQ**
+* Q: The power across the relay is not regulated when toggling secondary control.
+* A: One potential cause for this behavior is if there is no message exchange between the group members. This will  
+
 ## Contributing
 
 Explain how others can contribute to your project. Include guidelines for bug reports, feature requests, and pull requests.
