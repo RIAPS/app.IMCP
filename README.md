@@ -41,7 +41,21 @@ Before you begin, ensure you have met the following requirements:
 - Ensure that the mqtt broker allows anonymous connections:
     - add `allow_anonymous true` to the file `/etc/flashmq/flashmq.conf` 
     - if it is not there, after adding it, run `sudo systemctl restart flashmq.service`
-
+- Add node-red flow to create dashboard.
+    1. Start node red with `node-red` in the terminal
+    1. Open two browser tabs to:
+        - `http://127.0.0.1:1880/`
+        - `http://127.0.0.1:1880/ui/`
+    1. Copy the contents of `GUI/flow5.json`
+    1. In the `http://127.0.0.1:1880/` tab click the three horizontal bars in the top right corner and select `Import` or press `ctrl-i`
+    ![install_mqtt](README_images/node-red-3bars.PNG) 
+    1. Paste the contents `GUI/flow5.json` into the text field and click `Import`
+    ![install_mqtt](README_images/node-red-import.PNG)
+    1. Click the red `Deploy` button
+    1. Switch to the `http://127.0.0.1:1880/ui/` tab where you should see the dashboard.
+    ![install_mqtt](README_images/node-red-dashboard.PNG)
+    
+ 
 
 ### Installation
 
@@ -223,7 +237,42 @@ If that all works, congratulations! The app will probably run.
 
 ## Usage
 
-Explain how to use your project. Include examples, code snippets, and screenshots to illustrate its functionality.
+### Start the application
+
+1. Start node-red
+1. Open two browser tabs to:
+    1. `http://127.0.0.1:1880/`
+    1. `http://127.0.0.1:1880/ui/`
+1. `Load` and `Execute` the microgrid from RT-Lab. Make sure that in the `ModbusComs` subsystem the two `ModbusOrSimulated` (one at the top and the other at the bottom) toggles are set to 1, otherwise the control sent from the app is not received by the model. 
+![node-red-running](README_images/banshee-matlab.PNG) 
+![node-red-running](README_images/modbusOrSimulatedHighlights.PNG) 
+
+1. Start the application
+    ```bash
+    pytest -vs tests/test_24_app.py::test_app_with_gui
+    ```
+To monitor the activity of the application you can 
+  - Use `tail -f` on the log file from the node of interest, e.g., `tail -f server_logs/192.168.10.122` wiill tail the logs from the System Operator.
+  - Watch the gui in the Node-Red Dashboard
+  ![node-red-running](README_images/node-red-dashboard-running.PNG) 
+
+### Interact with the application
+Once the relays, generators, and battery inverters have values displayed in the GUI the application is ready for user inputs.
+1. The first input is to click the `Energize` toggle. This sends a command to turn on the generators and inverters and will cause the values to change at the relays, generators, and battery inverters. The approximate P values in each state are shown in the table below.
+1. The second input is to click the `SEND REGULATION UPDATE` button. This sets the target value for the power across PCC1 PCC2 and PCC3. 
+1. Click the `Active Control` toggle. This causes the app to switch to active control and it will gradually update the values until the relays all have a P value of 400. 
+
+|       | initial | Energized | Active Control |
+| ----  | ------- | --------- | -------------- |
+| PCC1  | 2270    | 1440      | 400            |
+| PCC2  | 1850    | 520       | 400
+| PCC3  | 2000    | 2965      | 400
+| F1108 | 0       | 0         | 0
+| F2217 | 0       | 0         | 0
+| Gen1  | 0.08    | 0.5       | 
+| Gen2  | 0.05    | 0.5       |
+| Gen3  | 0.08    | 0.5       |
+
 
 ### Examples
 
