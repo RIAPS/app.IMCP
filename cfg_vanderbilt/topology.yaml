@@ -1,0 +1,15 @@
+electrically_independent_group_names:
+  "['grid1']": G1
+  "['111', '112', '201', '202']": F1
+
+electrically_independent_groups:
+  0: ['grid1']
+  1: ['111', '112', '201', '202']
+
+# names the coordinates in an adjacency matrix according to the relay
+# that causes the relevant electrically independent groups to be connected.
+groups_connected_by_relay:
+  F1PCC: [0, 1]
+
+DIRECTLY_CONNECTED_RELAYS:
+  F1PCC: ['F1PCC', 'F1108']

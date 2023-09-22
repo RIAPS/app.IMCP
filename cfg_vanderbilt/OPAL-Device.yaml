@@ -1,0 +1,5 @@
+
+configs:
+  - ./cfg_vanderbilt/Opal_control.yaml
+GobalDebugMode: 0 # 0=no debug messages, 1=RAIPS Device level debug, 2=Modbus slave low level messages
+

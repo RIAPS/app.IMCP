@@ -1,0 +1,41 @@
+# Group membership configuration
+# Format for electrically_independent_group_names must be:
+# "['node_name1', 'node_name2', ...]": GroupName
+electrically_independent_group_names: 
+  "['grid1']": G1
+  "['grid2']": G2
+  "['grid3']": G3
+  "['111', '112', '201']": F1
+  "['114', '202']": F2
+  "['115', '116', '203']": F3
+
+electrically_independent_groups:
+  0: ['grid1']
+  1: ['grid2']
+  2: ['grid3']
+  3: ['111', '112', '201']
+  4: ['114', '202']
+  5: ['115', '116', '203']
+
+
+# names the coordinates in an adjacency matrix according to the relay
+# that causes the relevant electrically independent groups to be connected.
+groups_connected_by_relay:
+  'F1PCC': [0, 3]
+  'F2PCC': [1, 4]
+  'F3PCC': [2, 5]
+
+  'F1108': [3, 4]
+  'F1109': [3, 4]
+  'F1111': [3, 4]
+  'F1113': [3, 5]
+
+  'F2213': [4, 5]
+  'F2216': [4, 5]
+  'F2217': [4, 5]
+
+DIRECTLY_CONNECTED_RELAYS:
+  F1PCC: ["F1PCC", "F1108", "F1109", "F1111", "F1113"]
+  F2PCC: ["F2PCC", "F1108", "F1109", "F1111", "F2213", "F2216", "F2217"]
+  F3PCC: ["F3PCC", "F1113", "F2213", "F2216", "F2217"]
+
