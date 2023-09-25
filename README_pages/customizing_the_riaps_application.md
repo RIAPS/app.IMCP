@@ -1,8 +1,13 @@
 ## Table of Contents
 <!-- TOC -->
-* [Modbus Devices](#modbus-devices)
-* [MQTT](#mqtt)
-* [Distributed Controller Gains](#distributed-controller-gains)
+  * [Table of Contents](#table-of-contents)
+  * [Devices](#devices)
+    * [Device lists](#device-lists)
+    * [Device configuration](#device-configuration)
+      * [Modbus](#modbus)
+  * [MQTT - `cfg_ncsu/mqtt.yaml`](#mqtt---cfgncsumqttyaml)
+  * [Grid Topology - `cfg_ncsu/topology.yaml`](#grid-topology---cfgncsutopologyyaml)
+  * [Distributed Controller Gains](#distributed-controller-gains)
 <!-- TOC -->
 
 ## Devices
@@ -57,8 +62,7 @@ riaps_to_mqtt_mapping:
 
 
 
-## Grid Topology
-`cfg_ncsu/topology.yaml`
+## Grid Topology - `cfg_ncsu/topology.yaml`
 
 ## Distributed Controller Gains
 `applibs/constants.py` contains the default values for the controller gains. These values can be changed to tune the various controllers. The following table shows the default values for the controller gains.
