@@ -259,7 +259,7 @@ To monitor the activity of the application you can
 Once the relays, generators, and battery inverters have values displayed in the GUI the application is ready for user inputs.
 1. The first input is to click the `Energize` toggle. This sends a command to turn on the generators and inverters and will cause the values to change at the relays, generators, and battery inverters. The approximate P values in each state are shown in the table below.
 1. The second input is to click the `SEND REGULATION UPDATE` button. This sets the target value for the power across PCC1 PCC2 and PCC3. 
-1. Click the `Active Control` toggle. This causes the app to switch to active control and it will gradually update the values until the relays all have a P value of 400. 
+1. Click the `Active Control` toggle. This causes the app to switch to active control, and it will gradually update the values until the relays all have a P value of 400. 
 
 |       | initial | Energized | Active Control |
 |-------|---------|-----------|----------------|
@@ -273,36 +273,37 @@ Once the relays, generators, and battery inverters have values displayed in the 
 | Gen3  | 0.08    | 0.5       |
 
 
-### Examples
+[//]: # (### Examples)
 
-Provide detailed examples of how to use different parts of your project. You can also include GIFs or images to demonstrate its features.
+[//]: # ()
+[//]: # (Provide detailed examples of how to use different parts of your project. You can also include GIFs or images to demonstrate its features.)
 
 
 ### Troubleshooting/FAQ
 
 If the app is not behaving as expected here are some things to check.
-* Log Files
-  * **UNEXPECTED CONDITIONS** : Congratulations! You found an unanticipated combination of relay and fsm states that has not been handled. Please open a bug report. 
+* Check the log Files in `server_logs` for these keywords:
+  * **UNEXPECTED CONDITIONS** : Congratulations! You encountered an unanticipated combination of relay and fsm states that has not been handled. Please open a bug report. 
 
 **FAQ**
-* Q: The power across the relay is not regulated when toggling secondary control.
-* A: One potential cause for this behavior is if there is no message exchange between the group members. This will  
+
 
 ## Contributing
 
-Explain how others can contribute to your project. Include guidelines for bug reports, feature requests, and pull requests.
-
 ### Bug Reports
 
-Explain how to submit bug reports, what information to include, and how issues will be tracked and resolved.
+For bug reports and other issues, please open an [issue](https://github.com/RIAPS/app.IMCP/issues) on GitHub.
 
-### Feature Requests
+[//]: # (### Feature Requests)
 
-Explain how to submit feature requests and what information you need from contributors to evaluate and implement new features.
+[//]: # ()
+[//]: # (Explain how to submit feature requests and what information you need from contributors to evaluate and implement new features.)
 
-### Pull Requests
+[//]: # ()
+[//]: # (### Pull Requests)
 
-Explain the process for submitting pull requests, including any coding standards or conventions to follow. Mention any automated testing or CI/CD processes.
+[//]: # ()
+[//]: # (Explain the process for submitting pull requests, including any coding standards or conventions to follow. Mention any automated testing or CI/CD processes.)
 
 ## License
 
