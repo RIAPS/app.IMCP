@@ -1,6 +1,4 @@
-# Project Title
-
-A clear and concise title that describes your project.
+# app.IMCP
 
 ## Table of Contents
 
@@ -241,14 +239,14 @@ If that all works, congratulations! The app will probably run.
 ### Start the application
 
 1. Start node-red
-1. Open two browser tabs to:
+2. Open two browser tabs to:
     1. `http://127.0.0.1:1880/`
     1. `http://127.0.0.1:1880/ui/`
-1. `Load` and `Execute` the microgrid from RT-Lab. Make sure that in the `ModbusComs` subsystem the two `ModbusOrSimulated` (one at the top and the other at the bottom) toggles are set to 1, otherwise the control sent from the app is not received by the model. 
+3. `Load` and `Execute` the microgrid from RT-Lab. Make sure that in the `ModbusComs` subsystem the two `ModbusOrSimulated` (one at the top and the other at the bottom) toggles are set to 1, otherwise the control sent from the app is not received by the model. 
 ![node-red-running](README_images/banshee-matlab.PNG) 
 ![node-red-running](README_images/modbusOrSimulatedHighlights.PNG) 
 
-1. Start the application
+4. Start the application
     ```bash
     pytest -vs tests/test_24_app.py::test_app_with_gui
     ```
