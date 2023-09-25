@@ -1,6 +1,4 @@
 # Group membership configuration
-# Format for electrically_independent_group_names must be:
-# "['node_name1', 'node_name2', ...]": GroupName
 electrically_independent_group_names: 
   "['grid1']": G1
   "['grid2']": G2

@@ -61,8 +61,47 @@ riaps_to_mqtt_mapping:
 ```
 
 
-
 ## Grid Topology - `cfg_ncsu/topology.yaml`
+This file is used to capture certain aspects of the grid topology that are relevant to the application. `electrically_independent_groups` is an ordinal dictionary of the DERs that cannot be disconnected from one another, meaning there is no relay that can be opened to separate those DERs. `electrically_independent_group_names` is a dictionary where the keys are the values of the `electrically_independent_groups` dictionary and the values are names assigned to that group that are used by the app to construct names for the groups that are formed when closing relays. `groups_connected_by_relay` is a dictionary where the keys are the names of the relays in the topology and the keys are the ordinal numbers of the `electrically_independent_groups` that they connect. Finally, the `DIRECTLY_CONNECTED_RELAYS` are defined. This is a dictionary where the keys are the names of the PCC relays and the value is a list of the names of the relays that have a direct connection to that PCC relay. This is used by the DERs because we only want a DER control a relay if that relay cannot be isolated from the DER. The reason is that otherwise we have to concern ourselves with loops in the network and the need to compute the direction of the power flow.
+```yaml
+# Group membership configuration
+electrically_independent_group_names: 
+  "['grid1']": G1
+  "['grid2']": G2
+  "['grid3']": G3
+  "['111', '112', '201']": F1
+  "['114', '202']": F2
+  "['115', '116', '203']": F3
+
+electrically_independent_groups:
+  0: ['grid1']
+  1: ['grid2']
+  2: ['grid3']
+  3: ['111', '112', '201']
+  4: ['114', '202']
+  5: ['115', '116', '203']
+
+# names the coordinates in an adjacency matrix according to the relay
+# that causes the relevant electrically independent groups to be connected.
+groups_connected_by_relay:
+  'F1PCC': [0, 3]
+  'F2PCC': [1, 4]
+  'F3PCC': [2, 5]
+
+  'F1108': [3, 4]
+  'F1109': [3, 4]
+  'F1111': [3, 4]
+  'F1113': [3, 5]
+
+  'F2213': [4, 5]
+  'F2216': [4, 5]
+  'F2217': [4, 5]
+
+DIRECTLY_CONNECTED_RELAYS:
+  F1PCC: ["F1PCC", "F1108", "F1109", "F1111", "F1113"]
+  F2PCC: ["F2PCC", "F1108", "F1109", "F1111", "F2213", "F2216", "F2217"]
+  F3PCC: ["F3PCC", "F1113", "F2213", "F2216", "F2217"]
+```
 
 ## Distributed Controller Gains
 `applibs/constants.py` contains the default values for the controller gains. These values can be changed to tune the various controllers. The following table shows the default values for the controller gains.
