@@ -17,13 +17,14 @@ A clear and concise title that describes your project.
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
 
-## Project Description
+## Additional Documentation
+- [Folder Structure](README_pages/folder_structure.md)
+- [Customizing the RIAPS Application](README_pages/customizing_the_riaps_application.md)
 
-Provide a comprehensive overview of your project. Explain its purpose, why it exists, and any relevant context. You can also include a brief list of key features.
+## Project Description
+This project provides a reference implementation for the Integrated Microgrid Control Platform (IMCP). The IMCP is a distributed control application that uses a consensus algorithm to determine the set points for each DER in a microgrid. This project also provides an example RIAPS application using the IMCP on an OPAL-RT testbed running a modified version the Banshee microgrid model.
 
 ## Getting Started
-
-Explain how to get your project up and running. Include details about prerequisites and installation instructions.
 
 ### Prerequisites
 
@@ -43,16 +44,16 @@ Before you begin, ensure you have met the following requirements:
     - if it is not there, after adding it, run `sudo systemctl restart flashmq.service`
 - Add node-red flow to create dashboard.
     1. Start node red with `node-red` in the terminal
-    1. Open two browser tabs to:
+    2. Open two browser tabs to:
         - `http://127.0.0.1:1880/`
         - `http://127.0.0.1:1880/ui/`
-    1. Copy the contents of `GUI/flow5.json`
-    1. In the `http://127.0.0.1:1880/` tab click the three horizontal bars in the top right corner and select `Import` or press `ctrl-i`
+    3. Copy the contents of `GUI/flow5.json`
+    4. In the `http://127.0.0.1:1880/` tab click the three horizontal bars in the top right corner and select `Import` or press `ctrl-i`
     ![install_mqtt](README_images/node-red-3bars.PNG) 
-    1. Paste the contents `GUI/flow5.json` into the text field and click `Import`
+    5. Paste the contents `GUI/flow5.json` into the text field and click `Import`
     ![install_mqtt](README_images/node-red-import.PNG)
-    1. Click the red `Deploy` button
-    1. Switch to the `http://127.0.0.1:1880/ui/` tab where you should see the dashboard.
+    6. Click the red `Deploy` button
+    7. Switch to the `http://127.0.0.1:1880/ui/` tab where you should see the dashboard.
     ![install_mqtt](README_images/node-red-dashboard.PNG)
     
  
@@ -263,12 +264,12 @@ Once the relays, generators, and battery inverters have values displayed in the 
 1. Click the `Active Control` toggle. This causes the app to switch to active control and it will gradually update the values until the relays all have a P value of 400. 
 
 |       | initial | Energized | Active Control |
-| ----  | ------- | --------- | -------------- |
+|-------|---------|-----------|----------------|
 | PCC1  | 2270    | 1440      | 400            |
-| PCC2  | 1850    | 520       | 400
-| PCC3  | 2000    | 2965      | 400
-| F1108 | 0       | 0         | 0
-| F2217 | 0       | 0         | 0
+| PCC2  | 1850    | 520       | 400            |
+| PCC3  | 2000    | 2965      | 400            |
+| F1108 | 0       | 0         | 0              |
+| F2217 | 0       | 0         | 0              |
 | Gen1  | 0.08    | 0.5       | 
 | Gen2  | 0.05    | 0.5       |
 | Gen3  | 0.08    | 0.5       |
