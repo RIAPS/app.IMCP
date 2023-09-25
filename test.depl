@@ -1,0 +1,9 @@
+app appMgManage{
+
+    host all{
+        network 192.168.10.106;
+    }
+
+    //system operator
+    on (192.168.10.122) SYSTEM_OPERATOR_ACTOR(config = "./cfg_ncsu/OPAL-Device.yaml", mqtt_config="./cfg_ncsu/mqtt.yaml", mqtt_subsample_rate=5);
+}

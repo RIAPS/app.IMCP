@@ -103,7 +103,7 @@ DIRECTLY_CONNECTED_RELAYS:
   F3PCC: ["F3PCC", "F1113", "F2213", "F2216", "F2217"]
 ```
 
-## Distributed Controller Gains
+## Distributed Controller Gains - `applibs/constants.py`
 `applibs/constants.py` contains the default values for the controller gains. These values can be changed to tune the various controllers. The following table shows the default values for the controller gains.
 
 |                            | ECONOMIC DISPATCH | VOLTAGE ESTIMATION | RESYNCHRONIZATION | RELAY OPEN           | RELAY CLOSE           | SECONDARY CONTROL |
@@ -124,7 +124,7 @@ DIRECTLY_CONNECTED_RELAYS:
 
 
 Description of the controller gains:
-* **alpha_x_gain** controls
+* **alpha_x_gain** controls 
 * **edp_reactive_pwr_ctrl_gain** controls
 * **eps_reg_gain** controls
 * **pcc_reactive_pwr_ctrl_gain** controls
