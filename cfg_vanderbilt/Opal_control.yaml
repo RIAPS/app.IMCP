@@ -1,0 +1,112 @@
+---
+# DG1, READ, CMD
+# DG1, WRITE, CMD=Value
+OPAL: 
+   Description: OPAL console control signals
+   TCP:
+      Address: 192.168.10.210
+      Port:
+         502
+   uuid: "210"
+   Mode: "tcp"  # bypass, serial, tcp
+   Slave: 1
+   Interval: 5000
+   poll:
+      #StartStop_READ:
+      #GridTiedOp_READ:
+      #SecCtrlEnable_READ:
+      #SecCtrlAngleEnable_READ:
+   debugMode: False
+
+###### NO input register for all are holding registers ######
+   ALL_READ_INPUT:
+      info: Description of parameter or command
+      function: READ_INPUT_REGISTERS
+      start: 0
+      length: 4
+      output_value: 0
+      data_format: ""
+      expected_length: -1
+      write_starting_address_FC23: 0
+      Units:
+         - 1
+         - None
+         
+   StartStop_READ:
+      info: Description of parameter or command
+      function: READ_INPUT_REGISTERS
+      start: 0
+      length: 1
+      output_value: 0
+      data_format: ""
+      expected_length: -1
+      write_starting_address_FC23: 0
+      Units:
+         - 1
+         - None
+    
+   GridTiedOp_READ:
+      info: Description of parameter or command
+      function: READ_INPUT_REGISTERS
+      start: 1
+      length: 1
+      output_value: 0
+      data_format: ""
+      expected_length: -1
+      write_starting_address_FC23: 0
+      Units:
+         - 1
+         - None
+         
+   SecCtrlEnable_READ:
+      info: Description of parameter or command
+      function: READ_INPUT_REGISTERS
+      start: 2
+      length: 1
+      output_value: 0
+      data_format: ""
+      expected_length: -1
+      write_starting_address_FC23: 0
+      Units:
+         - 1
+         - None
+         
+   SecCtrlAngleEnable_READ:
+      info: Description of parameter or command
+      function: READ_INPUT_REGISTERS
+      start: 3
+      length: 1
+      output_value: 0
+      data_format: ""
+      expected_length: -1
+      write_starting_address_FC23: 0
+      Units:
+         - 1
+         - None
+###### not reading register at start 4 ######
+
+   RegulationSignal_READ:
+      info: Description of parameter or command
+      function: READ_INPUT_REGISTERS
+      start: 5
+      length: 1
+      output_value: 0
+      data_format: ">h"
+      expected_length: -1
+      write_starting_address_FC23: 0
+      Units:
+         - 1
+         - None
+
+   RegulationSignal2_READ:
+      info: Description of parameter or command
+      function: READ_INPUT_REGISTERS
+      start: 6
+      length: 1
+      output_value: 0
+      data_format: ">h"
+      expected_length: -1
+      write_starting_address_FC23: 0
+      Units:
+         - 1
+         - None

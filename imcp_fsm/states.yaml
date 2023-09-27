@@ -1,0 +1,35 @@
+active_states:
+  - name: "GRID-TIED"
+    on_enter: "placeholderOnEnter"
+
+  - name: "ISLANDED"
+    on_enter: "placeholderOnEnter"
+
+  - name: "PREPARE-ISLAND"
+    timeout: 60
+    on_timeout: "IncPrep4Island_CNTR"
+
+  - name: "PREPARE-RESYNC"
+    timeout: 60
+    on_timeout: "IncPrep4Grid_CNTR"
+
+  - name: "PREPARE-DISCONNECT"
+    timeout: 60
+    on_timeout: "IncPrep4Disconnect_CNTR"
+
+  - name: "PREPARE-CONNECT"
+    timeout: 60
+    on_timeout: "IncPrep4Connect_CNTR"
+
+top_states:
+  - name: 'SHUTDOWN'
+  - name: 'LOCAL-CONTROL'
+  - name: 'ACTIVE'
+#    timeout: 10
+#    on_timeout: "missingMessages"
+  - name: 'BLACKSTART'
+    on_timeout: "TimerUp"
+    timeout: 500
+  - name: 'MSG'
+
+

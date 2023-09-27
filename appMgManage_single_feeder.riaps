@@ -1,0 +1,191 @@
+app appMgManage{
+
+	message LocalDeviceEvent;
+	message Gen1DeviceQry;
+	message Gen1DeviceAns;
+    
+	message DgMsg;
+    message RelayMsg;
+    message StateMsg;
+    message GroupMsg;
+    message OperatorMsg;
+    message RaftMsg;
+    message MqttMsg;
+    message GuiMsg;
+
+    group Microgrid with leader using RaftMsg;
+
+	library cfg_vanderbilt;
+	library applibs;
+
+	library imcp_fsm;
+    library transitions;
+	library utils;
+
+	//------------------------------------------------------
+	//  GEN1
+	//------------------------------------------------------
+
+	device GEN1(path_to_device_list){
+		timer poller 3600 sec;
+    	inside modbus_command_port;
+		inside modbus_event_port;
+		pub event_port: LocalDeviceEvent;
+		ans device_port: (Gen1DeviceQry, Gen1DeviceAns) timed;
+	}
+
+	component GEN1_PWR_MANAGER(config, Ts, topology_config){
+	    timer init_clock 5 sec;
+
+	    // consensus clock
+        //timer poller 200 msec;
+        //timer consensus_clock 5000 msec;
+        timer consensus_clock 1000 msec;
+        
+	    // For status updates from device (faults, errors, etc.)
+	    sub local_event_port: LocalDeviceEvent;
+
+	    // Communicate with device
+	    qry device_qry_port: (Gen1DeviceQry, Gen1DeviceAns) timed;
+        
+        // power consensus  with other node
+        pub consensus_pub: DgMsg;
+	    sub consensus_sub: DgMsg;
+
+	    // message from relay
+	    sub relay_sub: RelayMsg;
+        
+        // external control signal from Opal
+        sub operator_sub: OperatorMsg;
+
+        // receive state machine message
+	    sub state_sub: StateMsg;
+	}
+
+
+    //------------------------------------------------------
+    //  RELAYs in one Feeder
+    //------------------------------------------------------
+
+    device RELAYF1(path_to_device_list){
+		timer poller 3600 sec;
+		inside modbus_command_port;
+		inside modbus_event_port;
+		pub event_port: LocalDeviceEvent;
+		ans device_port: (Gen1DeviceQry, Gen1DeviceAns) timed;
+	}
+
+	component RELAYF1_MANAGER(path_to_device_list){
+	    timer poller 1000 msec;
+
+	    // For status updates from device (faults, errors, etc.)
+	    sub local_event_port: LocalDeviceEvent;
+
+	    // Communicate with device
+	    qry device_port: (Gen1DeviceQry, Gen1DeviceAns) timed;
+
+	    // publish relays' status
+	    pub relay_pub: RelayMsg;
+
+        // sub the reconfiguration request
+        sub operator_sub: OperatorMsg;
+	}
+
+    //------------------------------------------------------
+    //  System Operator
+    //------------------------------------------------------
+
+	device MQTT(config){
+	    inside trigger;
+	    sub mqtt_sub: MqttMsg;
+	    pub gui_pub: GuiMsg;
+	}
+
+	component SYSTEM_OPERATOR_SINGLE_FEEDER(mqtt_subsample_rate){
+	    // timer init_clock 4 sec;
+
+	    // used to indicate the end of the initialization
+	    timer poller 5000 msec;
+
+	    // send out commands for power devices.
+        pub operator_pub: OperatorMsg;
+
+	    // For status updates from device (faults, errors, etc.)
+	    // sub local_event_port: LocalDeviceEvent;
+
+	    // Communicate with device
+	    // qry device_port: (Gen1DeviceQry, Gen1DeviceAns) timed;
+
+	    // message from relay
+	    sub relay_sub: RelayMsg;
+
+	    // message from FSM
+	    sub state_sub: StateMsg;
+
+	    // message from generator/computation component
+	    sub consensus_sub: DgMsg;
+
+	    // message to MQTT device
+	    pub mqtt_pub: MqttMsg;
+
+	    // message from MQTT based GUI
+	    sub gui_sub: GuiMsg;
+	}
+
+
+	component FSM(config, topology_config){
+        timer state_timer;
+        timer msg_timer;
+        // timer poller 5000 msec;
+        sub relay_sub: RelayMsg;
+        sub group_sub: GroupMsg;
+        pub state_pub: StateMsg;
+	}
+
+
+
+ 	component GROUP_MANAGER(config, topology_config){
+
+        //sub relay information
+        sub relay_sub: RelayMsg;
+
+        // pub group information
+        pub group_pub: GroupMsg;
+
+        // sub the reconfiguration request
+        sub operator_sub: OperatorMsg;
+	}
+    
+	//------------------------------------------------------
+	//  Actors
+	//------------------------------------------------------
+	
+
+	actor GEN1_ACTOR(path_to_device_list,config,Ts, topology_config){
+		local LocalDeviceEvent, Gen1DeviceQry, Gen1DeviceAns, GroupMsg;
+		{
+			dvc : GEN1(path_to_device_list=path_to_device_list);
+			power_manager : GEN1_PWR_MANAGER(config=config, Ts=Ts, topology_config=topology_config);
+			state_machine : FSM(config=config, topology_config=topology_config);
+			group_manager : GROUP_MANAGER(config=config, topology_config=topology_config);
+		}
+	}
+
+	actor RELAYF1_ACTOR(path_to_device_list){
+		local LocalDeviceEvent, Gen1DeviceQry, Gen1DeviceAns;
+		{
+			dvc : RELAYF1(path_to_device_list=path_to_device_list);
+			power_manager : RELAYF1_MANAGER(path_to_device_list=path_to_device_list);
+		}
+	}
+
+	actor SYSTEM_OPERATOR_ACTOR(config, mqtt_config, mqtt_subsample_rate){
+		local LocalDeviceEvent, Gen1DeviceQry, Gen1DeviceAns, MqttMsg, GuiMsg;
+		{
+			system_operator : SYSTEM_OPERATOR_SINGLE_FEEDER(mqtt_subsample_rate=mqtt_subsample_rate);
+			mqtt_dvc: MQTT(config=mqtt_config);
+		}
+	}
+
+	
+}

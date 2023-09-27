@@ -1,0 +1,4 @@
+path_to_config_files: ./cfg_ncsu
+names:
+  - F3_DSP115
+debugMode: True

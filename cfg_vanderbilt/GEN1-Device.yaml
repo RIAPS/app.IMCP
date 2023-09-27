@@ -1,0 +1,12 @@
+
+path_to_config_files: ./cfg_vanderbilt
+names:
+  - GEN1-Banshee
+GlobalDebugMode: 2 # 0=no debug messages, 1=RAIPS Device level debug, 2=Modbus slave low level messages
+
+
+#path_to_config_files: ./cfg_vanderbilt
+#modbus_device_names:
+#  - GEN1-Banshee
+#grid_topology: topology
+#GlobalDebugMode: 2 # 0=no debug messages, 1=RAIPS Device level debug, 2=Modbus slave low level messages

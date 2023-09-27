@@ -1,0 +1,145 @@
+active_transitions:
+  - trigger: "requestIsland"
+    source: "GRID-TIED"
+    dest: "PREPARE-ISLAND"
+
+  # - trigger: "requestConnect"
+  #   source: "GRID-TIED"
+  #   dest: "PREPARE-CONNECT"
+  # TODO: We would need additional states to support this. Two versions of prepare-connect would be required.
+  #  since we need to be able to return to both grid tied and islanded depending on where we came from.
+
+  - trigger: "requestResync"
+    source: "ISLANDED"
+    dest: "PREPARE-RESYNC"
+#      unless: "InstabilityDetect"
+
+  - trigger: "requestDisconnect"
+    source: "ISLANDED"
+    dest: "PREPARE-DISCONNECT"
+#      unless: "InstabilityDetect"
+
+  - trigger: "requestConnect"
+    source: "ISLANDED"
+    dest: "PREPARE-CONNECT"
+#      unless: "InstabilityDetect"
+
+  - trigger: "completePlannedIsland"
+    source: "PREPARE-ISLAND"
+    dest: "ISLANDED"
+#      unless: "InstabilityDetect"
+
+  - trigger: "unplannedIsland"
+    source: "GRID-TIED"
+    dest: "ISLANDED"
+#      unless: "InstabilityDetect"
+
+  - trigger: "completeResync"
+    source: "PREPARE-RESYNC"
+    dest: "GRID-TIED"
+#      unless: "InstabilityDetect"
+
+  - trigger: "completeDisconnect"
+    source: "PREPARE-DISCONNECT"
+    dest: "ISLANDED"
+#      unless: "InstabilityDetect"
+
+  - trigger: "completeConnect"
+    source: "PREPARE-CONNECT"
+    dest: "ISLANDED"
+#      unless: "InstabilityDetect"
+
+  - trigger: "retryIsland"
+    source: "PREPARE-ISLAND"
+    dest: "="
+
+  - trigger: "retryResync"
+    source: "PREPARE-RESYNC"
+    dest: "="
+
+  - trigger: "retryDisconnect"
+    source: "PREPARE-DISCONNECT"
+    dest: "="
+
+  - trigger: "retryConnect"
+    source: "PREPARE-CONNECT"
+    dest: "="
+
+  - trigger: "failIsland"
+    source: "PREPARE-ISLAND"
+    dest: "GRID-TIED"
+#    unless: "InstabilityDetect"
+
+  - trigger: "failResync"
+    source: "PREPARE-RESYNC"
+    dest: "ISLANDED"
+#    unless: "InstabilityDetect"
+
+  - trigger: "failDisconnect"
+    source: "PREPARE-DISCONNECT"
+    dest: "ISLANDED"
+      #    unless: "InstabilityDetect"
+
+  - trigger: "failConnect"
+    source: "PREPARE-CONNECT"
+    dest: "ISLANDED"
+#    unless: "InstabilityDetect"
+
+
+transitions:
+  - trigger: "commandDERStart"
+    source: "SHUTDOWN"
+    dest: "LOCAL-CONTROL"
+#    conditions: ["gridDetected"]
+    # should we add delay to turn on the DERs
+#  - trigger: "commandDERStart"
+#    source: "SHUTDOWN"
+#    dest: 'BLACKSTART'
+#    unless: "gridDetected"
+
+  - trigger: 'commandDERStop'
+    source: '*'
+    dest: 'SHUTDOWN'
+
+  - trigger: "commandActiveControlEnable"
+    source: "LOCAL-CONTROL"
+    dest: "ACTIVE_GRID-TIED"
+    conditions:
+      - "gridDetected"
+
+  - trigger: "commandActiveControlEnable"
+    source: "LOCAL-CONTROL"
+    dest: "ACTIVE_ISLANDED"
+    unless: "gridDetected"
+
+  - trigger: "commandActiveControlDisable"
+    source: ["ACTIVE"]
+    dest: "LOCAL-CONTROL"
+
+
+  - trigger: 'InstabilityDetected'
+    source: '*'
+    dest: 'SHUTDOWN'
+
+  - trigger: 'nodeFail'
+    source: 'ACTIVE'
+    dest: 'SHUTDOWN'
+
+  - trigger: 'missingMessages'
+    source: 'ACTIVE'
+    dest: 'LOCAL-CONTROL'
+
+#  - trigger: 'networkFail'
+#    source: 'ACTIVE'
+#    dest: 'LOCAL-CONTROL'
+    # {'trigger': 'missingGroupMessages',
+    #  'source': 'ACTIVE',
+    #  'dest': 'LOCAL-CONTROL'},
+    #
+    # {'trigger': 'missingRelayMessages',
+    #  'source': 'ACTIVE',
+    #  'dest': 'LOCAL-CONTROL'},
+    #
+    # {'trigger': 'missingPeerMessages',
+    #  'source': 'ACTIVE',
+    #  'dest': 'LOCAL-CONTROL'},

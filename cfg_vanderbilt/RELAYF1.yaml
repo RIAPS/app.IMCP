@@ -1,0 +1,6 @@
+
+path_to_config_files: ./cfg_vanderbilt
+names:
+  - F1PCC
+GlobalDebugMode: 1 # 0=no debug messages, 1=RAIPS Device level debug, 2=Modbus slave low level messages
+debugMode: True

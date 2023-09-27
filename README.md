@@ -1,6 +1,4 @@
-# Project Title
-
-A clear and concise title that describes your project.
+# app.IMCP
 
 ## Table of Contents
 
@@ -17,13 +15,14 @@ A clear and concise title that describes your project.
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
 
-## Project Description
+## Additional Documentation
+- [Folder Structure](README_pages/folder_structure.md)
+- [Customizing the RIAPS Application](README_pages/customizing_the_riaps_application.md)
 
-Provide a comprehensive overview of your project. Explain its purpose, why it exists, and any relevant context. You can also include a brief list of key features.
+## Project Description
+This project provides a reference implementation for the Integrated Microgrid Control Platform (IMCP). The IMCP is a distributed control application that uses a consensus algorithm to determine the set points for each DER in a microgrid. This project also provides an example RIAPS application using the IMCP on an OPAL-RT testbed running a modified version the Banshee microgrid model.
 
 ## Getting Started
-
-Explain how to get your project up and running. Include details about prerequisites and installation instructions.
 
 ### Prerequisites
 
@@ -43,16 +42,16 @@ Before you begin, ensure you have met the following requirements:
     - if it is not there, after adding it, run `sudo systemctl restart flashmq.service`
 - Add node-red flow to create dashboard.
     1. Start node red with `node-red` in the terminal
-    1. Open two browser tabs to:
+    2. Open two browser tabs to:
         - `http://127.0.0.1:1880/`
         - `http://127.0.0.1:1880/ui/`
-    1. Copy the contents of `GUI/flow5.json`
-    1. In the `http://127.0.0.1:1880/` tab click the three horizontal bars in the top right corner and select `Import` or press `ctrl-i`
+    3. Copy the contents of `GUI/flow5.json`
+    4. In the `http://127.0.0.1:1880/` tab click the three horizontal bars in the top right corner and select `Import` or press `ctrl-i`
     ![install_mqtt](README_images/node-red-3bars.PNG) 
-    1. Paste the contents `GUI/flow5.json` into the text field and click `Import`
+    5. Paste the contents `GUI/flow5.json` into the text field and click `Import`
     ![install_mqtt](README_images/node-red-import.PNG)
-    1. Click the red `Deploy` button
-    1. Switch to the `http://127.0.0.1:1880/ui/` tab where you should see the dashboard.
+    6. Click the red `Deploy` button
+    7. Switch to the `http://127.0.0.1:1880/ui/` tab where you should see the dashboard.
     ![install_mqtt](README_images/node-red-dashboard.PNG)
     
  
@@ -240,14 +239,14 @@ If that all works, congratulations! The app will probably run.
 ### Start the application
 
 1. Start node-red
-1. Open two browser tabs to:
+2. Open two browser tabs to:
     1. `http://127.0.0.1:1880/`
     1. `http://127.0.0.1:1880/ui/`
-1. `Load` and `Execute` the microgrid from RT-Lab. Make sure that in the `ModbusComs` subsystem the two `ModbusOrSimulated` (one at the top and the other at the bottom) toggles are set to 1, otherwise the control sent from the app is not received by the model. 
+3. `Load` and `Execute` the microgrid from RT-Lab. Make sure that in the `ModbusComs` subsystem the two `ModbusOrSimulated` (one at the top and the other at the bottom) toggles are set to 1, otherwise the control sent from the app is not received by the model. 
 ![node-red-running](README_images/banshee-matlab.PNG) 
 ![node-red-running](README_images/modbusOrSimulatedHighlights.PNG) 
 
-1. Start the application
+4. Start the application
     ```bash
     pytest -vs tests/test_24_app.py::test_app_with_gui
     ```
@@ -260,7 +259,7 @@ To monitor the activity of the application you can
 Once the relays, generators, and battery inverters have values displayed in the GUI the application is ready for user inputs.
 1. The first input is to click the `Energize` toggle. This sends a command to turn on the generators and inverters and will cause the values to change at the relays, generators, and battery inverters. The approximate P values in each state are shown in the table below.
 1. The second input is to click the `SEND REGULATION UPDATE` button. This sets the target value for the power across PCC1 PCC2 and PCC3. 
-1. Click the `Active Control` toggle. This causes the app to switch to active control and it will gradually update the values until the relays all have a P value of 400. 
+1. Click the `Active Control` toggle. This causes the app to switch to active control, and it will gradually update the values until the relays all have a P value of 400. 
 
 |       | initial | Energized | Active Control | Islanded |
 | ----  | ------- | --------- | -------------- | -------
@@ -279,36 +278,37 @@ Once the relays, generators, and battery inverters have values displayed in the 
 | C6    | -0.009  |           | 0.41           |
 
 
-### Examples
+[//]: # (### Examples)
 
-Provide detailed examples of how to use different parts of your project. You can also include GIFs or images to demonstrate its features.
+[//]: # ()
+[//]: # (Provide detailed examples of how to use different parts of your project. You can also include GIFs or images to demonstrate its features.)
 
 
 ### Troubleshooting/FAQ
 
 If the app is not behaving as expected here are some things to check.
-* Log Files
-  * **UNEXPECTED CONDITIONS** : Congratulations! You found an unanticipated combination of relay and fsm states that has not been handled. Please open a bug report. 
+* Check the log Files in `server_logs` for these keywords:
+  * **UNEXPECTED CONDITIONS** : Congratulations! You encountered an unanticipated combination of relay and fsm states that has not been handled. Please open a bug report. 
 
 **FAQ**
-* Q: The power across the relay is not regulated when toggling secondary control.
-* A: One potential cause for this behavior is if there is no message exchange between the group members. This will  
+
 
 ## Contributing
 
-Explain how others can contribute to your project. Include guidelines for bug reports, feature requests, and pull requests.
-
 ### Bug Reports
 
-Explain how to submit bug reports, what information to include, and how issues will be tracked and resolved.
+For bug reports and other issues, please open an [issue](https://github.com/RIAPS/app.IMCP/issues) on GitHub.
 
-### Feature Requests
+[//]: # (### Feature Requests)
 
-Explain how to submit feature requests and what information you need from contributors to evaluate and implement new features.
+[//]: # ()
+[//]: # (Explain how to submit feature requests and what information you need from contributors to evaluate and implement new features.)
 
-### Pull Requests
+[//]: # ()
+[//]: # (### Pull Requests)
 
-Explain the process for submitting pull requests, including any coding standards or conventions to follow. Mention any automated testing or CI/CD processes.
+[//]: # ()
+[//]: # (Explain the process for submitting pull requests, including any coding standards or conventions to follow. Mention any automated testing or CI/CD processes.)
 
 ## License
 
@@ -316,4 +316,13 @@ Specify the license under which your project is distributed. Include a brief sum
 
 ## Acknowledgments
 
-Thank any individuals, projects, or organizations that inspired or helped you during the development of your project. You can also mention any libraries, tools, or resources you used and provide links to their respective sources.
+This material is based upon work supported by the United States Army Corps of Engineers under Contract No. W912HQ20C0040. Any opinions, findings and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the
+United States Army Corps of Engineers.
+
+### libraries used
+* [pytransitions](https://github.com/pytransitions/transitions)
+* [modbus-tk](https://github.com/ljean/modbus-tk)
+* [paho-mqtt](https://github.com/eclipse/paho.mqtt.python)
+* [pytest](https://docs.pytest.org/en/7.1.x/getting-started.html)
+* [watchdog](https://github.com/gorakhargosh/watchdog)
+* [fabric](https://www.fabfile.org/)
