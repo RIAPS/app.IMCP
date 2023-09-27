@@ -262,16 +262,21 @@ Once the relays, generators, and battery inverters have values displayed in the 
 1. The second input is to click the `SEND REGULATION UPDATE` button. This sets the target value for the power across PCC1 PCC2 and PCC3. 
 1. Click the `Active Control` toggle. This causes the app to switch to active control and it will gradually update the values until the relays all have a P value of 400. 
 
-|       | initial | Energized | Active Control |
-| ----  | ------- | --------- | -------------- |
-| PCC1  | 2270    | 1440      | 400            |
-| PCC2  | 1850    | 520       | 400
-| PCC3  | 2000    | 2965      | 400
-| F1108 | 0       | 0         | 0
-| F2217 | 0       | 0         | 0
-| Gen1  | 0.08    | 0.5       | 
-| Gen2  | 0.05    | 0.5       |
-| Gen3  | 0.08    | 0.5       |
+|       | initial | Energized | Active Control | Islanded |
+| ----  | ------- | --------- | -------------- | -------
+| PCC1  | 2220    | 1440      | 400            | 0
+| PCC2  | 1800    | 520       | 400            |
+| PCC3  | 2000    | 2965      | 400            |
+| F1108 | 0       | 0         | 0              |
+| F2217 | 0       | 0         | 0              |
+| Gen1  | 0.08    | 0.5       | 0.56           | 
+| Gen2  | 0.05    | 0.5       | 0.38           | 
+| Gen3  | 0.08    | 0.5       | 0.46           |
+| C1    | -0.009  |           | 0.45           |
+| C2    | -0.009  |           | 0.45           |
+| C4    | -0.009  |           | 0.46           |
+| C5    | -0.009  |           | 0.41           |
+| C6    | -0.009  |           | 0.41           |
 
 
 ### Examples
