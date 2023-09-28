@@ -204,50 +204,35 @@ Note that the purpose of the following tests is to ensure that your testbed is p
     ```
 1. **Test the mqtt configuration**
     ```bash
-    pytest -vs tests/test_24_app.py::test_mqtt_config
+    $ pytest -vs tests/test_24_app.py::test_mqtt_config
+    ========== test session starts ======================
+    platform linux -- Python 3.8.10, pytest-7.4.2, pluggy-1.3.0 -- /usr/bin/python3
+    cachedir: .pytest_cache
+    rootdir: /home/riaps/projects/RIAPS/app.IMCP/tests
+    configfile: pytest.ini
+    plugins: libtmux-0.15.7
+    collected 1 item
+
+    tests/test_24_app.py::test_mqtt_config PASSED
     ```
 
 1. **Test that the mqtt communications are working between the test and app**
-    This is an interactive test that starts the System Operator which listens for mqtt messages.
-    There are 5 phases, 1) app startup, 2) Send `mg/event b'{"StartStop": 1}'` 3) Send `mg/event b'{"active": 400, "reactive": 300}'` 4) send `mg/event b'{"SecCtrlEnable": 1}'` 5) app teardown. 
-    Between each phase the app waits for user input. This app makes use of the `log_server` so the output of the System Operator can be found in `server_logs/<ip_of_target_node>_app.log`. 
-    If the app is running properly the content of the log file should include things like `Message from broker` e.g.,:
-    ```bash
-    ::[info]::[20:23:38,877]::[5703]::Message from broker: mg/event b'{"StartStop": 1}'::
-    ::[info]::[20:23:38,879]::[5703]::on_trigger():{'StartStop': 1}::
-    ::[info]::[20:23:38,881]::[5703]::{"timestamp": 1695327818.8807783, "level": "info", "module": "MQTT", "function": "on_trigger", "line": 29, "message": "on_trigger()", "app_event": "RECEIVED MESSAGE FROM MQTT BROKER"}::
-    ::[info]::[20:23:38,884]::[5677]::
-    System Operator.py - on_gui_sub
-    msg {'StartStop': 1}::
-    ::[info]::[20:23:38,885]::[5677]::
-    System Operator.py - on_gui_sub
-    self.control_values {'StartStop': 1, 'GridTiedOp': 0, 'SecCtrlEnable': 0, 'SecCtrlAngleEnable': 0, 'RegulationSignal': 0, 'RegulationSignal2': 0}::
-    ::[info]::[20:23:38,886]::[5677]::
-    OPAL_CTRL_MANAGER.py send_operator_msg
-    msg: ( sender = "OPAL",
-    type = "regD",
-    msgcounter = 1,
-    opalParams = ["StartStop", "GridTiedOp", "SecCtrlEnable", "SecCtrlAngleEnable", "RegulationSignal", "RegulationSignal2"],
-    opalValues = [1, 0, 0, 0, 0, 0],
-    requestedRelay = "NONE",
-    requestedAction = "NONE",
-    timestamp = 1695327818.8863797 )::
-    ```
+    This is an interactive test. Follow the prompts in the terminal.
 
 
     A successful run from the pytest terminal looks like this:
     ```bash
     $ pytest -vs tests/test_24_app.py::test_mqtt_2_riaps_communication
-    =========== test session starts =============
+    ========= test session starts =====================================
     platform linux -- Python 3.8.10, pytest-7.4.2, pluggy-1.3.0 -- /usr/bin/python3
     cachedir: .pytest_cache
-    rootdir: /home/riaps/projects/RIAPS/app.MgManage_refactor/tests
+    rootdir: /home/riaps/projects/RIAPS/app.IMCP/tests
     configfile: pytest.ini
     plugins: libtmux-0.15.7
-    collected 1 item                                                                                                                                                                                                                                  
+    collected 1 item                                                                                                                                                                                                                                                
 
     tests/test_24_app.py::test_mqtt_2_riaps_communication[mqtt_client0-log_server0] ['127.0.0.1', '192.168.10.106', '10.0.2.15']
-    on_connect at 1695327714.7804117 error string: No error.
+    on_connect at 1695916746.570389 error string: No error.
     Client Names: []
     Resolved IP Addresses: {}
     IP Addresses: ['192.168.10.122']
@@ -256,45 +241,62 @@ Note that the purpose of the following tests is to ensure that your testbed is p
     Compiling deployment: test.depl
     known_clients: []
     known_clients: []
-    known_clients: []
-    known_clients: []
-    known_clients: ['192.168.10.122', '192.168.10.112', '192.168.10.120', '192.168.10.114', '192.168.10.113', '192.168.10.121', '192.168.10.119', '192.168.10.116', '192.168.10.111', '192.168.10.115', '192.168.10.118', '192.168.10.117']
+    known_clients: ['192.168.10.115', '192.168.10.114', '192.168.10.122', '192.168.10.120', '192.168.10.112', '192.168.10.113', '192.168.10.111', '192.168.10.121', '192.168.10.117']
     loading application: appMgManage
-    Error: git tag failed
     I 192.168.10.122 appMgManage
     is_app_loaded: True
     launching application: appMgManage
     L 192.168.10.122 appMgManage SYSTEM_OPERATOR_ACTOR ['--config', './cfg_ncsu/OPAL-Device.yaml', '--mqtt_config', './cfg_ncsu/mqtt.yaml', '--mqtt_subsample_rate', '5']
     is_app_launched: True
-    Wait until app starts then press a key to start the DERs or q to quit.
+    Wait until app starts (check server_logs/<ip of system operator target>_app.log for this message: MQThread no new message) then press a key to start the DERs or q to quit.
 
-    Once the DERs start, press a key to set the power regulation or q to quit.
-    2023-09-21 20:23:38.877847 test's on_publish: 3
-    2023-09-21 20:23:38.878045 test's on_message: mg/event b'{"StartStop": 1}')
-
-    Press a key to enable secondary control or q to quit.
-    2023-09-21 20:23:43.065367 test's on_publish: 4
-    2023-09-21 20:23:43.065711 test's on_message: mg/event b'{"active": 400, "reactive": 300}')
-
-    Press a key to terminate the app
-    2023-09-21 20:23:46.177066 test's on_publish: 5
-    2023-09-21 20:23:46.177280 test's on_message: mg/event b'{"SecCtrlEnable": 1}')
-
+    2023-09-28 16:00:36.609675 test's on_publish: 3
+    2023-09-28 16:00:36.609853 test's on_message: mg/event b'{"StartStop": 1}')
     Halt app
     H 192.168.10.122 appMgManage SYSTEM_OPERATOR_ACTOR
     app halted? True
     remove app
-    Error: git tag failed
     R appMgManage 
     app removed
     Stop controller
     controller stopped
-    Test complete at 1695327833.3781416
+    Test complete at 1695916843.3733027
     PASSED
     ```
 
-If that all works, congratulations! The app will probably run. 
-
+   
+    Output in the log file found in the System operator log (e.g., `server_logs/192.168.10.122_app.log`) should look something like this:
+    ```bash
+    ::[debug]::[16:00:34,470]::[24067]::MQThread no new message::
+    ::[debug]::[16:00:35,477]::[24067]::MQThread no new message::
+    ::[debug]::[16:00:36,484]::[24067]::MQThread no new message::
+    ::[info]::[16:00:36,610]::[24067]::Message from broker: mg/event b'{"StartStop": 1}'::
+    ::[info]::[16:00:36,615]::[24067]::on_trigger():{'StartStop': 1}::
+    ::[info]::[16:00:36,620]::[24067]::{"timestamp": 1695916836.6196535, "level": "info", "module": "MQTT", "function": "on_trigger", "line": 29, "message": "on_trigger()", "app_event": "RECEIVED MESSAGE FROM MQTT BROKER"}::
+    ::[info]::[16:00:36,639]::[24041]::[94m
+    System Operator.py - on_gui_sub
+    msg {'StartStop': 1}::
+    ::[info]::[16:00:36,644]::[24041]::[94m
+    System Operator.py - on_gui_sub
+    self.control_values {'StartStop': 1, 'GridTiedOp': 0, 'SecCtrlEnable': 0, 'SecCtrlAngleEnable': 0, 'RegulationSignal': 0, 'RegulationSignal2': 0}::
+    ::[info]::[16:00:36,660]::[24041]::[36m
+    OPAL_CTRL_MANAGER.py send_operator_msg
+    msg: ( sender = "OPAL",
+    type = "regD",
+    msgcounter = 1,
+    opalParams = ["StartStop", "GridTiedOp", "SecCtrlEnable", "SecCtrlAngleEnable", "RegulationSignal", "RegulationSignal2"],
+    opalValues = [1, 0, 0, 0, 0, 0],
+    requestedRelay = "NONE",
+    requestedAction = "NONE",
+    timestamp = 1695916836.6492345 )[00m::
+    ::[debug]::[16:00:37,636]::[24067]::MQThread no new message::
+    ::[info]::[16:00:38,036]::[24067]::__destroy__::
+    ::[info]::[16:00:38,040]::[24067]::MQThread deactivated::
+    ::[info]::[16:00:38,044]::[24067]::MQThread terminating::
+    ::[debug]::[16:00:38,644]::[24067]::MQThread no new message::
+    ::[info]::[16:00:38,650]::[24067]::MQThread ended::
+    ::[info]::[16:00:38,652]::[24067]::__destroyed__::
+    ```
 
 ## Usage
 
