@@ -22,17 +22,17 @@ vanderbilt_config = {"VM_IP": "172.21.20.70",
                      "node_ids": ["20_", "36_"],
                      "SystemOperator": "172.21.20.20",
                      "app_folder_path": pathlib.Path(__file__).parents[1],
-                     "app_file_name": "appMgManage_single_feeder.riaps",
-                     "depl_file_name": "appMgManage_single_feeder_vanderbilt.depl"}
+                     "app_file_name": "IMCP_SingleFeeder_VU.riaps",
+                     "depl_file_name": "IMCP_SingleFeeder_VU.depl"}
 
 ncsu_config = {"VM_IP": "192.168.10.106",
                "mqtt_config": f"{pathlib.Path(__file__).parents[1]}/cfg_ncsu/mqtt.yaml",
                "node_ids": ["122_", "113_"],
                "SystemOperator": "192.168.10.122",
                "app_folder_path": pathlib.Path(__file__).parents[1],
-               "app_file_name": "appMgManage_banshee.riaps",
-               "depl_file_name": "appMgManage_banshee_ncsu.depl",
-               "test_mqtt_depl_file_name": "test.depl"}
+               "app_file_name": "IMCP_Banshee_NCSU.riaps",
+               "depl_file_name": "IMCP_Banshee_NCSU.depl",
+               "test_mqtt_depl_file_name": "IMCP_Banshee_NCSU_test.depl"}
 
 configs =  {"vandy": vanderbilt_config,
             "ncsu": ncsu_config}

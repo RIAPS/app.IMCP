@@ -1,4 +1,4 @@
-app appMgManage{
+app IMCP_Single_VU{
 
     host all{
         network 172.21.20.70;

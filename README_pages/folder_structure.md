@@ -18,13 +18,14 @@ ___
 * `log`: This contains a script for opening a terminals or tailing the logs from all the target nodes included in the deployment file.
 * `server_logs`: This contains the logs from the log aggregation server.
 * `tests`: This contains the tests for the IMCP control application.
-* `transitions`: is a copy of the pytransitions package that was included as an application library to eliminate the need to install the package on target nodes.
+* `transitions`: is a copy of the pytransitions version '0.9.0' package that was included as an application library to eliminate the need to install the package on target nodes.
 * `utils`: This is redundant with the `applibs/helper.py` file in that it also defines colors for the terminal. Perhaps this should be included in RIAPS as a module. 
 * RIAPS files:
-  * `appMgManage_banshee.riaps`: This is the RIAPS application file for the Banshee testbed.
-  * `appMgManage_single_feeder.riaps`: This is the RIAPS application file for the single feeder testbed.
-  * `appMgManage_banshee_ncsu.depl`: This is the RIAPS deployment file for the Banshee testbed at NCSU.
-  * `appMgManage_single_feeder_vanderbilt.depl`: This is the RIAPS deployment file for the single feeder testbed at Vanderbilt.
+  * `IMCP_Banshee_NCSU.riaps`: This is the RIAPS application file for the Banshee testbed.
+  * `IMCP_SingleFeeder_VU.riaps`: This is the RIAPS application file for the single feeder testbed.
+  * `IMCP_Banshee_NCSU.depl`: This is the RIAPS deployment file for the Banshee testbed at NCSU.
+  * `IMCP_SingleFeeder_VU.depl`: This is the RIAPS deployment file for the single feeder testbed at Vanderbilt.
+  * `IMCP_Banshee_NCSU_test.depl`: This is the RIAPS deployment file for the `test_mqtt_2_riaps_communication` test on the Banshee testbed at NCSU.
   * `riaps-log.conf`: This is the application log configuration file. 
 * Application Implementation files:
   * `FSM.py`

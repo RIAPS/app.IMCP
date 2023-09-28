@@ -133,9 +133,12 @@ def get_client_list(file_path):
 
 
 if __name__ == '__main__':
-    app_folder_path = "/home/riaps/projects/RIAPS/app.MgManage_refactor"
-    depl_file_name = "appMgManage_single_feeder_vanderbilt.depl"
-    file_path = app_folder_path + "/" + depl_file_name
+    import pathlib
+    # use pathlib to get to the grandparent folder
+    app_folder_path = pathlib.Path(__file__).parent.parent.parent.absolute()
+    print(app_folder_path)
+    depl_file_name = "IMCP_Banshee_NCSU.depl"
+    file_path = f"{app_folder_path}/{depl_file_name}"
     get_client_list(file_path=file_path)
 
 

@@ -1,4 +1,4 @@
-app appMgManage{
+app IMCP_Single_VU{
 
 	message LocalDeviceEvent;
 	message Gen1DeviceQry;

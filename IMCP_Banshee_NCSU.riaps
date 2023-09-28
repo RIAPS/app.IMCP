@@ -1,4 +1,4 @@
-app appMgManage{
+app IMCP_Banshee_NCSU{
 
 	message LocalDeviceEvent;
 	message Gen1DeviceQry;

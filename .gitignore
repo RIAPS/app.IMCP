@@ -6,7 +6,7 @@ __pycache__
 *.cert
 development
 riaps.yaml
-appMgManage.json
+IMCP*.json
 etc
 postprocess_logs
 server_logs

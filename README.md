@@ -237,26 +237,26 @@ Note that the purpose of the following tests is to ensure that your testbed is p
     Resolved IP Addresses: {}
     IP Addresses: ['192.168.10.122']
     client list: ['192.168.10.122']
-    Compiling app: appMgManage_banshee.riaps
-    Compiling deployment: test.depl
+    Compiling app: IMCP_Banshee_NCSU.riaps
+    Compiling deployment: IMCP_Banshee_NCSU_test.depl
     known_clients: []
     known_clients: []
     known_clients: ['192.168.10.115', '192.168.10.114', '192.168.10.122', '192.168.10.120', '192.168.10.112', '192.168.10.113', '192.168.10.111', '192.168.10.121', '192.168.10.117']
-    loading application: appMgManage
-    I 192.168.10.122 appMgManage
+    loading application: IMCP_Banshee_NCSU
+    I 192.168.10.122 IMCP_Banshee_NCSU
     is_app_loaded: True
-    launching application: appMgManage
-    L 192.168.10.122 appMgManage SYSTEM_OPERATOR_ACTOR ['--config', './cfg_ncsu/OPAL-Device.yaml', '--mqtt_config', './cfg_ncsu/mqtt.yaml', '--mqtt_subsample_rate', '5']
+    launching application: IMCP_Banshee_NCSU
+    L 192.168.10.122 IMCP_Banshee_NCSU SYSTEM_OPERATOR_ACTOR ['--config', './cfg_ncsu/OPAL-Device.yaml', '--mqtt_config', './cfg_ncsu/mqtt.yaml', '--mqtt_subsample_rate', '5']
     is_app_launched: True
     Wait until app starts (check server_logs/<ip of system operator target>_app.log for this message: MQThread no new message) then press a key to start the DERs or q to quit.
 
     2023-09-28 16:00:36.609675 test's on_publish: 3
     2023-09-28 16:00:36.609853 test's on_message: mg/event b'{"StartStop": 1}')
     Halt app
-    H 192.168.10.122 appMgManage SYSTEM_OPERATOR_ACTOR
+    H 192.168.10.122 IMCP_Banshee_NCSU SYSTEM_OPERATOR_ACTOR
     app halted? True
     remove app
-    R appMgManage 
+    R IMCP_Banshee_NCSU 
     app removed
     Stop controller
     controller stopped
