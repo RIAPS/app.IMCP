@@ -49,8 +49,9 @@ mqtt_config = {
 # -- LOG TESTS -- #
 # --------------- #
 def write_test_log(msg):
-    log_file_path = f"{pathlib.Path(__file__).parents[1]}/tests/test_logs"
-    with open(f"{log_file_path}/test_24_app_log.txt", "a") as log_file:
+    log_dir_path = pathlib.Path(__file__).parents[1] / 'tests' / 'test_logs'
+    log_dir_path.mkdir(parents=True, exist_ok=True)
+    with open(f"{log_dir_path}/test_24_app_log.txt", "a") as log_file:
         log_file.write(f"{datetime.datetime.utcnow()} | {msg}\n")
 
 

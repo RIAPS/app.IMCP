@@ -28,10 +28,16 @@ This project provides a reference implementation for the Integrated Microgrid Co
 
 Before you begin, ensure you have met the following requirements:
 
-- [**RIAPS Development Host**](https://github.com/RIAPS/riaps-integration/blob/master/riaps-x86runtime/README.md)
-- [**RIAPS Target Node**](https://github.com/RIAPS/riaps-integration/blob/master/riaps-node-runtime/README.md)
-- Ensure that the mqtt broker is running:
+- [**RIAPS Development Host**](https://github.com/RIAPS/riaps-integration/blob/master/riaps-x86runtime/README.md) v1.1.22
+- [**RIAPS Target Node**](https://github.com/RIAPS/riaps-integration/blob/master/riaps-node-runtime/README.md) v1.1.22
+- Ensure that the [FlashMQ Version 1.4.0](https://www.flashmq.org/download/) mqtt broker is installed and running:
     ```bash
+    $ flashmq --version
+    FlashMQ Version 1.4.0 with SSE4.2 support
+    Copyright (C) 2021,2022 Wiebe Cazemier.
+    License AGPLv3: GNU AGPL version 3. <https://www.gnu.org/licenses/agpl-3.0.html>.
+    
+    Author: Wiebe Cazemier <wiebe@halfgaar.net>
     $ sudo systemctl status flashmq.service
     flashmq.service - FlashMQ MQTT server
      Loaded: loaded (/lib/systemd/system/flashmq.service; enabled; vendor preset: enabled)
@@ -40,8 +46,8 @@ Before you begin, ensure you have met the following requirements:
 - Ensure that the mqtt broker allows anonymous connections:
     - add `allow_anonymous true` to the file `/etc/flashmq/flashmq.conf` 
     - if it is not there, after adding it, run `sudo systemctl restart flashmq.service`
-- Add node-red flow to create dashboard.
-    1. Start node red with `node-red` in the terminal
+- Add the *flow* to node-red ui editor to create dashboard. This is to set up the GUI that is used to interact with the application.
+    1. Start node red with `node-red` in the terminal. This was tested with node-red v3.0.2.
     2. Open two browser tabs to:
         - `http://127.0.0.1:1880/`
         - `http://127.0.0.1:1880/ui/`
@@ -53,6 +59,8 @@ Before you begin, ensure you have met the following requirements:
     6. Click the red `Deploy` button
     7. Switch to the `http://127.0.0.1:1880/ui/` tab where you should see the dashboard.
     ![install_mqtt](README_images/node-red-dashboard.PNG)
+- RT-Lab is installed and configured. 
+- The [microgrid model](https://github.com/RIAPS/model.Banshee/tree/main) is configured, compiled and can be loaded and executed on the OPAL-RT target. 
     
  
 
@@ -60,10 +68,10 @@ Before you begin, ensure you have met the following requirements:
 
 With RIAPS properly installed and configured the other dependencies can be satisfied on all target nodes simultaneously using the `riaps_fab` command.
 Tmux is used to improve robustness of the install commands, in case the Development Host loses connection with the target node before the installation is complete. The status of the install on a given node can be monitored by accessing a target node via ssh and running `tmux attach -t installdep`; this will attach to the tmux session. To detach from the tmux session use the key sequence `CTRL-b,d` (press ctrl and b, release and press d).
-- **Host only Dependencies**:
-  * fabric and fabric2
+- **Dependencies exclusive to Development Host**:
+  * fabric v.1.15.0 and fabric2 v.3.2.2
   ```bash
-  sudo python3 -m pip install 'fabric<2.0' fabric2
+  sudo python3 -m pip install 'fabric<2.0' 'fabric2==3.2.2'
   ```
   * [RIAPS test suite](https://github.com/RIAPS/test-suite)
   ```bash
@@ -71,38 +79,48 @@ Tmux is used to improve robustness of the install commands, in case the Developm
   ```
   * [Watchdog](https://github.com/gorakhargosh/watchdog)
   ```bash
-  sudo python3 -m pip install watchdog
+  sudo python3 -m pip install 'watchdog==3.0.0'
   ```
+- **Dependencies exclusive to Target Nodes**:
+  * Configure UART
+    1. SSH into the target node.
+    1. Check kernel version. This repo was developed and tested with kernal 5.10.168-ti-rt-r71.
+        ```bash
+        $ uname -r
+        5.10.168-ti-rt-r71
+        ```
+    1. Add the following to `/boot/uEnv.txt`. Note that the path to the dtbo file may be different depending on the kernel version.
+        ```bash
+        enable_uboot_overlays=1
+        uboot_overlay_addr4=/usr/lib/linux-image-5.10.168-ti-rt-r71/overlays/BB-UART1-00A0.dtbo
+        ```
 
-- **Host and Target Dependencies**:
-  * Numpy: 
-  ```bash 
-  riaps_fab sys.run:'"tmux new-session -d -s install_numpy sudo\ python3\ -m\ pip\ install\ numpy\ "' 
-  ```
+- **Development Host and Target Dependencies**:
+These can be installed on all target nodes simultaneously using the `riaps_fab` command. See below for syntax.
+
+  * Numpy (Note: Installing numpy on a BBB will take several hours.): 
+      ```bash 
+      riaps_fab sys.run:'"tmux new-session -d -s install_numpy sudo\ python3\ -m\ pip\ install\ numpy==1.24.4\ "' 
+      ```
   * [RIAPS modbus interface](https://github.com/RIAPS/interface.modbus.libs):
-  ```bash
-  riaps_fab sys.run:'"tmux new-session -d -s installdep sudo\ python3\ -m\ pip\ install\ git+https://github.com/RIAPS/interface.modbus.libs.git\ "'
-  ```
+      ```bash
+      riaps_fab sys.run:'"tmux new-session -d -s installdep sudo\ python3\ -m\ pip\ install\ git+https://github.com/RIAPS/interface.modbus.libs.git\ "'
+      ```
 
   * [RIAPS mqtt interface](https://github.com/RIAPS/interface.mqtt):
-  ```bash
-  riaps_fab sys.run:'"tmux new-session -d -s installdep sudo\ python3\ -m\ pip\ install\ git+https://github.com/RIAPS/interface.mqtt.git"'
-  ```
+      ```bash
+      riaps_fab sys.run:'"tmux new-session -d -s installdep sudo\ python3\ -m\ pip\ install\ git+https://github.com/RIAPS/interface.mqtt.git"'
+      ```
+  Example output:
   ![install_mqtt](README_images/install_mqtt.PNG) 
   * [modbus-tk](https://github.com/ljean/modbus-tk)
-  ```bash
-  riaps_fab sys.run:'"tmux new-session -d -s installdep sudo\ python3\ -m\ pip\ install\ modbus-tk"'
-  ```
+      ```bash
+      riaps_fab sys.run:'"tmux new-session -d -s installdep sudo\ python3\ -m\ pip\ install\ modbus-tk==1.1.3"'
+      ```
   * [pytest](https://docs.pytest.org/en/7.1.x/getting-started.html)
-  ```bash
-  riaps_fab sys.run:'"tmux new-session -d -s installdep sudo\ python3\ -m\ pip\ install\ pytest"'
-  ```
-
-These can be installed on all target nodes simultaneously using the `riaps_fab` command. For example to install `numpy` from the command line on the Development Host you would run:
-```bash
-riaps_fab sys.run:'"tmux new-session -d -s install_numpy sudo\ python3\ -m\ pip\ install\ numpy\ "'
-```
-(Note: Installing numpy on a BBB will take several hours.)
+      ```bash
+      riaps_fab sys.run:'"tmux new-session -d -s installdep sudo\ python3\ -m\ pip\ install\ pytest==7.4.2"'
+      ```
 
 
 ### Verify Installation and configuration
@@ -110,6 +128,7 @@ riaps_fab sys.run:'"tmux new-session -d -s install_numpy sudo\ python3\ -m\ pip\
 1. **Start Opal**
   `Load` and `Execute` the OPAL-RT microgrid model. 
   ![start opal](README_images/rtlab_interface.PNG) 
+Note that the purpose of the following tests is to ensure that your testbed is properly configured. They are configured here for the OPAL-RT testbed at NCSU. If you are using a different testbed the tests will fail and you will need to modify the tests to reflect your configuration, enabling verification that your testbed is properly configured.
 1. **Test modbus connection**
     Run test and check that it passed and output a result (e.g., `result: (6024,)`).
     ```bash
@@ -125,15 +144,47 @@ riaps_fab sys.run:'"tmux new-session -d -s install_numpy sudo\ python3\ -m\ pip\
 1. **Test modbus serial configuration**
     This test must be run from a target node that has a serial connection.
     The NCSU testbed has BeagleBone Black target nodes connected to DSP boards.
-    1. First run the `sync_to_nodes.sh` to transfer the test script and config files to the target nodes to test. 
+    1. Ensure that the `sync_to_nodes.sh` script to include the ip address of the target nodes with the serial connection. For example:
+        ```bash
+        REMOTE_NODES=("riaps@192.168.10.111" "riaps@192.168.10.112" "riaps@192.168.10.113") 
+        ```
+    1. Run the `sync_to_nodes.sh` to transfer the test script and config files to the target nodes to test. 
     1. SSH into the target node.
     1. Run the test:
-    ```bash
-    TODO
-    ```
+        ```bash
+        $ pytest -vs projects/RIAPS/app.MgManage_refactor/tests/test_ncsu_setup.py::test_dsp_111
+        ================= test session starts ========================================
+        platform linux -- Python 3.8.10, pytest-7.4.2, pluggy-1.3.0 -- /usr/bin/python3
+        cachedir: .pytest_cache
+        rootdir: /home/riaps
+        collected 1 item                                                                                                                                                                                                                                               
+
+        projects/RIAPS/app.MgManage_refactor/tests/test_ncsu_setup.py::test_dsp_111 poll parameter: FREQ
+        FREQ output: [60.0]
+        poll parameter: VA_RMS
+        VA_RMS output: [0]
+        poll parameter: P
+        P output: [3357]
+        poll parameter: Q
+        Q output: [0]
+        poll parameter: VREF
+        VREF output: [5.051]
+        poll parameter: WREF
+        WREF output: [1.038]
+        PASSED
+        ```
 1. **Test that the test logger works**
     ```bash
-    pytest -vs tests/test_24_app.py::test_write_test_log
+    $ pytest -vs tests/test_24_app.py::test_write_test_log
+    ================== test session starts ===============
+    platform linux -- Python 3.8.10, pytest-7.4.2, pluggy-1.3.0 -- /usr/bin/python3
+    cachedir: .pytest_cache
+    rootdir: /home/riaps/projects/RIAPS/app.IMCP/tests
+    configfile: pytest.ini
+    plugins: libtmux-0.15.7
+    collected 1 item                                                                                                                  
+
+    tests/test_24_app.py::test_write_test_log PASSED
     ```
 1. **Test the log server**
     This test helps make sure that the test configuration is valid for the Development host and is consistent with the configuration in `riaps-log.conf`.
