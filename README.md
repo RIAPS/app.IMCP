@@ -325,25 +325,31 @@ To monitor the activity of the application you can
 
 ### Interact with the application
 Once the relays, generators, and battery inverters have values displayed in the GUI the application is ready for user inputs.
-1. The first input is to click the `Energize` toggle. This sends a command to turn on the generators and inverters and will cause the values to change at the relays, generators, and battery inverters. The approximate P values in each state are shown in the table below.
+1. The first input is to click the `Energize` toggle. This sends a command to turn on the generators and inverters and will cause the values to change at the relays, generators, and battery inverters. The approximate steady state P values for each configuration are shown in the table below.
 2. The second input is to click the `SEND REGULATION UPDATE` button. This sets the target value for the power across PCC1 PCC2 and PCC3. 
 3. Click the `Active Control` toggle. This causes the app to switch to active control, and it will gradually update the values until the relays all have a P value of 400. 
+4. Click the PCC 1 relay. The small box will turn green, indicating that the target state for is to be Open. The controller will gradually reduce the power flow across the relay until it is 0, at which point the relay will open and the large box will turn green. Repeat this for PCC 2 and PCC 3. The microgrid is then in state Islanded F1/F2/F3.
+5. Click the F1 108 relay. The small box will turn red, indicating that the target state for is to be Closed. The controller will gradually reduce the frequency difference across the relay until it is 0, at which point the relay will close and the large box will turn red. The microgrid is then in state Islanded F1F2/F3
+6. Repeat this for F2 217. The microgrid is then in state Islanded F1F2F3
+7. Click the F2 217 relay again, setting the desired state to Open. When the large box turns green the microgrid is in state Islanded F1F2/F3
+8. Repeat this for F1 108. The microgrid is then in state Islanded F1/F2/F3
+9. One at a time, click the PCC 1, PCC 2, and PCC 3 relays. The microgrid is then in state Grid-Tied.
 
-|       | initial | Energized | Active Control | Islanded |
-|-------|---------|-----------|----------------|----------|
-| PCC1  | 2220    | 1440      | 400            | 0        |
-| PCC2  | 1800    | 520       | 400            |          |
-| PCC3  | 2000    | 2965      | 400            |          |
-| F1108 | 0       | 0         | 0              |          |
-| F2217 | 0       | 0         | 0              |          |
-| Gen1  | 0.08    | 0.5       | 0.56           |          |
-| Gen2  | 0.05    | 0.5       | 0.38           |          |
-| Gen3  | 0.08    | 0.5       | 0.46           |          |
-| C1    | -0.009  |           | 0.45           |          |
-| C2    | -0.009  |           | 0.45           |          |
-| C4    | -0.009  |           | 0.46           |          |
-| C5    | -0.009  |           | 0.41           |          |
-| C6    | -0.009  |           | 0.41           |          |
+|       | initial | Energized | Grid-Tied | Islanded F1/F2/F3 | Islanded F1F2/F3 | Islanded F1F2F3 | Islanded F1F2/F3 | Islanded F1/F2/F3 |
+|-------|---------|-----------|-----------|-------------------|------------------|-----------------|------------------|-------------------|
+| PCC1  | 2220    | 1440      | 400       | 0                 | 0                | 0               | 0                | 0                 |
+| PCC2  | 1800    | 520       | 400       | 0                 | 0                | 0               | 0                | 0                 |
+| PCC3  | 2000    | 2965      | 400       | 0                 | 0                | 0               | 0                | 0                 |
+| F1108 | 0       | 0         | 0         | 0                 |                  |                 |                  | 0                 |
+| F2217 | 0       | 0         | 0         | 0                 | 0                |                 | 0                | 0                 |
+| Gen1  | 0.08    | 0.5       | 0.56      |                   |                  |                 |                  |                   |
+| Gen2  | 0.05    | 0.5       | 0.38      |                   |                  |                 |                  |                   |
+| Gen3  | 0.08    | 0.5       | 0.46      |                   |                  |                 |                  |                   |
+| C1    | -0.009  |           | 0.45      |                   |                  |                 |                  |                   |
+| C2    | -0.009  |           | 0.45      |                   |                  |                 |                  |                   |
+| C4    | -0.009  |           | 0.46      |                   |                  |                 |                  |                   |
+| C5    | -0.009  |           | 0.41      |                   |                  |                 |                  |                   |
+| C6    | -0.009  |           | 0.41      |                   |                  |                 |                  |                   |
 
 [//]: # (### Examples)
 
