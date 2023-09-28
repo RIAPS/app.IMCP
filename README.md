@@ -1,19 +1,23 @@
 # app.IMCP
 
-## Table of Contents
-
-- [Project Description](#project-description)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-- [Usage](#usage)
-  - [Examples](#examples)
-- [Contributing](#contributing)
-  - [Bug Reports](#bug-reports)
-  - [Feature Requests](#feature-requests)
-  - [Pull Requests](#pull-requests)
-- [License](#license)
-- [Acknowledgments](#acknowledgments)
+<!-- TOC -->
+* [app.IMCP](#appimcp)
+  * [Additional Documentation](#additional-documentation)
+  * [Project Description](#project-description)
+  * [Getting Started](#getting-started)
+    * [Prerequisites](#prerequisites)
+    * [Installation](#installation)
+    * [Verify Installation and configuration](#verify-installation-and-configuration)
+  * [Usage](#usage)
+    * [Start the application](#start-the-application)
+    * [Interact with the application](#interact-with-the-application)
+    * [Troubleshooting/FAQ](#troubleshootingfaq)
+  * [Contributing](#contributing)
+    * [Bug Reports](#bug-reports)
+  * [License](#license)
+  * [Acknowledgments](#acknowledgments)
+    * [libraries used](#libraries-used)
+<!-- TOC -->
 
 ## Additional Documentation
 - [Folder Structure](README_pages/folder_structure.md)
@@ -326,21 +330,20 @@ Once the relays, generators, and battery inverters have values displayed in the 
 1. Click the `Active Control` toggle. This causes the app to switch to active control, and it will gradually update the values until the relays all have a P value of 400. 
 
 |       | initial | Energized | Active Control | Islanded |
-| ----  | ------- | --------- | -------------- | -------
-| PCC1  | 2220    | 1440      | 400            | 0
-| PCC2  | 1800    | 520       | 400            |
-| PCC3  | 2000    | 2965      | 400            |
-| F1108 | 0       | 0         | 0              |
-| F2217 | 0       | 0         | 0              |
-| Gen1  | 0.08    | 0.5       | 0.56           | 
-| Gen2  | 0.05    | 0.5       | 0.38           | 
-| Gen3  | 0.08    | 0.5       | 0.46           |
-| C1    | -0.009  |           | 0.45           |
-| C2    | -0.009  |           | 0.45           |
-| C4    | -0.009  |           | 0.46           |
-| C5    | -0.009  |           | 0.41           |
-| C6    | -0.009  |           | 0.41           |
-
+|-------|---------|-----------|----------------|----------|
+| PCC1  | 2220    | 1440      | 400            | 0        |
+| PCC2  | 1800    | 520       | 400            |          |
+| PCC3  | 2000    | 2965      | 400            |          |
+| F1108 | 0       | 0         | 0              |          |
+| F2217 | 0       | 0         | 0              |          |
+| Gen1  | 0.08    | 0.5       | 0.56           |          |
+| Gen2  | 0.05    | 0.5       | 0.38           |          |
+| Gen3  | 0.08    | 0.5       | 0.46           |          |
+| C1    | -0.009  |           | 0.45           |          |
+| C2    | -0.009  |           | 0.45           |          |
+| C4    | -0.009  |           | 0.46           |          |
+| C5    | -0.009  |           | 0.41           |          |
+| C6    | -0.009  |           | 0.41           |          |
 
 [//]: # (### Examples)
 
