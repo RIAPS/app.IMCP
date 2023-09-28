@@ -71,7 +71,7 @@ Before you begin, ensure you have met the following requirements:
 ### Installation
 
 With RIAPS properly installed and configured the other dependencies can be satisfied on all target nodes simultaneously using the `riaps_fab` command.
-Tmux is used to improve robustness of the installation commands, in case the Development Host loses connection with the target node before the installation is complete. The status of the installation on a given node can be monitored by accessing a target node via ssh and running `tmux attach -t installdep`; this will attach to the tmux session. To detach from the tmux session use the key sequence `CTRL-b,d` (press ctrl and b, release and press d).
+Tmux is used to improve robustness of the installation commands, in case the Development Host loses connection with the target node before the installation is complete. The status of the installation on a given node can be monitored by accessing a target node via ssh and running `tmux attach -t install_dep`; this will attach to the tmux session. To detach from the tmux session use the key sequence `CTRL-b,d` (press ctrl and b, release and press d).
 - **Dependencies exclusive to Development Host**:
   * fabric v.1.15.0 and fabric2 v.3.2.2
   ```bash
