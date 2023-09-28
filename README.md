@@ -93,7 +93,8 @@ Tmux is used to improve robustness of the installation commands, in case the Dev
         $ uname -r
         5.10.168-ti-rt-r71
         ```
-    3. Add the following to `/boot/uEnv.txt`. Note that the path to the `dtbo` file may be different depending on the kernel version.
+    3. Add the following to `/boot/uEnv.txt`. 
+        > Note: The path to the `dtbo` file may be different depending on the kernel version.
         ```bash
         enable_uboot_overlays=1
         uboot_overlay_addr4=/usr/lib/linux-image-5.10.168-ti-rt-r71/overlays/BB-UART1-00A0.dtbo
@@ -102,10 +103,11 @@ Tmux is used to improve robustness of the installation commands, in case the Dev
 - **Development Host and Target Dependencies**:
 These can be installed on all target nodes simultaneously using the `riaps_fab` command. See below for syntax.
 
-  * Numpy (Note: Installing numpy on a BBB will take several hours.): 
-      ```bash 
-      riaps_fab sys.run:'"tmux new-session -d -s install_numpy sudo\ python3\ -m\ pip\ install\ numpy==1.24.4\ "' 
-      ```
+  * Numpy 
+    > Note: Installing numpy on a BBB will take several hours.
+    ```bash
+    riaps_fab sys.run:'"tmux new-session -d -s install_numpy sudo\ python3\ -m\ pip\ install\ numpy==1.24.4\ "'
+    ```
   * [RIAPS modbus interface](https://github.com/RIAPS/interface.modbus.libs):
       ```bash
       riaps_fab sys.run:'"tmux new-session -d -s install_dep sudo\ python3\ -m\ pip\ install\ git+https://github.com/RIAPS/interface.modbus.libs.git\ "'
@@ -132,7 +134,9 @@ These can be installed on all target nodes simultaneously using the `riaps_fab` 
 1. **Start Opal**
   `Load` and `Execute` the OPAL-RT microgrid model. 
   ![start opal](README_images/rtlab_interface.PNG) 
-Note that the purpose of the following tests is to ensure that your testbed is properly configured. They are configured here for the OPAL-RT testbed at NCSU. If you are using a different testbed the tests will fail, and you will need to modify the tests to reflect your configuration, enabling verification that your testbed is properly configured.
+
+    > Note: The purpose of the following tests is to ensure that your testbed is properly configured. They are configured here for the OPAL-RT testbed at NCSU. If you are using a different testbed the tests will fail, and you will need to modify the tests to reflect your configuration, enabling verification that your testbed is properly configured.
+
 2. **Test modbus connection**
     Run test and check that it passed and output a result (e.g., `result: (6024,)`).
     ```bash
@@ -350,6 +354,8 @@ Once the relays, generators, and battery inverters have values displayed in the 
 | C4    | -0.009  |           | 0.46      |                   |                  |                 |                  |                   |
 | C5    | -0.009  |           | 0.41      |                   |                  |                 |                  |                   |
 | C6    | -0.009  |           | 0.41      |                   |                  |                 |                  |                   |
+
+> Note: The 107 and 217 relays are not designed to be closed while in Grid-Tied mode. Closing them in that state may result in unexpected behavior.
 
 [//]: # (### Examples)
 
