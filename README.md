@@ -71,7 +71,7 @@ Before you begin, ensure you have met the following requirements:
 ### Installation
 
 With RIAPS properly installed and configured the other dependencies can be satisfied on all target nodes simultaneously using the `riaps_fab` command.
-Tmux is used to improve robustness of the install commands, in case the Development Host loses connection with the target node before the installation is complete. The status of the install on a given node can be monitored by accessing a target node via ssh and running `tmux attach -t installdep`; this will attach to the tmux session. To detach from the tmux session use the key sequence `CTRL-b,d` (press ctrl and b, release and press d).
+Tmux is used to improve robustness of the installation commands, in case the Development Host loses connection with the target node before the installation is complete. The status of the installation on a given node can be monitored by accessing a target node via ssh and running `tmux attach -t installdep`; this will attach to the tmux session. To detach from the tmux session use the key sequence `CTRL-b,d` (press ctrl and b, release and press d).
 - **Dependencies exclusive to Development Host**:
   * fabric v.1.15.0 and fabric2 v.3.2.2
   ```bash
@@ -88,12 +88,12 @@ Tmux is used to improve robustness of the install commands, in case the Developm
 - **Dependencies exclusive to Target Nodes**:
   * Configure UART
     1. SSH into the target node.
-    1. Check kernel version. This repo was developed and tested with kernal 5.10.168-ti-rt-r71.
+    2. Check kernel version. This repo was developed and tested with kernel 5.10.168-ti-rt-r71.
         ```bash
         $ uname -r
         5.10.168-ti-rt-r71
         ```
-    1. Add the following to `/boot/uEnv.txt`. Note that the path to the dtbo file may be different depending on the kernel version.
+    3. Add the following to `/boot/uEnv.txt`. Note that the path to the `dtbo` file may be different depending on the kernel version.
         ```bash
         enable_uboot_overlays=1
         uboot_overlay_addr4=/usr/lib/linux-image-5.10.168-ti-rt-r71/overlays/BB-UART1-00A0.dtbo
@@ -108,22 +108,22 @@ These can be installed on all target nodes simultaneously using the `riaps_fab` 
       ```
   * [RIAPS modbus interface](https://github.com/RIAPS/interface.modbus.libs):
       ```bash
-      riaps_fab sys.run:'"tmux new-session -d -s installdep sudo\ python3\ -m\ pip\ install\ git+https://github.com/RIAPS/interface.modbus.libs.git\ "'
+      riaps_fab sys.run:'"tmux new-session -d -s install_dep sudo\ python3\ -m\ pip\ install\ git+https://github.com/RIAPS/interface.modbus.libs.git\ "'
       ```
 
   * [RIAPS mqtt interface](https://github.com/RIAPS/interface.mqtt):
       ```bash
-      riaps_fab sys.run:'"tmux new-session -d -s installdep sudo\ python3\ -m\ pip\ install\ git+https://github.com/RIAPS/interface.mqtt.git"'
+      riaps_fab sys.run:'"tmux new-session -d -s install_dep sudo\ python3\ -m\ pip\ install\ git+https://github.com/RIAPS/interface.mqtt.git"'
       ```
   Example output:
   ![install_mqtt](README_images/install_mqtt.PNG) 
   * [modbus-tk](https://github.com/ljean/modbus-tk)
       ```bash
-      riaps_fab sys.run:'"tmux new-session -d -s installdep sudo\ python3\ -m\ pip\ install\ modbus-tk==1.1.3"'
+      riaps_fab sys.run:'"tmux new-session -d -s install_dep sudo\ python3\ -m\ pip\ install\ modbus-tk==1.1.3"'
       ```
   * [pytest](https://docs.pytest.org/en/7.1.x/getting-started.html)
       ```bash
-      riaps_fab sys.run:'"tmux new-session -d -s installdep sudo\ python3\ -m\ pip\ install\ pytest==7.4.2"'
+      riaps_fab sys.run:'"tmux new-session -d -s install_dep sudo\ python3\ -m\ pip\ install\ pytest==7.4.2"'
       ```
 
 
@@ -132,29 +132,29 @@ These can be installed on all target nodes simultaneously using the `riaps_fab` 
 1. **Start Opal**
   `Load` and `Execute` the OPAL-RT microgrid model. 
   ![start opal](README_images/rtlab_interface.PNG) 
-Note that the purpose of the following tests is to ensure that your testbed is properly configured. They are configured here for the OPAL-RT testbed at NCSU. If you are using a different testbed the tests will fail and you will need to modify the tests to reflect your configuration, enabling verification that your testbed is properly configured.
-1. **Test modbus connection**
+Note that the purpose of the following tests is to ensure that your testbed is properly configured. They are configured here for the OPAL-RT testbed at NCSU. If you are using a different testbed the tests will fail, and you will need to modify the tests to reflect your configuration, enabling verification that your testbed is properly configured.
+2. **Test modbus connection**
     Run test and check that it passed and output a result (e.g., `result: (6024,)`).
     ```bash
     pytest -vs tests/test_ncsu_setup.py::test_modbustk_execute
     ```
-    ![test modbustk](README_images/test_modbus-tk.PNG) 
-1. **Test modbus tcp configurations**
+    ![test modbus-tk](README_images/test_modbus-tk.PNG) 
+3. **Test modbus tcp configurations**
     This ensures that all the parameters we care about for the application can be read from the simulation.
     ```bash
     pytest -vs tests/test_ncsu_setup.py::test_modbus_tcp
     ```
-    ![example modbustcp resonse](README_images/test_opal_modbustcp_response.PNG) 
-1. **Test modbus serial configuration**
+    ![example modbus-tcp response](README_images/test_opal_modbustcp_response.PNG) 
+4. **Test modbus serial configuration**
     This test must be run from a target node that has a serial connection.
     The NCSU testbed has BeagleBone Black target nodes connected to DSP boards.
     1. Ensure that the `sync_to_nodes.sh` script to include the ip address of the target nodes with the serial connection. For example:
         ```bash
         REMOTE_NODES=("riaps@192.168.10.111" "riaps@192.168.10.112" "riaps@192.168.10.113") 
         ```
-    1. Run the `sync_to_nodes.sh` to transfer the test script and config files to the target nodes to test. 
-    1. SSH into the target node.
-    1. Run the test:
+    2. Run the `sync_to_nodes.sh` to transfer the test script and config files to the target nodes to test. 
+    3. SSH into the target node.
+    4. Run the test:
         ```bash
         $ pytest -vs projects/RIAPS/app.MgManage_refactor/tests/test_ncsu_setup.py::test_dsp_111
         ================= test session starts ========================================
@@ -177,7 +177,7 @@ Note that the purpose of the following tests is to ensure that your testbed is p
         WREF output: [1.038]
         PASSED
         ```
-1. **Test that the test logger works**
+5. **Test that the test logger works**
     ```bash
     $ pytest -vs tests/test_24_app.py::test_write_test_log
     ================== test session starts ===============
@@ -190,7 +190,7 @@ Note that the purpose of the following tests is to ensure that your testbed is p
 
     tests/test_24_app.py::test_write_test_log PASSED
     ```
-1. **Test the log server**
+6. **Test the log server**
     This test helps make sure that the test configuration is valid for the Development host and is consistent with the configuration in `riaps-log.conf`.
     ```bash
     $ pytest -vs tests/test_24_app.py::test_log_server
@@ -206,7 +206,7 @@ Note that the purpose of the following tests is to ensure that your testbed is p
       test_log_server: <Process name='riaps.logger.app' pid=13231 parent=13226 started>
       PASSED
     ```
-1. **Test the mqtt configuration**
+7. **Test the mqtt configuration**
     ```bash
     $ pytest -vs tests/test_24_app.py::test_mqtt_config
     ========== test session starts ======================
@@ -220,7 +220,7 @@ Note that the purpose of the following tests is to ensure that your testbed is p
     tests/test_24_app.py::test_mqtt_config PASSED
     ```
 
-1. **Test that the mqtt communications are working between the test and app**
+8. **Test that the mqtt communications are working between the test and app**
     This is an interactive test. Follow the prompts in the terminal.
 
 
@@ -309,7 +309,7 @@ Note that the purpose of the following tests is to ensure that your testbed is p
 1. Start node-red
 2. Open two browser tabs to:
     1. `http://127.0.0.1:1880/`
-    1. `http://127.0.0.1:1880/ui/`
+    2. `http://127.0.0.1:1880/ui/`
 3. `Load` and `Execute` the microgrid from RT-Lab. Make sure that in the `ModbusComs` subsystem the two `ModbusOrSimulated` (one at the top and the other at the bottom) toggles are set to 1, otherwise the control sent from the app is not received by the model. 
 ![node-red-running](README_images/banshee-matlab.PNG) 
 ![node-red-running](README_images/modbusOrSimulatedHighlights.PNG) 
@@ -319,15 +319,15 @@ Note that the purpose of the following tests is to ensure that your testbed is p
     pytest -vs tests/test_24_app.py::test_app_with_gui
     ```
 To monitor the activity of the application you can 
-  - Use `tail -f` on the log file from the node of interest, e.g., `tail -f server_logs/192.168.10.122` wiill tail the logs from the System Operator.
+  - Use `tail -f` on the log file from the node of interest, e.g., `tail -f server_logs/192.168.10.122` will tail the logs from the System Operator.
   - Watch the gui in the Node-Red Dashboard
   ![node-red-running](README_images/node-red-dashboard-running.PNG) 
 
 ### Interact with the application
 Once the relays, generators, and battery inverters have values displayed in the GUI the application is ready for user inputs.
 1. The first input is to click the `Energize` toggle. This sends a command to turn on the generators and inverters and will cause the values to change at the relays, generators, and battery inverters. The approximate P values in each state are shown in the table below.
-1. The second input is to click the `SEND REGULATION UPDATE` button. This sets the target value for the power across PCC1 PCC2 and PCC3. 
-1. Click the `Active Control` toggle. This causes the app to switch to active control, and it will gradually update the values until the relays all have a P value of 400. 
+2. The second input is to click the `SEND REGULATION UPDATE` button. This sets the target value for the power across PCC1 PCC2 and PCC3. 
+3. Click the `Active Control` toggle. This causes the app to switch to active control, and it will gradually update the values until the relays all have a P value of 400. 
 
 |       | initial | Energized | Active Control | Islanded |
 |-------|---------|-----------|----------------|----------|
