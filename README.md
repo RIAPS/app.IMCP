@@ -189,7 +189,18 @@ Note that the purpose of the following tests is to ensure that your testbed is p
 1. **Test the log server**
     This test helps make sure that the test configuration is valid for the Development host and is consistent with the configuration in `riaps-log.conf`.
     ```bash
-    pytest -vs tests/test_24_app.py::test_log_server
+    $ pytest -vs tests/test_24_app.py::test_log_server
+      =============== test session starts =================
+      platform linux -- Python 3.8.10, pytest-7.4.2, pluggy-1.3.0 -- /usr/bin/python3
+      cachedir: .pytest_cache
+      rootdir: /home/riaps/projects/RIAPS/app.IMCP/tests
+      configfile: pytest.ini
+      plugins: libtmux-0.15.7
+      collected 1 item                                                
+
+      tests/test_24_app.py::test_log_server[log_server0] ['127.0.0.1', '192.168.10.106', '10.0.2.15']
+      test_log_server: <Process name='riaps.logger.app' pid=13231 parent=13226 started>
+      PASSED
     ```
 1. **Test the mqtt configuration**
     ```bash
