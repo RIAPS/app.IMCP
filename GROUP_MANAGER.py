@@ -2,7 +2,7 @@
 import capnp
 import copy
 import numpy as np
-import riaps_capnp
+import imcp_capnp
 import time
 
 from riaps.run.comp import Component
@@ -85,7 +85,7 @@ class GROUP_MANAGER(Component):
 
     def on_relay_sub(self):
         msg_bytes = self.relay_sub.recv()
-        msg = riaps_capnp.RelayMsg.from_bytes(msg_bytes)
+        msg = imcp_capnp.RelayMsg.from_bytes(msg_bytes)
 
         if debugMode:
             self.logger.info(f"{helper.BrightMagenta}\n"
@@ -155,7 +155,7 @@ class GROUP_MANAGER(Component):
 
     def on_operator_sub(self):
         operator_msg_bytes = self.operator_sub.recv()
-        operator_msg = riaps_capnp.OperatorMsg.from_bytes(operator_msg_bytes)
+        operator_msg = imcp_capnp.OperatorMsg.from_bytes(operator_msg_bytes)
         if debugMode:
             self.logger.info(f"{helper.Cyan}\n"
                              f"GROUP_MANAGER.py "
@@ -188,7 +188,7 @@ class GROUP_MANAGER(Component):
 
     def publish_group_update(self, timestamp):
 
-        msg = riaps_capnp.GroupMsg.new_message()
+        msg = imcp_capnp.GroupMsg.new_message()
         msg.sender = self.device_name
         msg.timestamp = timestamp
         # TODO: There should also be a timestamp for when the state should be reached. See the IMCP_FSM.py

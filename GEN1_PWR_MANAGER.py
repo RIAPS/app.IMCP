@@ -4,7 +4,7 @@ import capnp
 from applibs.ComputationalComponentAll import ComputationalComponent
 import applibs.helper as helper
 
-import riaps_capnp
+import imcp_capnp
 # riaps:keep_import:end
 
 debugMode = helper.debugMode
@@ -29,7 +29,7 @@ class GEN1_PWR_MANAGER(ComputationalComponent):
 
     def on_operator_sub(self):
         operator_msg_bytes = self.operator_sub.recv()
-        operator_msg = riaps_capnp.OperatorMsg.from_bytes(operator_msg_bytes)
+        operator_msg = imcp_capnp.OperatorMsg.from_bytes(operator_msg_bytes)
 
         if debugMode:
             self.logger.info(f"{helper.Cyan}\n"

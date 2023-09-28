@@ -11,7 +11,7 @@ from riaps.run.comp import Component
 from riaps.interfaces.modbus.config import load_config_file
 import riaps.interfaces.modbus.device_capnp as msg_struct
 
-import riaps_capnp
+import imcp_capnp
 
 import applibs.constants as const
 import applibs.helper as helper
@@ -127,7 +127,7 @@ class ComputationalComponent(Component):
 
     def on_state_sub(self):
         msg_bytes = self.state_sub.recv()
-        msg = riaps_capnp.StateMsg.from_bytes(msg_bytes).to_dict()
+        msg = imcp_capnp.StateMsg.from_bytes(msg_bytes).to_dict()
         if msg.get("sender") != self.uuid:
             self.logger.debug(f"Ignore state messages from other devices")
             return
@@ -150,7 +150,7 @@ class ComputationalComponent(Component):
 
     def on_relay_sub(self):
         msg_bytes = self.relay_sub.recv()
-        msg = riaps_capnp.RelayMsg.from_bytes(msg_bytes)
+        msg = imcp_capnp.RelayMsg.from_bytes(msg_bytes)
 
         if debugMode:
             self.logger.info(f"{helper.BrightMagenta}\n"
@@ -264,7 +264,7 @@ class ComputationalComponent(Component):
         self.commandValues = [[self.CONTROL]]
 
         # Instantiate a new distributed consensus message to share local information with group members
-        group_consensus_msg = riaps_capnp.DgGeneralMsg.new_message()
+        group_consensus_msg = imcp_capnp.DgGeneralMsg.new_message()
         group_consensus_msg.sender = self.uuid
         group_consensus_msg.timestamp = time.time()
         group_consensus_msg.activePower = activePowerPU
@@ -530,7 +530,7 @@ class ComputationalComponent(Component):
 
     def on_consensus_sub(self):
         msg_bytes = self.consensus_sub.recv()
-        msg = riaps_capnp.DgGeneralMsg.from_bytes(msg_bytes)
+        msg = imcp_capnp.DgGeneralMsg.from_bytes(msg_bytes)
 
         if msg.sender == self.uuid:
             return

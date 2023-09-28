@@ -35,7 +35,7 @@ ___
   * `MQTT.py`
   * `RELAYF1.py`
   * `RELAYF1_MANAGER.py`
-  * `riaps.capnp`: This is the capnp file that defines the messages used by the application.
+  * `imcp.capnp`: This is the capnp file that defines the messages used by the application.
   * `SYSTEM_OPERATOR_*.py`
     * `BANSHEE`: This is the system operator for standalone demo at NCSU.
     * `MQTT`: This is the system operator for the Banshee testbed at NCSU that is driven by the node-red gui.

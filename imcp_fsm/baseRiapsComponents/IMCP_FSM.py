@@ -3,7 +3,7 @@ import abc
 import time
 import yaml
 
-import riaps_capnp
+import imcp_capnp
 from riaps.run.comp import Component
 
 from imcp_fsm.machines import riaps as machine
@@ -135,7 +135,7 @@ class IMCP_FSM(Component):
 
         # --- Fetch the message --
         msg_bytes = self.group_sub.recv()
-        msg = riaps_capnp.GroupMsg.from_bytes(msg_bytes)
+        msg = imcp_capnp.GroupMsg.from_bytes(msg_bytes)
 
         # --- Begin msg contents ---
         msg_device_name = msg.sender
@@ -248,7 +248,7 @@ class IMCP_FSM(Component):
 
         # --- Fetch the message --
         msg_bytes = self.relay_sub.recv()
-        msg = riaps_capnp.RelayMsg.from_bytes(msg_bytes)
+        msg = imcp_capnp.RelayMsg.from_bytes(msg_bytes)
         msg_dict = msg.to_dict()
 
         # --- Begin msg contents ---
@@ -355,7 +355,7 @@ class IMCP_FSM(Component):
                          f"groupToSend: {groupToSend} | type: {type(groupToSend)}"
                          f"{TerminalColors.RESET}")
 
-        msg = riaps_capnp.StateMsg.new_message()
+        msg = imcp_capnp.StateMsg.new_message()
         msg.sender = self.uuid
         msg.timestamp = time.time()
         msg.msgcounter = 0

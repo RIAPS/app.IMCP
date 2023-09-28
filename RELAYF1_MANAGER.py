@@ -8,7 +8,7 @@ import riaps.interfaces.modbus.device_capnp as msg_struct
 from riaps.interfaces.modbus.config import load_config_paths
 from riaps.interfaces.modbus.config import load_config_files
 
-import riaps_capnp
+import imcp_capnp
 import applibs.helper as helper
 
 debugMode = helper.debugMode
@@ -139,7 +139,7 @@ class RELAYF1_MANAGER(Component):
         relay_status = compute_relay_status(relay_parameters, relay_status_thresholds)
         self.relayStatus[relay_id] = relay_status
 
-        relay_msg = riaps_capnp.RelayMsg.new_message()
+        relay_msg = imcp_capnp.RelayMsg.new_message()
         relay_msg.sender = relay_id
         relay_msg.timestamp = time.time()
         relay_msg.connected = relay_status["connected"]
@@ -194,7 +194,7 @@ class RELAYF1_MANAGER(Component):
 
     def on_operator_sub(self):
         operator_msg_bytes = self.operator_sub.recv()
-        operator_msg = riaps_capnp.OperatorMsg.from_bytes(operator_msg_bytes)
+        operator_msg = imcp_capnp.OperatorMsg.from_bytes(operator_msg_bytes)
 
         # if operator_msg.requestedRelay == 'PCC':
         #     self.requestedRelay = self.pccRelayID

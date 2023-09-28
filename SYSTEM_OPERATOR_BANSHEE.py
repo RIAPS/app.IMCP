@@ -3,7 +3,7 @@ from riaps.run.comp import Component
 import applibs.helper as helper
 import spdlog
 import capnp
-import riaps_capnp
+import imcp_capnp
 import modbuslibs.device_capnp as msgstruct
 import time
 import os
@@ -121,7 +121,7 @@ class SYSTEM_OPERATOR(Component):
         if debugMode:
             self.logger.info('received commands from opal: %s' % str(msg))
 
-        operator_msg = riaps_capnp.OperatorMsg.new_message()
+        operator_msg = imcp_capnp.OperatorMsg.new_message()
         operator_msg.sender = 'OPAL'  # self.dvc["uuid"]
         operator_msg.type = 'regD'
         operator_msg.msgcounter = msg.msgcounter
@@ -154,7 +154,7 @@ class SYSTEM_OPERATOR(Component):
     # riaps:keep_consensus_sub:begin
     def on_consensus_sub(self):
         msg_bytes = self.consensus_sub.recv()
-        capnp_msg = riaps_capnp.DgGeneralMsg.from_bytes(msg_bytes)
+        capnp_msg = imcp_capnp.DgGeneralMsg.from_bytes(msg_bytes)
         self.logger.debug("System operator: on_consensus_sub"
                           f"msg: {capnp_msg}")
 
@@ -176,7 +176,7 @@ class SYSTEM_OPERATOR(Component):
     # riaps:keep_relay_sub:begin
     def on_relay_sub(self):
         msg_bytes = self.relay_sub.recv()
-        capnp_msg = riaps_capnp.RelayMsg.from_bytes(msg_bytes)
+        capnp_msg = imcp_capnp.RelayMsg.from_bytes(msg_bytes)
         self.logger.debug("System operator: on_relay_sub"
                           f"msg: {capnp_msg}")
 

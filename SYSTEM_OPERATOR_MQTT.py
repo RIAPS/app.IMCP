@@ -2,7 +2,7 @@
 import time
 from riaps.run.comp import Component
 import capnp
-import riaps_capnp
+import imcp_capnp
 import applibs.helper as helper
 from applibs.log_preprocessor import log_json
 
@@ -54,7 +54,7 @@ class SYSTEM_OPERATOR_MQTT(Component):
     # riaps:keep_state_sub:begin
     def on_state_sub(self):
         msg_bytes = self.state_sub.recv()
-        msg = riaps_capnp.StateMsg.from_bytes(msg_bytes)
+        msg = imcp_capnp.StateMsg.from_bytes(msg_bytes)
         if debugMode:
             self.logger.info(f"{helper.Yellow}"
                              f"Operator\n"
@@ -71,7 +71,7 @@ class SYSTEM_OPERATOR_MQTT(Component):
     # riaps:keep_consensus_sub:begin
     def on_consensus_sub(self):
         msg_bytes = self.consensus_sub.recv()
-        msg = riaps_capnp.DgGeneralMsg.from_bytes(msg_bytes).to_dict()
+        msg = imcp_capnp.DgGeneralMsg.from_bytes(msg_bytes).to_dict()
 
         if debugMode:
             self.logger.info(f"{helper.BrightCyan}"
@@ -86,7 +86,7 @@ class SYSTEM_OPERATOR_MQTT(Component):
     # riaps:keep_relay_sub:begin
     def on_relay_sub(self):
         msg_bytes = self.relay_sub.recv()
-        msg_capnp = riaps_capnp.RelayMsg.from_bytes(msg_bytes)
+        msg_capnp = imcp_capnp.RelayMsg.from_bytes(msg_bytes)
         relayID = msg_capnp.sender
         msg = msg_capnp.to_dict()
         self.relayStatus[relayID] = {"connected": msg["connected"]}
@@ -162,7 +162,7 @@ class SYSTEM_OPERATOR_MQTT(Component):
         self.mqtt_pub.send_pyobj(msg)
 
     def send_operator_msg(self, requested_relay):
-        operator_msg = riaps_capnp.OperatorMsg.new_message()
+        operator_msg = imcp_capnp.OperatorMsg.new_message()
         operator_msg.sender = 'OPAL'  # self.dvc["uuid"]
         operator_msg.type = 'regD'
         # operator_msg.type is not used, but could be used to distinguish if we are using P/Q or F/V control.
