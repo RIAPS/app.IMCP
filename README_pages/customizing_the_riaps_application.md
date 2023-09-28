@@ -133,9 +133,13 @@ Description of the controller gains:
 * **active_pwr_ctrl_gain** is the first consensus gain. It is the gain for the consensus error of the active power of the DERs.
 * **reactive_pwr_ctrl_gain** is the second consensus gain. It is the gain for the consensus error of the reactive power of the DERs.
 * **voltage_ctrl_gain_relay** is the first pinning gain. It is the gain for the error of the voltage across the relay under control.
-* **voltage_ctrl_gain_island** is a pinning gain. It is the gain for error between the average voltage of all connected DERs and the nominal voltage. Because the average and nominal voltage are in per unit form they are multiplied by 480 (the inverter voltage) to be comparable to the **voltage_ctrl_gain_relay**. It can also be considered to make it easier to compare generator voltage with inverter voltage. The 20 is approximately 13800/480.
-Both the control gains should be roughly the same magnitude, but since the voltage magnitudes differ we add the terms explicitly to make them comparable. 
+* **voltage_ctrl_gain_island** is a pinning gain. It is the gain for error between the average voltage of all connected DERs and the nominal voltage. 
+> Note: Intuitively, the voltage_ctrl_gain_relay and voltage_ctrl_gain_island should be similar in magnitude. However, the control application that uses the voltage_ctrl_gain_relay is in volts while the control application that uses the voltage_ctrl_gain_island is in per unit.  
+> To make them comparable, we explicitly add the terms that convert the voltage_ctrl_gain_island to volts.
+> 480 is the nominal voltage of the inverter. The nominal voltage of the generator is 13800. The 20 is their approximate ratio (13800/480=28.75). This also makes is easier to compare generator voltage with inverter voltage in a per-unit sense.
 * **relay_p_ctrl_gain** is the first pinning gain. It is the gain of error between the active power flow through the relay and 0.
 * **relay_q_ctrl_gain** is the second pinning gain. It is the gain of error between the reactive power flow through the relay and 0.
-impact relay control speed. p controls active q controls reactive. May have to reduce for power-sharing.
+
+> Note: Larger gains will increase the speed of the controller but may cause instability.
+
 
