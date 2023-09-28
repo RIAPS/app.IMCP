@@ -124,14 +124,18 @@ DIRECTLY_CONNECTED_RELAYS:
 
 
 Description of the controller gains:
-* **alpha_x_gain** controls 
-* **edp_reactive_pwr_ctrl_gain** controls
-* **eps_reg_gain** controls
-* **pcc_reactive_pwr_ctrl_gain** controls
-* **consensus_gain** controls
-* **freq_ctrl_gain** controls
-* **active_pwr_ctrl_gain** and **reactive_pwr_ctrl_gain** controls the balance between the active and reactive power.
-* **voltage_ctrl_gain_relay** controls
-* **voltage_ctrl_gain_island** is multiplied by 480 to make it easier to compare generator voltage with inverter voltage.
-* **relay_p_ctrl_gain** and **relay_q_ctrl_gain** impact relay control speed. p controls active q controls reactive. May have to reduce for power-sharing.
+* **alpha_x_gain** is the first consensus gain for economic dispatch. It is the gain for the consenus error of the incremental cost.
+* **edp_reactive_pwr_ctrl_gain** is the second consensus gain for economic dispatch. It is the gain for the consensus error of the reactive power.
+* **eps_reg_gain** is the first pinning gain for economic dispatch. It is the gain for the error of the active power at the PCC.
+* **pcc_reactive_pwr_ctrl_gain** is the second pinning gain for economic dispatch. It is the gain for the error of the reactive power at the PCC.
+* **consensus_gain** is the gain for the consensus error of the estimated voltage.
+* **freq_ctrl_gain** is the first pinning gain for resync, relay close, and secondary control. It is the gain for the error between the DERs frequency and the nominal frequency (60hz). 
+* **active_pwr_ctrl_gain** is the first consensus gain. It is the gain for the consenus error of the active power of the DERs.
+* **reactive_pwr_ctrl_gain** is the second consensus gain. It is the gain for the consenus error of the reactive power of the DERs.
+* **voltage_ctrl_gain_relay** is the first pinning gain. It is the gain for the error of the voltage across the relay under control.
+* **voltage_ctrl_gain_island** is a pinning gain. It is the gain for error between the average voltge of all connected DERs and the nominal voltage. Because the average and nominal voltage are in per unit form they are multiplied by 480 (the inverter voltage) to be comparable to the **voltage_ctrl_gain_relay**. It can also be considered to make it easier to compare generator voltage with inverter voltage. The 20 is approximately 13800/480.
+Both the control gains should be roughly the same magnitude, but since the voltage magnitudes differ we add the terms explicitely to make them comparible. 
+* **relay_p_ctrl_gain** is the first pinning gain. It is the gain of error between the active power flow through the relay and 0.
+* **relay_q_ctrl_gain** is the second pinning gain. It is the gain of error between the reactive power flow through the relay and 0.
+impact relay control speed. p controls active q controls reactive. May have to reduce for power-sharing.
 
