@@ -169,6 +169,8 @@ def test_monitoring(fabric_group):
 @pytest.mark.parametrize('log_server', [{'server_ip': test_cfg["VM_IP"]}], indirect=True)
 @pytest.mark.parametrize('mqtt_client', [mqtt_config], indirect=True)
 def test_mqtt_2_riaps_communication(log_server, mqtt_client):
+    # assert that test_cfg["test_mqtt_depl_file_name"] exists
+    assert pathlib.Path(f"{test_cfg['app_folder_path']}/{test_cfg['test_mqtt_depl_file_name']}").exists(), "Expected file does not exist"
 
     app_folder_path = test_cfg["app_folder_path"]
     app_file_name = test_cfg["app_file_name"]
@@ -184,37 +186,18 @@ def test_mqtt_2_riaps_communication(log_server, mqtt_client):
                                                      database_type="dht",
                                                      required_clients=client_list)
 
-    key = input("Wait until app starts then press a key to start the DERs or q to quit.\n")
+    key = input("Wait until app starts (check server_logs/<ip of system operator target>_app.log for this message: MQThread no new message) then press a key to start the DERs or q to quit.\n")
     if key == "q":
         test_api.terminate_riaps_app(controller, app_name)
         print(f"Test complete at {time.time()}")
         return
+    
     task = {"StartStop": 1}
     mqtt_client.publish(topic="mg/event",
                         payload=json.dumps(task),
                         qos=0)
-
-    key = input("Once the DERs start, press a key to set the power regulation or q to quit.\n")
-    if key == "q":
-        test_api.terminate_riaps_app(controller, app_name)
-        print(f"Test complete at {time.time()}")
-        return
-    task = {"active": 400, "reactive": 300}
-    mqtt_client.publish(topic="mg/event",
-                        payload=json.dumps(task),
-                        qos=0)
-
-    key = input("Press a key to enable secondary control or q to quit.\n")
-    if key == "q":
-        test_api.terminate_riaps_app(controller, app_name)
-        print(f"Test complete at {time.time()}")
-        return
-    task = {"SecCtrlEnable": 1}
-    mqtt_client.publish(topic="mg/event",
-                        payload=json.dumps(task),
-                        qos=0)
-
-    input("Press a key to terminate the app\n")
+    
+    time.sleep(1)
     test_api.terminate_riaps_app(controller, app_name)
     print(f"Test complete at {time.time()}")
 
