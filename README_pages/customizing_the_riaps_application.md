@@ -7,7 +7,7 @@
       * [Modbus](#modbus)
   * [MQTT - `cfg_ncsu/mqtt.yaml`](#mqtt---cfgncsumqttyaml)
   * [Grid Topology - `cfg_ncsu/topology.yaml`](#grid-topology---cfgncsutopologyyaml)
-  * [Distributed Controller Gains](#distributed-controller-gains)
+  * [Distributed Controller Gains - `applibs/constants.py`](#distributed-controller-gains---applibsconstantspy)
 <!-- TOC -->
 
 ## Devices
@@ -41,10 +41,10 @@ For additional information on the modbus configuration see the [minimal example]
 
 ## MQTT - `cfg_ncsu/mqtt.yaml`
 The MQTT configuration file is used to configure the connection to the MQTT broker and the topics that the RIAPS application is subscribing to. 
-In this application we are using a RIAPS MQTT device component to receive messages from the MQTT broker and publish them to the System Operator. These messages are then used to specify the desired states for the relays and the desired power setpoints for the generators. The source of the MQTT messages can either be an external script such as is done by the test in `tests/test_24_app.py::test_app` or from the `node-red` GUI. The identities used in the GUI for the SVG elements does not match the identifiers used in the Instance Information section of the device configuration files. The mapping between the two is done in the `cfg_ncsu/mqtt.yaml` file. The following is an example of the `cfg_ncsu/mqtt.yaml` file:
+In this application we are using a RIAPS MQTT device component to receive messages from the MQTT broker and publish them to the System Operator. These messages are then used to specify the desired states for the relays and the desired power set-points for the generators. The source of the MQTT messages can either be an external script such as is done by the test in `tests/test_24_app.py::test_app` or from the `node-red` GUI. The identities used in the GUI for the SVG elements does not match the identifiers used in the Instance Information section of the device configuration files. The mapping between the two is done in the `cfg_ncsu/mqtt.yaml` file. The following is an example of the `cfg_ncsu/mqtt.yaml` file:
 ```yaml
 broker_connect_config:
-  host: 192.168.10.139  # the hostname or IP address of the remote broker
+  host: 192.168.10.106  # the hostname or IP address of the remote broker
   port: 1883  # the network port of the server host to connect to. Defaults to 1883. Note that the default port for MQTT over SSL/TLS is 8883 so if you are using tls_set() or tls_set_context(), the port may need providing manually
   keepalive: 60  # maximum period in seconds allowed between communications with the broker. If no other messages are being exchanged, this controls the rate at which the client will send ping messages to the broker
   bind_address: ""  # the IP address of a local network interface to bind this client to, assuming multiple interfaces exist
@@ -124,18 +124,22 @@ DIRECTLY_CONNECTED_RELAYS:
 
 
 Description of the controller gains:
-* **alpha_x_gain** is the first consensus gain for economic dispatch. It is the gain for the consenus error of the incremental cost.
+* **alpha_x_gain** is the first consensus gain for economic dispatch. It is the gain for the consensus error of the incremental cost.
 * **edp_reactive_pwr_ctrl_gain** is the second consensus gain for economic dispatch. It is the gain for the consensus error of the reactive power.
 * **eps_reg_gain** is the first pinning gain for economic dispatch. It is the gain for the error of the active power at the PCC.
 * **pcc_reactive_pwr_ctrl_gain** is the second pinning gain for economic dispatch. It is the gain for the error of the reactive power at the PCC.
 * **consensus_gain** is the gain for the consensus error of the estimated voltage.
 * **freq_ctrl_gain** is the first pinning gain for resync, relay close, and secondary control. It is the gain for the error between the DERs frequency and the nominal frequency (60hz). 
-* **active_pwr_ctrl_gain** is the first consensus gain. It is the gain for the consenus error of the active power of the DERs.
-* **reactive_pwr_ctrl_gain** is the second consensus gain. It is the gain for the consenus error of the reactive power of the DERs.
+* **active_pwr_ctrl_gain** is the first consensus gain. It is the gain for the consensus error of the active power of the DERs.
+* **reactive_pwr_ctrl_gain** is the second consensus gain. It is the gain for the consensus error of the reactive power of the DERs.
 * **voltage_ctrl_gain_relay** is the first pinning gain. It is the gain for the error of the voltage across the relay under control.
-* **voltage_ctrl_gain_island** is a pinning gain. It is the gain for error between the average voltge of all connected DERs and the nominal voltage. Because the average and nominal voltage are in per unit form they are multiplied by 480 (the inverter voltage) to be comparable to the **voltage_ctrl_gain_relay**. It can also be considered to make it easier to compare generator voltage with inverter voltage. The 20 is approximately 13800/480.
-Both the control gains should be roughly the same magnitude, but since the voltage magnitudes differ we add the terms explicitely to make them comparible. 
+* **voltage_ctrl_gain_island** is a pinning gain. It is the gain for error between the average voltage of all connected DERs and the nominal voltage. 
+> Note: Intuitively, the voltage_ctrl_gain_relay and voltage_ctrl_gain_island should be similar in magnitude. However, the control application that uses the voltage_ctrl_gain_relay is in volts while the control application that uses the voltage_ctrl_gain_island is in per unit.  
+> To make them comparable, we explicitly add the terms that convert the voltage_ctrl_gain_island to volts.
+> 480 is the nominal voltage of the inverter. The nominal voltage of the generator is 13800. The 20 is their approximate ratio (13800/480=28.75). This also makes is easier to compare generator voltage with inverter voltage in a per-unit sense.
 * **relay_p_ctrl_gain** is the first pinning gain. It is the gain of error between the active power flow through the relay and 0.
 * **relay_q_ctrl_gain** is the second pinning gain. It is the gain of error between the reactive power flow through the relay and 0.
-impact relay control speed. p controls active q controls reactive. May have to reduce for power-sharing.
+
+> Note: Larger gains will increase the speed of the controller but may cause instability.
+
 

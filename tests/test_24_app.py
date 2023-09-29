@@ -92,7 +92,7 @@ def test_log_server(log_server):
 # ---------------- #
 # Write a test that checks the ip in the depl file for the permitted traffic 
 #  host all{
-#         network 192.168.10.139;
+#         network 192.168.10.106;
 #     }
 
 def test_mqtt_config():
@@ -208,6 +208,8 @@ def test_mqtt_2_riaps_communication(log_server, mqtt_client):
 @pytest.mark.parametrize('log_server', [{'server_ip': test_cfg["VM_IP"]}], indirect=True)
 @pytest.mark.parametrize('mqtt_client', [mqtt_config], indirect=True)
 def test_app_with_gui(platform_log_server, log_server, mqtt_client):
+
+    # TODO: Check that depl file `host all` has the correct ip address
 
     app_folder_path = test_cfg["app_folder_path"]
     app_file_name = test_cfg["app_file_name"]

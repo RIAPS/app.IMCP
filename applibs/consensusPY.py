@@ -39,15 +39,18 @@ class AverageConsensus():
                 self.logger.info(f"{helper.Cyan}Self consensus variables{self.consensusVariable}")
             self.display_counter_Q += 1
 
-        if self.numberOfVariable == 1:
+        if len(dataValues) == 0:
+            sum_otherConsensusVariable =  np.zeros_like(myDataValues)
+            numberOfReceivedInfo = 0
+        elif self.numberOfVariable == 1:
             sum_otherConsensusVariable = np.sum(dataValues)
-            numberOfReceivedInfo = dataValues.shape[0]
+            numberOfReceivedInfo = dataValues.shape[1]
         else:
             sum_otherConsensusVariable = np.sum(dataValues, 1)  # this squeezes dimension automatically
             numberOfReceivedInfo = dataValues.shape[1]  # [ P1+P2, Q1+Q2 ]
-        der_ConsensusVariable = self.Ts * (
-                self.consensusGains * (
-                myDataValues * numberOfReceivedInfo - sum_otherConsensusVariable) + pinningValues * self.piningGains)
+        der_ConsensusVariable = self.Ts * (self.consensusGains 
+                                           * (myDataValues * numberOfReceivedInfo - sum_otherConsensusVariable) 
+                                           + pinningValues * self.piningGains)
         self.consensusVariable -= der_ConsensusVariable
 
         return self.consensusVariable.tolist()
@@ -84,12 +87,16 @@ class DynamicConsensus():
         dataValues = dataValues.T
         inputValues = np.array(trackingInput)
 
-        if self.numberOfVariable == 1:
+        if len(dataValues) == 0:
+            sum_otherConsensusVariable =  np.zeros_like(myDataValues)
+            numberOfReceivedInfo = 0
+        elif self.numberOfVariable == 1:
             sum_otherConsensusVariable = np.sum(dataValues)
+            numberOfReceivedInfo = dataValues.shape[1]
         else:
             sum_otherConsensusVariable = np.sum(dataValues, 1)  # this squeezes dimension automatically
+            numberOfReceivedInfo = dataValues.shape[1]
 
-        numberOfReceivedInfo = dataValues.shape[1]
 
         self.logger.info(f"{helper.White}"
                          f"consensusPY.py run \n"

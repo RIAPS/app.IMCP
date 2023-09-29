@@ -1,3 +1,4 @@
+from modbus_tk import modbus_rtu
 import pathlib
 import pytest
 import time
@@ -23,6 +24,57 @@ def test_modbustk_execute():
 
     print(f"result: {result}")
 
+def test_modbustk_serial():
+    import serial
+    import modbus_tk
+    import modbus_tk.defines as cst
+    import modbus_tk.modbus_rtu as modbus_rtu
+    
+    serial_connection = serial.Serial(port="/dev/ttyS1",
+                                      baudrate=115200,
+                                      bytesize=8,
+                                      parity='N',
+                                      stopbits=1,
+                                      xonxoff=0)
+    master = modbus_rtu.RtuMaster(serial_connection)
+    master.set_timeout((1000 / 1000.0), use_sw_timeout=True)
+
+    starting_address = 2000  # CONTROL
+    length = 1
+    data_fmt = ""
+
+    print("Write control register")
+
+    result=  master.execute(slave=10,
+                                    function_code=cst.WRITE_MULTIPLE_REGISTERS,
+                                    starting_address=starting_address,
+                                    quantity_of_x=length,
+                                    data_format=data_fmt,
+                                    output_value=[1],)
+    
+    print(f"Write control register result: {result}")
+    
+
+    result: tuple = master.execute(slave=10,
+                                    function_code=cst.READ_HOLDING_REGISTERS,
+                                    starting_address=starting_address,
+                                    quantity_of_x=length,
+                                    data_format=data_fmt)
+    
+    print(f"Read control register result: {result}")
+    
+
+    starting_address = 22  # FREQ
+    length = 1
+    data_fmt = ""
+
+    result: tuple = master.execute(slave=10,
+                                    function_code=cst.READ_INPUT_REGISTERS,
+                                    starting_address=starting_address,
+                                    quantity_of_x=length,
+                                    data_format=data_fmt)
+
+    print(f"Read Freq result: {result}")
 
 def test_modbus_tcp():
     cfg_path = f"{pathlib.Path(__file__).parents[1]}/cfg_ncsu"
@@ -58,6 +110,7 @@ def test_modbus_serial():
                                parameter_list=DER_parameters)
 
 
+
 def poll_modbus_parameters(modbus_interface, parameter_list):
     
     for parameter in parameter_list:
@@ -68,6 +121,21 @@ def poll_modbus_parameters(modbus_interface, parameter_list):
 
 
 # The DSP tests need to be run from the nodes connected via serial to the DSP.
+def start_dsp(der):
+    cfg_path = f"{pathlib.Path(__file__).parents[1]}/cfg_ncsu"
+    path_to_file = f"{cfg_path}/{der}.yaml"
+    mbi =  ModbusInterface.ModbusInterface(path_to_file)
+
+    parameters_to_poll = ["CONTROL", "P", "Q"]
+
+    # poll_modbus_parameters(modbus_interface=mbi, parameter_list=parameters_to_poll)
+
+    mbi.write_modbus(parameter="CONTROL", values=[1])
+    time.sleep(10)
+
+    # poll_modbus_parameters(modbus_interface=mbi, parameter_list=parameters_to_poll)
+
+    
 def query_dsp(der):
     cfg_path = f"{pathlib.Path(__file__).parents[1]}/cfg_ncsu"
     path_to_file = f"{cfg_path}/{der}.yaml"
@@ -77,7 +145,10 @@ def query_dsp(der):
 
     poll_modbus_parameters(modbus_interface=mbi,
                            parameter_list=DER_parameters)
-
+    
+def test_start_dsp_111():
+    der = "F1_DSP111"
+    start_dsp(der=der)
 
 def test_dsp_111():
     der = "F1_DSP111"

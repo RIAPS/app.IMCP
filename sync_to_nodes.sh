@@ -3,7 +3,7 @@
 REMOTE_DIR="/home/riaps/projects/RIAPS"
 APP_SUBDIR="app.MgManage_refactor"
 REMOTE="$REMOTE_DIR/$APP_SUBDIR"
-REMOTE_NODES=("riaps@192.168.10.111" "riaps@192.168.10.112" "riaps@192.168.10.114" "riaps@192.168.10.115" "riaps@192.168.10.116")
+REMOTE_NODES=("riaps@192.168.10.111" "riaps@192.168.10.112" "riaps@192.168.10.113" "riaps@192.168.10.114" "riaps@192.168.10.115" "riaps@192.168.10.116")
 
 for item in "${REMOTE_NODES[@]}"
 do
