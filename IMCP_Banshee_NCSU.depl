@@ -1,7 +1,7 @@
 app IMCP_Banshee_NCSU{
 
     host all{
-        network 192.168.10.139;
+        network 192.168.10.106;
     }
 
     //system operator
