@@ -190,14 +190,9 @@ class RELAYF1_MANAGER(Component):
         operator_msg_bytes = self.operator_sub.recv()
         operator_msg = imcp_capnp.OperatorMsg.from_bytes(operator_msg_bytes)
 
-        # if operator_msg.requestedRelay == 'PCC':
-        #     self.requestedRelay = self.pccRelayID
-        # else:
-        #     self.requestedRelay = operator_msg.requestedRelay
         self.requestedRelay = operator_msg.requestedRelay
         self.requestedAction = operator_msg.requestedAction
-        # As long as the operator only commands one relay at a time this logic is OK.
-
-        # self.poller.launch()
+        # TODO: Allow control of all PCCs
+       
 
 
