@@ -166,31 +166,25 @@ class RELAYF1_MANAGER(Component):
 
     def send_relay_commands(self, requested_relay, requested_action):
         # condition for close
-        if (requested_action == 'CLOSE' and
-                self.relayStatus[requested_relay]['synchronized'] is True):
-            # write to relays for control
-            msg = msg_struct.DeviceQry.new_message()
-            msg.device = self.requestedRelay
-            msg.operation = "WRITE"
-            msg.params = ['LOGIC']
-            msg.values = [[1]]  # 1 close relay; 2 open relay
-            msg.timestamp = time.time()
-            msg.msgcounter = 0
-            msg_bytes = msg.to_bytes()
-            self.device_port.send(msg_bytes)
+        values = None
+        if (requested_action == 'CLOSE' and self.relayStatus[requested_relay]['synchronized'] is True):
+            values = [[1]]  # 1 close relay; 2 open relay
         # condition for open
-        elif (requested_action == 'OPEN' and
-              self.relayStatus[requested_relay]['zero_power_flow'] is True):
-            # write to relays for control
+        elif (requested_action == 'OPEN' and self.relayStatus[requested_relay]['zero_power_flow'] is True):
+            values = [[2]]  # 1 close relay; 2 open relay
+        # write to relays for control
+        if values:
             msg = msg_struct.DeviceQry.new_message()
             msg.device = requested_relay
             msg.operation = "WRITE"
             msg.params = ['LOGIC']
-            msg.values = [[2]]  # 1 close relay; 2 open relay
+            msg.values = values  # 1 close relay; 2 open relay
             msg.timestamp = time.time()
             msg.msgcounter = 0
             msg_bytes = msg.to_bytes()
             self.device_port.send(msg_bytes)
+
+
 
     def on_operator_sub(self):
         operator_msg_bytes = self.operator_sub.recv()
