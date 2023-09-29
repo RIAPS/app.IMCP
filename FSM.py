@@ -276,21 +276,28 @@ class FSM(IMCP_FSM):
                          f'dcgroup groupSize: {self.dcgroup.groupSize}')
         # I guess dcgroup is a thread because I can't seem to call the Group class's groupSize() method.
 
-        vote_msg = self.rfcids[rfcId]
-        if vote == "no":
-            self.logger.info(f"{str(rfcId)} {vote_msg['kind']} was not reached")
-            return
-
         if vote == "timeout":
             self.logger.info(f"{str(rfcId)} Poll expired before {vote_msg['kind']} was reached")
+            return
+        
+        if vote == "no":
+            self.logger.info(f"{str(rfcId)} {vote_msg['kind']} was not reached")
             return
 
         if vote != "yes":
             self.logger.info(f"{str(rfcId)} Somehow got a weird value for vote: {vote}")
             return
+        
+        vote_msg = self.rfcids.get(rfcId)
+        if not vote_msg:
+            log_json(self.logger, "warn", "We missed the vote request for {vote}, but got the result",
+                     event="MISSED VOTE. GOT RESULT")
+            # TODO: This could happen if there is a majority vote. How should this be handled? 
+            #  Go to local control and rejoin? 
+            # On a related note, if we notice we are in a state different from other group members what should we do?
+            return
 
         # vote == "yes"
-        vote_msg = self.rfcids[rfcId]
 
         # lock the relay if the transition is to happen
         self.relayUnderControl = vote_msg['requestRelay']
