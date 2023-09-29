@@ -214,8 +214,7 @@ class ComputationalComponent(Component):
         msg_bytes = msg.to_bytes()
 
         if debugMode:
-            self.logger.info(f"{helper.qryBlack}\n"
-                             f"ComputationalComponent.py - on_consensus_clock \n"
+            self.logger.info(f"{helper.qryBlack} | ComputationalComponent.py - on_consensus_clock \n"
                              f"send qry msgcounter {self.msgcounter} to {self.device_name}\n"
                              f"msg.operation: {msg.operation} \n"
                              f"msg.commands:{msg.params}"
@@ -324,19 +323,26 @@ class ComputationalComponent(Component):
                              f"{helper.RESET}")
 
             # remove data from non group members
+            to_delete = []
             for otherId in self.consensus_data:
                 if otherId not in self.group_members:
-                    del self.consensus_data[otherId]  # guaranteed to be present because it came from the for loop
+                    to_delete.append(otherId)
+            for otherId in to_delete:
+                del self.consensus_data[otherId]
 
-            if len(self.consensus_data) == 0:
-                #  No consensus data received from peers during this time step.
-                #  We do not need to consider the case when there is only one generator
-                #  doing secondary control because the system will fall back to local control.
-                if debugMode:
-                    self.logger.info(f"{helper.White}"
-                                     f"ComputationalComponentAll.py - on_device_qry_port"
-                                     f"No consensus data received from peers during this time step."
-                                     f"{helper.RESET}")
+
+            # TODO: Ask Hao if removing this causes problems.
+            # if len(self.consensus_data) == 0:
+            #     #  No consensus data received from peers during this time step.
+            #     #  We do not need to consider the case when there is only one generator
+            #     #  doing secondary control because the system will fall back to local control.
+            #     if debugMode:
+            #         self.logger.info(f"{helper.White}"
+            #                          f"ComputationalComponentAll.py - on_device_qry_port"
+            #                          f"No consensus data received from peers during this time step."
+            #                          f"{helper.RESET}")
+            if False:
+                pass
             else:
                 if debugMode:
                     self.logger.info(f"{helper.White}\n"
@@ -544,8 +550,7 @@ class ComputationalComponent(Component):
 
         if debugMode:
             self.logger.info(f"{helper.BrightCyan}"
-                             f"ComputationalComponent.py \n"
-                             f"on_consensus_sub \n"
+                             f"ComputationalComponent.py - on_consensus_sub \n"
                              f"msg: {msg}\n"
                              f"Is {otherId} in the group members list?: {self.group_members}"
                              f"{helper.RESET}")
