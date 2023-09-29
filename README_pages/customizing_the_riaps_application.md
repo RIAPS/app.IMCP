@@ -44,7 +44,7 @@ The MQTT configuration file is used to configure the connection to the MQTT brok
 In this application we are using a RIAPS MQTT device component to receive messages from the MQTT broker and publish them to the System Operator. These messages are then used to specify the desired states for the relays and the desired power set-points for the generators. The source of the MQTT messages can either be an external script such as is done by the test in `tests/test_24_app.py::test_app` or from the `node-red` GUI. The identities used in the GUI for the SVG elements does not match the identifiers used in the Instance Information section of the device configuration files. The mapping between the two is done in the `cfg_ncsu/mqtt.yaml` file. The following is an example of the `cfg_ncsu/mqtt.yaml` file:
 ```yaml
 broker_connect_config:
-  host: 192.168.10.139  # the hostname or IP address of the remote broker
+  host: 192.168.10.106  # the hostname or IP address of the remote broker
   port: 1883  # the network port of the server host to connect to. Defaults to 1883. Note that the default port for MQTT over SSL/TLS is 8883 so if you are using tls_set() or tls_set_context(), the port may need providing manually
   keepalive: 60  # maximum period in seconds allowed between communications with the broker. If no other messages are being exchanged, this controls the rate at which the client will send ping messages to the broker
   bind_address: ""  # the IP address of a local network interface to bind this client to, assuming multiple interfaces exist
