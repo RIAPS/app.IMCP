@@ -158,6 +158,7 @@ class IMCP_FSM(Component):
                         "relays_status": self.relays_status.get(self.requestedRelay, False)})
         # --- End msg contents ---
 
+        # Check Preconditions
         if not self.model:
             log_json(self.logger, level="error", message="How did we get here with an undefined model?",
                      event="UNEXPECTED LACK OF MODEL DEFINITION")
@@ -166,7 +167,10 @@ class IMCP_FSM(Component):
             return False  # No relay status for the PCC relay yet, so no need to process the message.
         if not commands:
             return False  # The operator has not specified the desired state yet.
-
+        if not instance_name:
+            return False  # If there is no instance_name the group manager hasn't run group management yet so skip.
+        
+        # Do work
         if self.requestedRelay != 'NONE':
             # If the requested state (OPEN/CLOSE) is different from the current state then a transition is required.
             relay_state = self.relays_status[self.requestedRelay]["relay_state"]
