@@ -339,21 +339,21 @@ Once the relays, generators, and battery inverters have values displayed in the 
 8. Repeat this for F1 108. The microgrid is then in state Islanded F1/F2/F3
 9. One at a time, click the PCC 1, PCC 2, and PCC 3 relays. The microgrid is then in state Grid-Tied.
 
-|       | initial | Energized | Grid-Tied | Islanded F1/F2/F3 | Islanded F1F2/F3 | Islanded F1F2F3 | Islanded F1F2/F3 | Islanded F1/F2/F3 |
-|-------|---------|-----------|-----------|-------------------|------------------|-----------------|------------------|-------------------|
-| PCC1  | 2220    | 1440      | 400       | 0                 | 0                | 0               | 0                | 0                 |
-| PCC2  | 1800    | 520       | 400       | 0                 | 0                | 0               | 0                | 0                 |
-| PCC3  | 2000    | 2965      | 400       | 0                 | 0                | 0               | 0                | 0                 |
-| F1108 | 0       | 0         | 0         | 0                 |                  |                 |                  | 0                 |
-| F2217 | 0       | 0         | 0         | 0                 | 0                |                 | 0                | 0                 |
-| Gen1  | 0.08    | 0.5       | 0.56      |                   |                  |                 |                  |                   |
-| Gen2  | 0.05    | 0.5       | 0.38      |                   |                  |                 |                  |                   |
-| Gen3  | 0.08    | 0.5       | 0.46      |                   |                  |                 |                  |                   |
-| C1    | -0.009  |           | 0.45      |                   |                  |                 |                  |                   |
-| C2    | -0.009  |           | 0.45      |                   |                  |                 |                  |                   |
-| C4    | -0.009  |           | 0.46      |                   |                  |                 |                  |                   |
-| C5    | -0.009  |           | 0.41      |                   |                  |                 |                  |                   |
-| C6    | -0.009  |           | 0.41      |                   |                  |                 |                  |                   |
+|       | initial | Energized | Grid-Tied | Islanded F1/F2/F3 | Islanded F1F2/F3 | Islanded F1F2F3 |
+|-------|---------|-----------|-----------|-------------------|------------------|-----------------|
+| PCC1  | 2270    | 481      | 400       | 0                  | 0                | 0               |
+| PCC2  | 1850    | 31       | 400       | 0                  | 0                | 0               |
+| PCC3  | 2000    | 196      | 400       | 0                  | 0                | 0               |
+| F1108 | 0       | 0        | 0         | 0                  | -200             | -230            |
+| F2217 | 0       | 0        | 0         | 0                  | 0                | -40             |
+| Gen1  | 0.08    | 0.5      | 0.56      | 0.61               | 0.55             | 0.55            |
+| Gen2  | 0.05    | 0.5      | 0.38      | 0.50               | 0.55             | 0.55            |
+| Gen3  | 0.08    | 0.5      | 0.46      | 0.53               | 0.53             | 0.55            |
+| C1    | -0.009  | 0.5      | 0.45      | 0.61               | 0.55             | 0.55            |
+| C2    | -0.009  | 0.5      | 0.45      | 0.61               | 0.55             | 0.55            |
+| C4    | -0.009  | 0.5      | 0.46      | 0.50               | 0.55             | 0.55            |
+| C5    | -0.009  | 0.5      | 0.41      | 0.53               | 0.53             | 0.55            |
+| C6    | -0.009  | 0.5      | 0.41      | 0.53               | 0.53             | 0.55            |
 
 > Note: The 107 and 217 relays are not designed to be closed while in Grid-Tied mode. Closing them in that state may result in unexpected behavior.
 
