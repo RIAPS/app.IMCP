@@ -178,11 +178,6 @@ class IMCP_FSM(Component):
                 self.relays_status[self.requestedRelay]["requested_state"] = self.requestedAction
                 self.relays_status[self.requestedRelay]["transition_required"] = True
 
-        if self.debugMode:
-            self.logger.info(f"{TerminalColors.Green}"
-                             f"IMCP_FSM.py - on_group_sub msg: {msg}"
-                             f"{TerminalColors.RESET}")
-
         self.update_dc_group(instance_name=instance_name, group_members=self.group)
         # Update cyber connection based on physical connection as determined by the group manager.
 

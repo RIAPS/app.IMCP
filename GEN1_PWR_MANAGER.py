@@ -32,7 +32,7 @@ class GEN1_PWR_MANAGER(ComputationalComponent):
         operator_msg = imcp_capnp.OperatorMsg.from_bytes(operator_msg_bytes)
 
         if debugMode:
-            self.logger.info(f"{helper.Cyan}\n"
+            self.logger.debug(f"{helper.Cyan}\n"
                              f"GEN1_PWR_MANAGER.py on_operator_sub \n"
                              f"msg: {operator_msg}"
                              f"{helper.RESET}")
