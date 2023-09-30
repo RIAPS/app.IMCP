@@ -354,11 +354,6 @@ class IMCP_FSM(Component):
         else:
             groupToSend = self.group
 
-        self.logger.info(f"{TerminalColors.Red}"
-                         f"IMCP_FSM.py - publish_state\n"
-                         f"groupToSend: {groupToSend} | type: {type(groupToSend)}"
-                         f"{TerminalColors.RESET}")
-
         msg = imcp_capnp.StateMsg.new_message()
         msg.sender = self.uuid
         msg.timestamp = time.time()
@@ -375,7 +370,7 @@ class IMCP_FSM(Component):
         msg_bytes = msg.to_bytes()
 
         self.logger.info(f"{TerminalColors.Red}\n"
-                         f"IMCP_FSM.py - {cause} - publish_state\n"
+                         f"IMCP_FSM.py - publish_state | cause: {cause}\n"
                          f"msg: {msg}"
                          f"{TerminalColors.RESET}")
         self.state_pub.send(msg_bytes)
