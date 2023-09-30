@@ -162,7 +162,7 @@ class ComputationalComponent(Component):
         relayID = msg.sender
         self.relayMessages[relayID] = msg.to_dict()
 
-        # those PCC related values are used in GEN_PWR_MANAGER for testing
+        # Store actual PCC state. Used to determine value of self.CONTROL.
         if relayID == self.pccRelayID:
             self.pccRelay_closed = self.relayMessages[relayID]["connected"]
 
