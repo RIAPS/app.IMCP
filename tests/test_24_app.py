@@ -127,20 +127,15 @@ def save_to_csv(data, filename):
 def test_monitoring(fabric_group):
     test_data = str(pathlib.Path(__file__).parents[0]) + "/test_data"
 
-    # samples_required = 2
     samples_collected = 0
-    # while samples_collected < samples_required:
 
     process_to_monitor = 117965
+    assert psutil.pid_exists(process_to_monitor), f"Process {process_to_monitor} does not exist"
 
     while True:
         if not psutil.pid_exists(process_to_monitor):
-            print(f"Process {process_to_monitor} does not exist")
+            print(f"Process {process_to_monitor} no longer exists")
             break
-
-        # if samples_collected == 2:
-        #     print(f"Collected {samples_collected} samples")
-        #     break
 
         results = fabric_group.run('free -m', hide=True)
         for conn in results:
