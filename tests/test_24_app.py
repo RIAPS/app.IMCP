@@ -68,23 +68,11 @@ def test_write_test_log():
     assert pathlib.Path(f"{log_file_path}/test_24_app_log.txt").exists(), "Expected file does not exist"
 
 
-@pytest.mark.parametrize('log_server', [{'server_ip': test_cfg["VM_IP"]}], indirect=True)
+@pytest.mark.parametrize('log_server', [{'server_ip': test_cfg["VM_IP"],
+                                         'log_config_path': f"{test_cfg['app_folder_path']}/riaps-log.conf"}],
+                         indirect=True)
 def test_log_server(log_server):
     print(f"test_log_server: {log_server}")
-    file_path = test_cfg["app_folder_path"] / "riaps-log.conf"
-
-    pattern = r'server_host = "(\d+\.\d+\.\d+\.\d+)"'
-    # Open the app riaps-log.conf file to check that ips match
-    with file_path.open("r") as file:
-        file_content = file.read()
-        match = re.search(pattern, file_content)
-
-        if match:
-            ip_address = match.group(1)
-
-    error_msg = (f"The IP address in the riaps-log.conf file {ip_address}"
-                 f" does not match the VM's IP address {test_cfg['VM_IP']}")
-    assert ip_address == test_cfg["VM_IP"], error_msg
 
 
 # ---------------- #
@@ -94,6 +82,7 @@ def test_log_server(log_server):
 #  host all{
 #         network 192.168.10.106;
 #     }
+
 
 def test_mqtt_config():
     from riaps.interfaces.mqtt import MQTT
@@ -261,7 +250,9 @@ class EventQMonitorThread(threading.Thread):
 
 
 @pytest.mark.parametrize('platform_log_server', [{'server_ip': test_cfg["VM_IP"]}], indirect=True)
-@pytest.mark.parametrize('log_server', [{'server_ip': test_cfg["VM_IP"]}], indirect=True)
+@pytest.mark.parametrize('log_server', indirect=True,
+                         argvalues=[{'server_ip': test_cfg["VM_IP"],
+                                     'log_config_path': f"{test_cfg['app_folder_path']}/riaps-log.conf"}])
 @pytest.mark.parametrize('mqtt_client', [mqtt_config], indirect=True)
 def test_app(platform_log_server, log_server, mqtt_client):
     # TODO: Add something to quit the test if opal is not running.
