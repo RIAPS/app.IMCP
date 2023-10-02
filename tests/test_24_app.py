@@ -1,4 +1,3 @@
-import csv
 import datetime
 import json
 import pathlib
@@ -6,13 +5,11 @@ import psutil
 import pytest
 import queue
 import re
-import netifaces
 import time
 import threading
 
 import riaps_fixtures_library.utils as utils
 import riaps.test_suite.test_api as test_api
-
 
 # --------------- #
 # -- Config -- #
@@ -34,16 +31,17 @@ ncsu_config = {"VM_IP": "192.168.10.106",
                "depl_file_name": "IMCP_Banshee_NCSU.depl",
                "test_mqtt_depl_file_name": "IMCP_Banshee_NCSU_test.depl"}
 
-configs =  {"vandy": vanderbilt_config,
-            "ncsu": ncsu_config}
+configs = {"vu": vanderbilt_config,
+           "ncsu": ncsu_config}
 
-test_cfg = configs["ncsu"]
+test_cfg = configs["vu"]
 
 mqtt_config = {
     "broker_ip": test_cfg["VM_IP"],
     "broker_port": 1883,
     "broker_keepalive": 60
 }
+
 
 # --------------- #
 # -- LOG TESTS -- #
@@ -59,6 +57,7 @@ def write_test_error_log(msg):
     log_file_path = f"{pathlib.Path(__file__).parents[1]}/presentation/data"
     with open(f"{log_file_path}/test_24_app_error_log.txt", "a") as log_file:
         log_file.write(f"{datetime.datetime.utcnow()} | {msg}\n")
+
 
 def test_write_test_log():
     write_test_log(f"Test started at {time.time()}")
@@ -87,6 +86,7 @@ def test_log_server(log_server):
                  f" does not match the VM's IP address {test_cfg['VM_IP']}")
     assert ip_address == test_cfg["VM_IP"], error_msg
 
+
 # ---------------- #
 # -- TODO TESTS -- #
 # ---------------- #
@@ -103,10 +103,9 @@ def test_mqtt_config():
     test_mqtt_ip = mqtt_config["broker_ip"]
 
     error_msg = (f"The IP address in the riaps mqtt_config file {riaps_mqtt_ip}"
-                 f" does not match the ip specfied in the test {test_mqtt_ip}")
-    
-    assert riaps_mqtt_ip == test_mqtt_ip, error_msg
+                 f" does not match the ip specified in the test {test_mqtt_ip}")
 
+    assert riaps_mqtt_ip == test_mqtt_ip, error_msg
 
 
 # ------------------------- #
@@ -123,13 +122,6 @@ def save_to_csv(data, filename):
     # Write the data to the CSV file
     with open(filename, 'a', newline='') as csv_file:
         csv_file.write(data_with_timestamp)
-
-    # Split the output into lines and save it to a CSV file
-    # # lines = data.strip().split('\n')
-    # with open(filename, 'w', newline='') as csv_file:
-    #     csv_writer = csv.writer(csv_file)
-    #     for line in lines:
-    #         csv_writer.writerow(line.split())
 
 
 def test_monitoring(fabric_group):
@@ -163,6 +155,7 @@ def test_monitoring(fabric_group):
         print(f"Collected {samples_collected} samples")
         time.sleep(60)
 
+
 # ---------------- #
 # -- MQTT TESTS -- #
 # ---------------- #
@@ -170,7 +163,9 @@ def test_monitoring(fabric_group):
 @pytest.mark.parametrize('mqtt_client', [mqtt_config], indirect=True)
 def test_mqtt_2_riaps_communication(log_server, mqtt_client):
     # assert that test_cfg["test_mqtt_depl_file_name"] exists
-    assert pathlib.Path(f"{test_cfg['app_folder_path']}/{test_cfg['test_mqtt_depl_file_name']}").exists(), "Expected file does not exist"
+    assert pathlib.Path(
+        f"{test_cfg['app_folder_path']}/{test_cfg['test_mqtt_depl_file_name']}").exists(), \
+        "Expected file does not exist"
 
     app_folder_path = test_cfg["app_folder_path"]
     app_file_name = test_cfg["app_file_name"]
@@ -186,20 +181,23 @@ def test_mqtt_2_riaps_communication(log_server, mqtt_client):
                                                      database_type="dht",
                                                      required_clients=client_list)
 
-    key = input("Wait until app starts (check server_logs/<ip of system operator target>_app.log for this message: MQThread no new message) then press a key to start the DERs or q to quit.\n")
+    key = input(
+        "Wait until app starts then press a key to start the DERs or q to quit.\n"
+        "(check server_logs/<ip of system operator target>_app.log for this message: 'MQThread no new message')")
     if key == "q":
         test_api.terminate_riaps_app(controller, app_name)
         print(f"Test complete at {time.time()}")
         return
-    
+
     task = {"StartStop": 1}
     mqtt_client.publish(topic="mg/event",
                         payload=json.dumps(task),
                         qos=0)
-    
+
     time.sleep(1)
     test_api.terminate_riaps_app(controller, app_name)
     print(f"Test complete at {time.time()}")
+
 
 # -------------------------- #
 # -- GUI DRIVEN APP TESTS -- #
@@ -208,7 +206,6 @@ def test_mqtt_2_riaps_communication(log_server, mqtt_client):
 @pytest.mark.parametrize('log_server', [{'server_ip': test_cfg["VM_IP"]}], indirect=True)
 @pytest.mark.parametrize('mqtt_client', [mqtt_config], indirect=True)
 def test_app_with_gui(platform_log_server, log_server, mqtt_client):
-
     # TODO: Check that depl file `host all` has the correct ip address
 
     app_folder_path = test_cfg["app_folder_path"]
@@ -230,6 +227,7 @@ def test_app_with_gui(platform_log_server, log_server, mqtt_client):
     test_api.terminate_riaps_app(controller, app_name)
     print(f"Test complete at {time.time()}")
 
+
 # --------------------------- #
 # -- TEST DRIVEN APP TESTS -- #
 # --------------------------- #
@@ -237,7 +235,7 @@ def test_app_with_gui(platform_log_server, log_server, mqtt_client):
 def next_command(mqtt_client, data):
     write_test_log(f"Wait for 60 seconds before executing command {data}")
     for ix in range(6):
-        write_test_log(f"Waited for {ix*10} seconds")
+        write_test_log(f"Waited for {ix * 10} seconds")
         time.sleep(10)
     write_test_log(f"Execute command: {data}")
     mqtt_client.publish(topic="mg/event",
@@ -312,7 +310,7 @@ def test_app(platform_log_server, log_server, mqtt_client):
                 log_file_observer_thread.start()
 
             if not event_q_monitor_thread.is_alive():
-                write_test_log(f"event_q_montior_thread is not alive. Restarting.")
+                write_test_log(f"event_q_monitor_thread is not alive. Restarting.")
                 event_q_monitor_thread.stop()
                 event_q_monitor_thread = EventQMonitorThread(event_q, task_q, end_time=end_time)
                 event_q_monitor_thread.start()
@@ -469,8 +467,13 @@ def watch24(event_q, task_q, end_time):
                         task_q.put(task)
                     elif task_count == 5:
                         task_count = 0
-                        current_target_state = last_active_state  # I probably don't need this as well as the task count reset when a task fails.
-                        # This is necessary because I want to make sure that the generator is back in "GRID-TIED" before I disable the control and when it comes back online it will be in "GRID-TIED" and correctly set the current_target_state to ISLANDED as well as add the OPEN relay command to the queue. In other words, we're going back to the beginning of the loop and need to set the values back to their initial state.
+                        current_target_state = last_active_state
+                        # I probably don't need this as well as the task count reset when a task fails.
+                        # This is necessary because I want to make sure that the generator is back in "GRID-TIED"
+                        # before I disable the control and when it comes back online it will be in "GRID-TIED" and
+                        # correctly set the current_target_state to ISLANDED as well as add the OPEN relay command to
+                        # the queue. In other words, we're going back to the beginning of the loop and need to set the
+                        # values back to their initial state.
                         write_test_log(f"Task {task_count}. Skip task: {task}")
                         task_q.put({"SecCtrlEnable": 0})
                     else:
@@ -480,4 +483,3 @@ def watch24(event_q, task_q, end_time):
                 write_test_log(f"task_q: {list(task_q.queue)}")
 
     task_q.put("terminate")
-
