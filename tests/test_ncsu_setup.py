@@ -1,4 +1,5 @@
 from modbus_tk import modbus_rtu
+import os
 import pathlib
 import pytest
 import time
@@ -146,29 +147,38 @@ def query_dsp(der):
     poll_modbus_parameters(modbus_interface=mbi,
                            parameter_list=DER_parameters)
     
+
+# Define a function to check if ttyS1 exists
+def has_ttyS1_access():
+    return os.access('/dev/ttyS1', os.R_OK | os.W_OK)
+
+# Use the @pytest.mark.skipif decorator to skip the test if ttyS1 doesn't exist
+@pytest.mark.skipif(not has_ttyS1_access(), reason="No access to ttyS1")
 def test_start_dsp_111():
     der = "F1_DSP111"
     start_dsp(der=der)
 
+@pytest.mark.skipif(not has_ttyS1_access(), reason="No access to ttyS1")
 def test_dsp_111():
     der = "F1_DSP111"
     query_dsp(der=der)
 
-
+@pytest.mark.skipif(not has_ttyS1_access(), reason="No access to ttyS1")
 def test_dsp_112():
     der = "F1_DSP112"
     query_dsp(der=der)
 
+@pytest.mark.skipif(not has_ttyS1_access(), reason="No access to ttyS1")
 def test_dsp_114():
     der = "F2_DSP114"
     query_dsp(der=der)
 
-
+@pytest.mark.skipif(not has_ttyS1_access(), reason="No access to ttyS1")
 def test_dsp_115():
     der = "F3_DSP115"
     query_dsp(der=der)
 
-
+@pytest.mark.skipif(not has_ttyS1_access(), reason="No access to ttyS1")
 def test_dsp_116():
     der = "F3_DSP116"
     query_dsp(der=der)

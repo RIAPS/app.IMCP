@@ -1,4 +1,5 @@
 import datetime
+import functools
 import json
 import pathlib
 import psutil
@@ -10,26 +11,29 @@ import threading
 
 import riaps_fixtures_library.utils as utils
 import riaps.test_suite.test_api as test_api
+from event_thread_handlers.single_feeder_24 import watch24 as single_24
+from event_thread_handlers.full_24 import watch24 as full_24
 
 # --------------- #
 # -- Config -- #
 # --------------- #
+single = functools.partial(single_24, nodes_to_watch=["20_", "36_"], operator_node_id="172.21.20.20")
 vanderbilt_config = {"VM_IP": "172.21.20.70",
                      "mqtt_config": f"{pathlib.Path(__file__).parents[1]}/cfg_vanderbilt/mqtt.yaml",
-                     "node_ids": ["20_", "36_"],
-                     "SystemOperator": "172.21.20.20",
                      "app_folder_path": pathlib.Path(__file__).parents[1],
                      "app_file_name": "IMCP_SingleFeeder_VU.riaps",
-                     "depl_file_name": "IMCP_SingleFeeder_VU.depl"}
+                     "depl_file_name": "IMCP_SingleFeeder_VU.depl",
+                     "event_thread_handler": single}
 
+
+full = functools.partial(full_24, nodes_to_watch=["122_", "113_"], operator_node_id="172.21.20.20")
 ncsu_config = {"VM_IP": "192.168.10.106",
                "mqtt_config": f"{pathlib.Path(__file__).parents[1]}/cfg_ncsu/mqtt.yaml",
-               "node_ids": ["122_", "113_"],
-               "SystemOperator": "192.168.10.122",
                "app_folder_path": pathlib.Path(__file__).parents[1],
                "app_file_name": "IMCP_Banshee_NCSU.riaps",
                "depl_file_name": "IMCP_Banshee_NCSU.depl",
-               "test_mqtt_depl_file_name": "IMCP_Banshee_NCSU_test.depl"}
+               "test_mqtt_depl_file_name": "IMCP_Banshee_NCSU_test.depl",
+               "event_thread_handler": full}
 
 configs = {"vu": vanderbilt_config,
            "ncsu": ncsu_config}
@@ -46,26 +50,14 @@ mqtt_config = {
 # --------------- #
 # -- LOG TESTS -- #
 # --------------- #
-def write_test_log(msg):
-    log_dir_path = pathlib.Path(__file__).parents[1] / 'tests' / 'test_logs'
-    log_dir_path.mkdir(parents=True, exist_ok=True)
-    with open(f"{log_dir_path}/test_24_app_log.txt", "a") as log_file:
-        log_file.write(f"{datetime.datetime.utcnow()} | {msg}\n")
 
-
-def write_test_error_log(msg):
-    log_file_path = f"{pathlib.Path(__file__).parents[1]}/presentation/data"
-    with open(f"{log_file_path}/test_24_app_error_log.txt", "a") as log_file:
-        log_file.write(f"{datetime.datetime.utcnow()} | {msg}\n")
-
-
-def test_write_test_log():
-    write_test_log(f"Test started at {time.time()}")
+def test_file_logger(file_logger):
+    file_logger.info(f"Test started at {time.time()}")
     time.sleep(1)
-    write_test_log(f"Test stopped at {time.time()}")
+    file_logger.info(f"Test stopped at {time.time()}")
     log_file_path = f"{pathlib.Path(__file__).parents[1]}/tests/test_logs"
 
-    assert pathlib.Path(f"{log_file_path}/test_24_app_log.txt").exists(), "Expected file does not exist"
+    assert pathlib.Path(f"{log_file_path}/debug.log").exists(), "Expected file does not exist"
 
 
 @pytest.mark.parametrize('log_server', [{'server_ip': test_cfg["VM_IP"],
@@ -216,22 +208,22 @@ def test_app_with_gui(platform_log_server, log_server, mqtt_client):
 # -- TEST DRIVEN APP TESTS -- #
 # --------------------------- #
 
-def next_command(mqtt_client, data):
-    write_test_log(f"Wait for 60 seconds before executing command {data}")
+def next_command(logger, mqtt_client, data):
+    logger.info(f"Wait for 60 seconds before executing command {data}")
     for ix in range(6):
-        write_test_log(f"Waited for {ix * 10} seconds")
+        logger.info(f"Waited for {ix * 10} seconds")
         time.sleep(10)
-    write_test_log(f"Execute command: {data}")
+    logger.info(f"Execute command: {data}")
     mqtt_client.publish(topic="mg/event",
                         payload=json.dumps(data),
                         qos=0)
 
 
 class EventQMonitorThread(threading.Thread):
-    def __init__(self, event_q, task_q, end_time):
+    def __init__(self, handler):
         super().__init__()
         self.is_running = False
-        self.event_q_handler = threading.Thread(target=watch24, args=(event_q, task_q, end_time))
+        self.event_q_handler = threading.Thread(target=handler)
         self.event_q_handler.daemon = True
 
     def run(self):
@@ -254,24 +246,36 @@ class EventQMonitorThread(threading.Thread):
                          argvalues=[{'server_ip': test_cfg["VM_IP"],
                                      'log_config_path': f"{test_cfg['app_folder_path']}/riaps-log.conf"}])
 @pytest.mark.parametrize('mqtt_client', [mqtt_config], indirect=True)
-def test_app(platform_log_server, log_server, mqtt_client):
+def test_app(testslogger, platform_log_server, log_server, mqtt_client):
     # TODO: Add something to quit the test if opal is not running.
+    app_folder_path = test_cfg["app_folder_path"]
+    app_file_name = test_cfg["app_file_name"]
+    depl_file_name = test_cfg["depl_file_name"]
+    partial_event_thread_handler = test_cfg["event_thread_handler"]
+
     event_q = queue.Queue()
     task_q = queue.Queue()
+    end_time = time.time() + 24 * 60 * 60
+
+    event_thread_handler = functools.partial(partial_event_thread_handler, 
+                                             logger=testslogger, 
+                                             event_q=event_q, 
+                                             task_q=task_q,
+                                             end_time=end_time)
+
+
     log_file_path = str(pathlib.Path(__file__).parents[1]) + "/server_logs"
     log_file_observer_thread = test_api.FileObserverThread(event_q, folder_to_monitor=log_file_path)
     log_file_observer_thread.start()
 
-    end_time = time.time() + 24 * 60 * 60
-    event_q_monitor_thread = EventQMonitorThread(event_q, task_q, end_time=end_time)
+    
+    event_q_monitor_thread = EventQMonitorThread(handler=event_thread_handler)
     event_q_monitor_thread.start()
 
-    app_folder_path = test_cfg["app_folder_path"]
-    app_file_name = test_cfg["app_file_name"]
-    depl_file_name = test_cfg["depl_file_name"]
+    
 
     client_list = utils.get_client_list(file_path=f"{app_folder_path}/{depl_file_name}")
-    write_test_log(f"client list: {client_list}")
+    testslogger.info(f"client list: {client_list}")
 
     controller, app_name = test_api.launch_riaps_app(
         app_folder_path=app_folder_path,
@@ -290,15 +294,15 @@ def test_app(platform_log_server, log_server, mqtt_client):
         now = time.time()
         if int(now) % 10 == 0:
             if not log_file_observer_thread.is_alive():
-                write_test_log(f"Log file observer is not alive. Restarting.")
+                testslogger.info(f"Log file observer is not alive. Restarting.")
                 log_file_observer_thread.stop()
                 log_file_observer_thread = test_api.FileObserverThread(event_q, folder_to_monitor=log_file_path)
                 log_file_observer_thread.start()
 
             if not event_q_monitor_thread.is_alive():
-                write_test_log(f"event_q_monitor_thread is not alive. Restarting.")
+                testslogger.info(f"event_q_monitor_thread is not alive. Restarting.")
                 event_q_monitor_thread.stop()
-                event_q_monitor_thread = EventQMonitorThread(event_q, task_q, end_time=end_time)
+                event_q_monitor_thread = EventQMonitorThread(testslogger, event_q, task_q, end_time=end_time, handler=event_thread_handler)
                 event_q_monitor_thread.start()
 
         try:
@@ -307,12 +311,12 @@ def test_app(platform_log_server, log_server, mqtt_client):
             if time_of_last_task == 0:
                 seconds_waiting_for_first_task = now - first_task_start_timer
                 if seconds_waiting_for_first_task > max_seconds_until_first_task:
-                    write_test_log(f"Test timed out after {seconds_waiting_for_first_task} seconds")
+                    testslogger.info(f"Test timed out after {seconds_waiting_for_first_task} seconds")
                     finished = True
             else:
                 seconds_since_last_task = now - time_of_last_task
                 if seconds_since_last_task > max_seconds_between_tasks:
-                    write_test_log(f"Time between tasks is too long: {seconds_since_last_task}")
+                    testslogger.info(f"Time between tasks is too long: {seconds_since_last_task}")
                     finished = True
             continue
 
@@ -321,7 +325,7 @@ def test_app(platform_log_server, log_server, mqtt_client):
         time_since_last_task = time.time() - time_of_last_task
         time_of_last_task = time.time()
         if time_since_last_task > max_seconds_between_tasks:
-            write_test_log(f"Time between tasks is too long: {time_since_last_task}")
+            testslogger.info(f"Time between tasks is too long: {time_since_last_task}")
             finished = True
             continue
 
@@ -331,141 +335,4 @@ def test_app(platform_log_server, log_server, mqtt_client):
             next_command(mqtt_client, task)
 
     test_api.terminate_riaps_app(controller, app_name)
-    write_test_log(f"Test complete at {time.time()}")
-
-
-def watch24(event_q, task_q, end_time):
-    files = {}
-    start_time = time.time()
-    datetime_start = datetime.datetime.fromtimestamp(start_time)
-    datetime_end = datetime.datetime.fromtimestamp(end_time)
-    duration_seconds = end_time - start_time
-
-    task_count = 0
-    last_active_state = None
-    current_target_state = "GRID-TIED"
-    no_errors = True
-
-    write_test_log(f"Watchdog started at {datetime_start}, "
-                   f"will run for {duration_seconds} seconds until {datetime_end}")
-    while end_time > time.time() and no_errors:
-        try:
-            event_source = event_q.get(10)  #
-        except queue.Empty:
-            write_test_log(f"File event queue is empty")
-            continue
-
-        if ".log" not in event_source:  # required to filter out the directory events
-            continue
-
-        file_name = pathlib.Path(event_source).name
-        file_data = files.get(file_name, None)
-        if file_data is None:
-            file_handle = open(event_source, "r")
-            files[file_name] = {"fh": file_handle, "offset": 0}
-        else:
-            file_handle = file_data["fh"]
-
-        if not any(node_id in file_name for node_id in test_cfg["node_ids"]):
-            continue  # Not interested in this file
-
-        for line in file_handle:
-            files[file_name]["offset"] += len(line)
-            if "ERROR" in line:
-                no_errors = False
-                write_test_log(f"Encountered an ERROR in {file_name} at {time.time()}: {line}")
-                break
-            elif "exception" in line:
-                no_errors = False
-                write_test_log(f"Encountered an exception in {file_name} at {time.time()}: {line}")
-                break
-            if "app_event" not in line:
-                continue
-
-            try:
-                ignore1, level, timestamp, pid, json_msg, ignore2 = line.split("::")
-            except ValueError:
-                no_errors = False
-                write_test_log(f"Encountered a malformed line in {file_name} at {time.time()}: {line}")
-                break
-
-            msg = json.loads(json_msg)
-
-            if test_cfg["SystemOperator"] in file_name and "COMPONENT_INITIALIZED" in msg["app_event"]:
-                task = {"StartStop": 1}
-                task_q.put(task)
-                task = {"active": 400, "reactive": 300}
-                task_q.put(task)
-                write_test_log(f"System operator is initialized, start the generators")
-            elif "FAIL" in msg["app_event"]:
-                action = msg["app_event"]["FAIL"]
-                if action == "ISLAND":
-                    write_test_log(f"Failed to open PCC relay. Retry task {task_count}| {line}")
-                    task_count -= 1
-                    current_target_state = "GRID-TIED"
-                elif action == "RESYNC":
-                    write_test_log(f"Failed to close PCC relay. Retry task {task_count}| {line}")
-                    task_count -= 1
-                    current_target_state = "ISLANDED"
-                elif action == "DISCONNECT":
-                    write_test_log(f"Failed to disconnect relay | {line}")
-                    current_target_state = "ISLANDED"
-                    # TODO: I know these last two are clearly not correct.
-                    #  I need to figure out how to get the correct state.
-                elif action == "CONNECT":
-                    write_test_log(f"Failed to connect relay. Retry task {task_count}| {line}")
-                    task_count -= 1
-                    current_target_state = "ISLANDED"
-
-            elif "ENTER_STATE" in msg["app_event"]:
-
-                write_test_log(f"ENTERED STATE: {msg['app_event']['ENTER_STATE']} at {timestamp} "
-                               f"caused by {msg['app_event']['trigger']}. "
-                               f"Current task: {task_count} "
-                               f"Current target state: {current_target_state}")
-                task = None
-                if "LOCAL-CONTROL" in msg["app_event"].get("ENTER_STATE"):
-                    write_test_log(f"Generator is in local control, enable secondary control")
-                    task_q.put({"SecCtrlEnable": 1})
-                elif "GRID-TIED" in msg["app_event"].get("ENTER_STATE"):
-                    write_test_log(f"Grid is tied, open the PCC relay")
-                    last_active_state = "GRID-TIED"
-                    if current_target_state == "GRID-TIED":
-                        task = {"event": "relay_click", "requestedRelay": "F1PCC", "requestedAction": "OPEN"}
-                        task_count += 1
-                        current_target_state = "ISLANDED"
-
-                elif "ISLANDED" in msg["app_event"].get("ENTER_STATE"):
-                    write_test_log(f"Grid is islanded, close the PCC relay")
-                    last_active_state = "ISLANDED"
-                    if current_target_state == "ISLANDED":
-                        task = {"event": "relay_click", "requestedRelay": "F1PCC", "requestedAction": "CLOSE"}
-                        task_count += 1
-                        current_target_state = "GRID-TIED"
-
-                if task is not None:
-
-                    if task_count in [2, 3]:
-                        # This will disable secondary control, causing the generator to go back to local control
-                        # where secondary control will be re-enabled.j
-                        write_test_log(f"Task {task_count}. Queue task: {task}")
-                        task_q.put({"SecCtrlEnable": 0})
-                        task_q.put(task)
-                    elif task_count == 5:
-                        task_count = 0
-                        current_target_state = last_active_state
-                        # I probably don't need this as well as the task count reset when a task fails.
-                        # This is necessary because I want to make sure that the generator is back in "GRID-TIED"
-                        # before I disable the control and when it comes back online it will be in "GRID-TIED" and
-                        # correctly set the current_target_state to ISLANDED as well as add the OPEN relay command to
-                        # the queue. In other words, we're going back to the beginning of the loop and need to set the
-                        # values back to their initial state.
-                        write_test_log(f"Task {task_count}. Skip task: {task}")
-                        task_q.put({"SecCtrlEnable": 0})
-                    else:
-                        write_test_log(f"Task {task_count}. Queue task: {task}")
-                        task_q.put(task)
-
-                write_test_log(f"task_q: {list(task_q.queue)}")
-
-    task_q.put("terminate")
+    testslogger.info(f"Test complete at {time.time()}")
