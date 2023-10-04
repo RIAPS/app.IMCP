@@ -25,6 +25,73 @@ def test_modbustk_execute():
 
     print(f"result: {result}")
 
+
+
+def test_modbus_tcp():
+    cfg_path = f"{pathlib.Path(__file__).parents[1]}/cfg_ncsu"
+    DERs = ["GEN1-Banshee", "GEN2-Banshee", "GEN3-Banshee"]
+    DER_parameters = ["FREQ", "VA_RMS", "P", "Q", "VREF", "WREF"]
+    relays = ["F1PCC","F1108","F2PCC","F2217","F3PCC"]
+    relay_parameters = ["IS_GRID_CONNECTED_BIT", "VA_RMS", "FREQ", "SYNCHK_FREQ_SLIP",
+                        "SYNCHK_VOLT_DIFF", "SYNCHK_ANG_DIFF", "P", "Q"]
+
+    for der in DERs:
+        path_to_file = f"{cfg_path}/{der}.yaml"
+        mbi =  ModbusInterface.ModbusInterface(path_to_file)
+        print(f"\n {der}")
+        poll_modbus_parameters(modbus_interface=mbi,
+                               parameter_list=DER_parameters)
+    for relay in relays:
+        path_to_file = f"{cfg_path}/{relay}.yaml"
+        mbi =  ModbusInterface.ModbusInterface(path_to_file)
+        print(f"\n {relay}")
+        poll_modbus_parameters(modbus_interface=mbi,
+                               parameter_list=relay_parameters)
+
+
+
+def poll_modbus_parameters(modbus_interface, parameter_list):
+    
+    for parameter in parameter_list:
+        print(f"poll parameter: {parameter}")
+        modbus_result = modbus_interface.read_modbus(parameter=parameter)
+        assert modbus_result is not None, f"Parameter {parameter} returned {modbus_result}"
+        print(f"{parameter} output: {modbus_result['values']}")
+
+
+# The DSP tests need to be run from the nodes connected via serial to the DSP.
+def start_dsp(der):
+    cfg_path = f"{pathlib.Path(__file__).parents[1]}/cfg_ncsu"
+    path_to_file = f"{cfg_path}/{der}.yaml"
+    mbi =  ModbusInterface.ModbusInterface(path_to_file)
+
+    parameters_to_poll = ["CONTROL", "P", "Q"]
+
+    # poll_modbus_parameters(modbus_interface=mbi, parameter_list=parameters_to_poll)
+
+    mbi.write_modbus(parameter="CONTROL", values=[1])
+    time.sleep(10)
+
+    # poll_modbus_parameters(modbus_interface=mbi, parameter_list=parameters_to_poll)
+
+    
+def query_dsp(der):
+    cfg_path = f"{pathlib.Path(__file__).parents[1]}/cfg_ncsu"
+    path_to_file = f"{cfg_path}/{der}.yaml"
+    DER_parameters = ["FREQ", "VA_RMS", "P", "Q", "VREF", "WREF"]
+    
+    mbi = ModbusInterface.ModbusInterface(path_to_file)
+
+    poll_modbus_parameters(modbus_interface=mbi,
+                           parameter_list=DER_parameters)
+    
+
+# Define a function to check if ttyS1 exists
+def has_ttyS1_access():
+    return os.access('/dev/ttyS1', os.R_OK | os.W_OK)
+
+
+@pytest.mark.skipif(not has_ttyS1_access(), reason="No access to ttyS1")
 def test_modbustk_serial():
     import serial
     import modbus_tk
@@ -77,27 +144,8 @@ def test_modbustk_serial():
 
     print(f"Read Freq result: {result}")
 
-def test_modbus_tcp():
-    cfg_path = f"{pathlib.Path(__file__).parents[1]}/cfg_ncsu"
-    DERs = ["GEN1-Banshee", "GEN2-Banshee", "GEN3-Banshee"]
-    DER_parameters = ["FREQ", "VA_RMS", "P", "Q", "VREF", "WREF"]
-    relays = ["F1PCC","F1108","F2PCC","F2217","F3PCC"]
-    relay_parameters = ["IS_GRID_CONNECTED_BIT", "VA_RMS", "FREQ", "SYNCHK_FREQ_SLIP",
-                        "SYNCHK_VOLT_DIFF", "SYNCHK_ANG_DIFF", "P", "Q"]
 
-    for der in DERs:
-        path_to_file = f"{cfg_path}/{der}.yaml"
-        mbi =  ModbusInterface.ModbusInterface(path_to_file)
-        print(f"\n {der}")
-        poll_modbus_parameters(modbus_interface=mbi,
-                               parameter_list=DER_parameters)
-    for relay in relays:
-        path_to_file = f"{cfg_path}/{relay}.yaml"
-        mbi =  ModbusInterface.ModbusInterface(path_to_file)
-        print(f"\n {relay}")
-        poll_modbus_parameters(modbus_interface=mbi,
-                               parameter_list=relay_parameters)
-        
+@pytest.mark.skipif(not has_ttyS1_access(), reason="No access to ttyS1")        
 def test_modbus_serial():
     cfg_path = f"{pathlib.Path(__file__).parents[1]}/cfg_ncsu"
     DERs = ["F1_DSP111", "F1_DSP112", "F2_DSP114", "F3_DSP115", "F3_DSP116"]
@@ -109,48 +157,7 @@ def test_modbus_serial():
         print(f"\n {der}")
         poll_modbus_parameters(modbus_interface=mbi,
                                parameter_list=DER_parameters)
-
-
-
-def poll_modbus_parameters(modbus_interface, parameter_list):
-    
-    for parameter in parameter_list:
-        print(f"poll parameter: {parameter}")
-        modbus_result = modbus_interface.read_modbus(parameter=parameter)
-        assert modbus_result is not None, f"Parameter {parameter} returned {modbus_result}"
-        print(f"{parameter} output: {modbus_result['values']}")
-
-
-# The DSP tests need to be run from the nodes connected via serial to the DSP.
-def start_dsp(der):
-    cfg_path = f"{pathlib.Path(__file__).parents[1]}/cfg_ncsu"
-    path_to_file = f"{cfg_path}/{der}.yaml"
-    mbi =  ModbusInterface.ModbusInterface(path_to_file)
-
-    parameters_to_poll = ["CONTROL", "P", "Q"]
-
-    # poll_modbus_parameters(modbus_interface=mbi, parameter_list=parameters_to_poll)
-
-    mbi.write_modbus(parameter="CONTROL", values=[1])
-    time.sleep(10)
-
-    # poll_modbus_parameters(modbus_interface=mbi, parameter_list=parameters_to_poll)
-
-    
-def query_dsp(der):
-    cfg_path = f"{pathlib.Path(__file__).parents[1]}/cfg_ncsu"
-    path_to_file = f"{cfg_path}/{der}.yaml"
-    DER_parameters = ["FREQ", "VA_RMS", "P", "Q", "VREF", "WREF"]
-    
-    mbi = ModbusInterface.ModbusInterface(path_to_file)
-
-    poll_modbus_parameters(modbus_interface=mbi,
-                           parameter_list=DER_parameters)
-    
-
-# Define a function to check if ttyS1 exists
-def has_ttyS1_access():
-    return os.access('/dev/ttyS1', os.R_OK | os.W_OK)
+        
 
 # Use the @pytest.mark.skipif decorator to skip the test if ttyS1 doesn't exist
 @pytest.mark.skipif(not has_ttyS1_access(), reason="No access to ttyS1")
@@ -183,18 +190,3 @@ def test_dsp_116():
     der = "F3_DSP116"
     query_dsp(der=der)
 
-
-def test_gen_on():
-    cfg_path = f"{pathlib.Path(__file__).parents[1]}/cfg_ncsu"
-    device = "GEN2-Banshee"
-    path_to_file = f"{cfg_path}/{device}.yaml"
-    mbi = ModbusInterface.ModbusInterface(path_to_file)
-
-    parameters_to_poll = ["CONTROL", "P", "Q"]
-
-    poll_modbus_parameters(modbus_interface=mbi, parameter_list=parameters_to_poll)
-
-    mbi.write_modbus(parameter="CONTROL", values=[1])
-    time.sleep(10)
-
-    poll_modbus_parameters(modbus_interface=mbi, parameter_list=parameters_to_poll)
