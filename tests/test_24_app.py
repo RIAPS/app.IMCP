@@ -26,7 +26,7 @@ vanderbilt_config = {"VM_IP": "172.21.20.70",
                      "event_thread_handler": single}
 
 
-full = functools.partial(full_24, nodes_to_watch=["122_", "113_"], operator_node_id="172.21.20.20")
+full = functools.partial(full_24, nodes_to_watch=["122_", "113_"], operator_node_id="192.168.10.122")
 ncsu_config = {"VM_IP": "192.168.10.106",
                "mqtt_config": f"{pathlib.Path(__file__).parents[1]}/cfg_ncsu/mqtt.yaml",
                "app_folder_path": pathlib.Path(__file__).parents[1],
@@ -38,7 +38,7 @@ ncsu_config = {"VM_IP": "192.168.10.106",
 configs = {"vu": vanderbilt_config,
            "ncsu": ncsu_config}
 
-test_cfg = configs["vu"]
+test_cfg = configs["ncsu"]
 
 mqtt_config = {
     "broker_ip": test_cfg["VM_IP"],
@@ -332,7 +332,7 @@ def test_app(testslogger, platform_log_server, log_server, mqtt_client):
         if task == "terminate":
             finished = True
         else:
-            next_command(mqtt_client, task)
+            next_command(testslogger, mqtt_client, task)
 
     test_api.terminate_riaps_app(controller, app_name)
     testslogger.info(f"Test complete at {time.time()}")

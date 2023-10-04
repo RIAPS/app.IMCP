@@ -18,7 +18,7 @@ def watch24(logger, event_q, task_q, end_time, nodes_to_watch, operator_node_id)
     no_errors = True
 
     logger.info(f"Watchdog started at {datetime_start}, "
-                   f"will run for {duration_seconds} seconds until {datetime_end}")
+                f"will run for {duration_seconds} seconds until {datetime_end}")
     while end_time > time.time() and no_errors:
         try:
             event_source = event_q.get(10)  #
