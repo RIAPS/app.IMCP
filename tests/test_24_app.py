@@ -100,6 +100,7 @@ def save_to_csv(data, filename):
     # Append the timestamp to the data
     data_with_timestamp = f"{timestamp}\n{data}"
 
+    #TODO: Create file if it doesn't exist
     # Write the data to the CSV file
     with open(filename, 'a', newline='') as csv_file:
         csv_file.write(data_with_timestamp)
@@ -110,7 +111,7 @@ def test_monitoring(fabric_group):
 
     samples_collected = 0
 
-    process_to_monitor = 117965
+    process_to_monitor = 2031
     assert psutil.pid_exists(process_to_monitor), f"Process {process_to_monitor} does not exist"
 
     while True:
