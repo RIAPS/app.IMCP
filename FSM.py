@@ -79,8 +79,10 @@ class FSM(IMCP_FSM):
                                            "model_state": self.model.state,
                                            "unplanned": unplanned}})
 
-        if "ACTIVE_" not in self.model.state:
-            return None, False
+        # if "ACTIVE_" not in self.model.state:
+        #     return None, False
+        # TODO: 10/4/2023
+        #  Pretty sure this is not needed because of the "PREPARE" check below.
 
         if unplanned:
             if relay_id == self.pcc_relay_id:
@@ -90,14 +92,17 @@ class FSM(IMCP_FSM):
             
         if relay_id != self.relayUnderControl:
             return None, False
-        
-        if relay_id == self.pcc_relay_id:
-            if connected and self.model.state == 'ACTIVE_GRID-TIED':
-                return None, False
-            if (not connected) and self.model.state == 'ACTIVE_ISLANDED':
-                return None, False
+
+        if "PREPARE" not in self.model.state:
+            """triggers caused by the relay are only valid from transition states (except unplanned ones).
+            We are not in one of those states, so ignore the message."""
+            return None, False
 
         if relay_id == self.pcc_relay_id:
+            # if connected and self.model.state == 'ACTIVE_GRID-TIED':
+            #     return None, False
+            # elif (not connected) and self.model.state == 'ACTIVE_ISLANDED':
+            #     return None, False
             if self.model.state == 'ACTIVE_PREPARE-ISLAND':
                 return ('completePlannedIsland', True) if not connected else (None, False)
             elif self.model.state == 'ACTIVE_PREPARE-RESYNC':
@@ -110,9 +115,8 @@ class FSM(IMCP_FSM):
                 return ('completeConnect', True) if connected else (None, False)
             elif self.model.state == 'ACTIVE_PREPARE-DISCONNECT':
                 return ('completeDisconnect', True) if not connected else (None, False)
-            else:
-                return None, False  # Ignore message from non pcc relay if we're not in a transition state.
-
+            # else:
+            #     return None, False  # Ignore message from non pcc relay if we're not in a transition state.
 
         log_json(self.logger, "error", "Unexpected conditions",
                  event={"UNEXPECTED CONDITIONS": {"relay_id": relay_id,
@@ -164,40 +168,46 @@ class FSM(IMCP_FSM):
         elif self.model.state == "LOCAL-CONTROL" and commandEnableActiveControl == 0:
             return None, False  # These are the predicates for the LOCAL-CONTROL state, so don't do anything.
 
-        # ---- evaluate the active control commands ---- #
+        # ---- evaluate if the message is relevant ---- #
         # GRID Operations
         if requestedRelayStatus == "Unknown":
             return None, False
+        elif "PREPARE" in self.model.state:
+            """triggers caused by the operator are only valid from stable states.
+            We are not in one of those states, so ignore the message."""
+            return None, False
+        elif not groupChange:
+            """All triggers caused by the operator will result in a group change."""
+            return None, False
+        elif self.model.state == "ACTIVE_GRID-TIED" and requestedRelayStatus["requested_state"] == "CLOSE":
+            """If the requested state is as expected for the model state, then ignore the message."""
+            return None, False
+        elif self.model.state == "ACTIVE_ISLANDED" and requestedRelayStatus["requested_state"] == "OPEN":
+            return None, False
 
-        connected = requestedRelayStatus["connected"]
-
+        # ---- evaluate the active control commands ---- #
+        # GRID Operations
         if requestedRelayID == self.pcc_relay_id:
             # planned islanding
-            if connected and self.model.state == 'ACTIVE_GRID-TIED':
-                return ('requestIsland', True) if requestedAction == 'OPEN' else (None, False)
+            if self.model.state == 'ACTIVE_GRID-TIED' and requestedRelayStatus["requested_state"] == "OPEN":
+                return 'requestIsland', True
             # reconnecting
-            elif (not connected) and self.model.state == 'ACTIVE_ISLANDED':
-                return ('requestResync', True) if requestedAction == 'CLOSE' else (None, False)
-            elif "PREPARE" in self.model.state:
-                return None, False  # This is a waiting state, so don't do anything
+            elif self.model.state == 'ACTIVE_ISLANDED' and requestedRelayStatus["requested_state"] == "CLOSE":
+                return 'requestResync', True
 
         # Feeder Operations
         elif requestedRelayID != self.pcc_relay_id:
-            if not groupChange:
-                return None, False
-            elif "PREPARE" in self.model.state:
-                return None, False # This is a waiting state, so don't do anything
             # disconnecting adjacent feeder in islanded mode
-            elif connected and self.model.state == "ACTIVE_ISLANDED":
-                return ('requestDisconnect', True) if requestedAction == 'OPEN' else (None, False)
+            if self.model.state == "ACTIVE_ISLANDED" and requestedRelayStatus["requested_state"] == "OPEN":
+                return 'requestDisconnect', True
             # connecting adjacent feeder in islanded mode.
             # see https://github.com/RIAPS/app.MgManage/blob/new-fsm-integration/FSM.py#L196
-            elif (not connected) and self.model.state == "ACTIVE_ISLANDED":
-                return ('requestConnect', True) if requestedAction == 'CLOSE' else (None, False)
-            else:
-                # TODO: What if I'm in a state other than ACTIVE_ISLANDED and I get a request to connect/disconnect a
-                #  non-PCC relay?
-                #  For now let's write a log stating it is not supported and return None. This was not supported in the original app either. 
+            elif self.model.state == "ACTIVE_ISLANDED" and requestedRelayStatus["requested_state"] == "CLOSE":
+                return 'requestConnect', True
+            elif self.model.state != "ACTIVE_ISLANDED":
+                # TODO: What if I'm in GRID-TIED and I get a request to connect/disconnect a non-PCC relay?
+                #  For now let's write a log stating it is not supported and return None.
+                #  This was not supported in the original app either.
                 log_json(self.logger, "warn",
                          "Unsupported request to connect/disconnect a non-PCC relay while not ISLANDED",
                          event={"UNSUPPORTED REQUEST": {"commandStartStop": commandStartStop,
@@ -206,10 +216,9 @@ class FSM(IMCP_FSM):
                                                         "requestedRelayID": requestedRelayID,
                                                         "pcc_relay": self.pcc_relay_id,
                                                         "requestedAction": requestedAction,
-                                                        "connected": connected,
+                                                        "connected": requestedRelayStatus["connected"],
                                                         "groupChange": groupChange}})
                 return None, False  
-                
 
         log_json(self.logger, "error", "Unexpected conditions",
                  event={"UNEXPECTED CONDITIONS": {"commandStartStop": commandStartStop,
@@ -218,7 +227,7 @@ class FSM(IMCP_FSM):
                                                   "requestedRelayID": requestedRelayID,
                                                   "pcc_relay": self.pcc_relay_id,
                                                   "requestedAction": requestedAction,
-                                                  "connected": connected,
+                                                  "connected": requestedRelayStatus["connected"],
                                                   "groupChange": groupChange}})
 
         assert False, "Unexpected conditions, how did we get here? Was it a bug?"
