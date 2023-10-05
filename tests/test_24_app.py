@@ -1,5 +1,6 @@
 import datetime
 import functools
+import inspect
 import json
 import pathlib
 import psutil
@@ -51,10 +52,39 @@ mqtt_config = {
 # -- LOG TESTS -- #
 # --------------- #
 
-def test_file_logger(file_logger):
-    file_logger.info(f"Test started at {time.time()}")
-    time.sleep(1)
-    file_logger.info(f"Test stopped at {time.time()}")
+def test_testslogger(testslogger):
+    testslogger.info(f"Test started at {time.time()}")
+    for handler in testslogger.handlers:
+        print(f"flushing handler: {handler}")
+        handler.flush()
+        
+    for ix in range(10):
+        testslogger.info(f"Test {ix}")
+        time.sleep(1)
+    testslogger.info(f"Test stopped at {time.time()}")
+    log_file_path = f"{pathlib.Path(__file__).parents[1]}/tests/test_logs"
+
+    assert pathlib.Path(f"{log_file_path}/debug.log").exists(), "Expected file does not exist"
+
+def test_testslogger_thread(testslogger):
+    def threaded_logger_function(logger):
+        logger.info(f"Threaded logger started at {time.time()}")
+        for ix in range(10):
+            logger.info(f"Threaded logger {ix}")
+            time.sleep(1)
+        logger.info(f"Threaded logger stopped at {time.time()}")
+
+    testslogger.info(f"Test started at {time.time()}")
+    for handler in testslogger.handlers:
+        print(f"handler: {handler}")
+
+    threaded_logger = threading.Thread(target=threaded_logger_function, args=(testslogger,))
+    threaded_logger.start()
+        
+    for ix in range(10):
+        testslogger.info(f"Test {ix}")
+        time.sleep(1)
+    testslogger.info(f"Test stopped at {time.time()}")
     log_file_path = f"{pathlib.Path(__file__).parents[1]}/tests/test_logs"
 
     assert pathlib.Path(f"{log_file_path}/debug.log").exists(), "Expected file does not exist"
@@ -221,25 +251,45 @@ def next_command(logger, mqtt_client, data):
 
 
 class EventQMonitorThread(threading.Thread):
-    def __init__(self, handler):
+    def __init__(self, handler, logger=None):
         super().__init__()
         self.is_running = False
-        self.event_q_handler = threading.Thread(target=handler)
+        self.stop_event = threading.Event()
+        self.event_q_handler = threading.Thread(target=handler, kwargs={"stop_event": self.stop_event})
         self.event_q_handler.daemon = True
+        self.logger = logger
 
     def run(self):
         try:
             self.is_running = True
             self.event_q_handler.start()
             while self.is_running:
+                self.logger.debug(f"EventQMonitorThread is alive: {self.event_q_handler.is_alive()}") if self.logger is not None else None
                 time.sleep(1)
         except Exception as e:
             print(f"Exception in EventQThread: {e}")
         finally:
-            self.event_q_handler.join()
+            self.logger.info(f"EventQMonitorThread is stopping") if self.logger is not None else None
+            # self.event_q_handler.join()
+            self.logger.info(f"event_q alive?: {self.event_q_handler.is_alive()}") if self.logger is not None else None
 
     def stop(self):
         self.is_running = False
+        self.stop_event.set()
+        self.event_q_handler.join()
+
+def partial_with_missing_args(func, *args, **kwargs):
+    partial_func = functools.partial(func, *args, **kwargs)
+    
+    def missing_args(*args, **kwargs):
+        signature = inspect.signature(func)
+        bound_args = signature.bind_partial(*args, **kwargs)
+        
+        missing_params = [param for param, value in bound_args.arguments.items() if value is param.default]
+        
+        return partial_func, missing_params
+    
+    return missing_args
 
 
 @pytest.mark.parametrize('platform_log_server', [{'server_ip': test_cfg["VM_IP"]}], indirect=True)
@@ -258,19 +308,35 @@ def test_app(testslogger, platform_log_server, log_server, mqtt_client):
     task_q = queue.Queue()
     end_time = time.time() + 24 * 60 * 60
 
+    # logger, event_q, task_q, end_time, stop_event
+
     event_thread_handler = functools.partial(partial_event_thread_handler, 
                                              logger=testslogger, 
                                              event_q=event_q, 
                                              task_q=task_q,
                                              end_time=end_time)
+    
+    # partial_event_thread_handler_signature = inspect.signature(partial_event_thread_handler)
+    # event_thread_handler_signature = inspect.signature(event_thread_handler)
+    # partial_event_thread_handler_parameters = partial_event_thread_handler_signature.parameters
+    # event_thread_handler_parameters = event_thread_handler_signature.parameters
 
+    # for param_name, param_info in partial_event_thread_handler_parameters.items():
+    #     print(f"partial Parameter: {param_name}")
+    #     print(f"partial Default Value: {param_info.default}")
+
+    # for param_name, param_info in event_thread_handler_parameters.items():
+    #     print(f"Parameter: {param_name}")
+    #     print(f"Default Value: {param_info.default}")
+    
+  
 
     log_file_path = str(pathlib.Path(__file__).parents[1]) + "/server_logs"
-    log_file_observer_thread = test_api.FileObserverThread(event_q, folder_to_monitor=log_file_path)
+    log_file_observer_thread = test_api.FileObserverThread(event_q, folder_to_monitor=log_file_path, logger=testslogger)
     log_file_observer_thread.start()
 
     
-    event_q_monitor_thread = EventQMonitorThread(handler=event_thread_handler)
+    event_q_monitor_thread = EventQMonitorThread(handler=event_thread_handler, logger=testslogger)
     event_q_monitor_thread.start()
 
     
@@ -278,62 +344,72 @@ def test_app(testslogger, platform_log_server, log_server, mqtt_client):
     client_list = utils.get_client_list(file_path=f"{app_folder_path}/{depl_file_name}")
     testslogger.info(f"client list: {client_list}")
 
-    controller, app_name = test_api.launch_riaps_app(
-        app_folder_path=app_folder_path,
-        app_file_name=app_file_name,
-        depl_file_name=depl_file_name,
-        database_type="dht",
-        required_clients=client_list
-    )
+    input("Press a key to terminate the app\n")
 
-    finished = False
-    time_of_last_task = 0
-    max_seconds_between_tasks = 600
-    first_task_start_timer = time.time()
-    max_seconds_until_first_task = 600
-    while not finished:
-        now = time.time()
-        if int(now) % 10 == 0:
-            if not log_file_observer_thread.is_alive():
-                testslogger.info(f"Log file observer is not alive. Restarting.")
-                log_file_observer_thread.stop()
-                log_file_observer_thread = test_api.FileObserverThread(event_q, folder_to_monitor=log_file_path)
-                log_file_observer_thread.start()
+    # controller, app_name = test_api.launch_riaps_app(
+    #     app_folder_path=app_folder_path,
+    #     app_file_name=app_file_name,
+    #     depl_file_name=depl_file_name,
+    #     database_type="dht",
+    #     required_clients=client_list
+    # )
 
-            if not event_q_monitor_thread.is_alive():
-                testslogger.info(f"event_q_monitor_thread is not alive. Restarting.")
-                event_q_monitor_thread.stop()
-                event_q_monitor_thread = EventQMonitorThread(testslogger, event_q, task_q, end_time=end_time, handler=event_thread_handler)
-                event_q_monitor_thread.start()
+    # finished = False
+    # time_of_last_task = 0
+    # max_seconds_between_tasks = 600
+    # first_task_start_timer = time.time()
+    # max_seconds_until_first_task = 600
+    # while not finished:
+    #     now = time.time()
+    #     if int(now) % 10 == 0:
+    #         testslogger.debug(f"Checking threads at {now}")
+    #         for handler in [testslogger.handlers]:
+    #             print(f"flushing handler: {handler}")
+    #             handler.stream.flush()
+    #         if not log_file_observer_thread.is_alive():
+    #             testslogger.info(f"Log file observer is not alive. Restarting.")
+    #             log_file_observer_thread.stop()
+    #             log_file_observer_thread = test_api.FileObserverThread(event_q, folder_to_monitor=log_file_path)
+    #             log_file_observer_thread.start()
 
-        try:
-            task = task_q.get(timeout=1)
-        except queue.Empty:
-            if time_of_last_task == 0:
-                seconds_waiting_for_first_task = now - first_task_start_timer
-                if seconds_waiting_for_first_task > max_seconds_until_first_task:
-                    testslogger.info(f"Test timed out after {seconds_waiting_for_first_task} seconds")
-                    finished = True
-            else:
-                seconds_since_last_task = now - time_of_last_task
-                if seconds_since_last_task > max_seconds_between_tasks:
-                    testslogger.info(f"Time between tasks is too long: {seconds_since_last_task}")
-                    finished = True
-            continue
+    #         if not event_q_monitor_thread.is_alive():
+    #             testslogger.info(f"event_q_monitor_thread is not alive. Restarting.")
+    #             event_q_monitor_thread.stop()
+    #             event_q_monitor_thread = EventQMonitorThread(testslogger, event_q, task_q, end_time=end_time, handler=event_thread_handler)
+    #             event_q_monitor_thread.start()
 
-        if time_of_last_task == 0:
-            time_of_last_task = time.time()
-        time_since_last_task = time.time() - time_of_last_task
-        time_of_last_task = time.time()
-        if time_since_last_task > max_seconds_between_tasks:
-            testslogger.info(f"Time between tasks is too long: {time_since_last_task}")
-            finished = True
-            continue
+    #     try:
+    #         task = task_q.get(timeout=1)
+    #     except queue.Empty:
+    #         testslogger.info(f"No tasks in queue")
+    #         if time_of_last_task == 0:
+    #             seconds_waiting_for_first_task = now - first_task_start_timer
+    #             if seconds_waiting_for_first_task > max_seconds_until_first_task:
+    #                 testslogger.info(f"Test timed out after {seconds_waiting_for_first_task} seconds")
+    #                 finished = True
+    #         else:
+    #             seconds_since_last_task = now - time_of_last_task
+    #             if seconds_since_last_task > max_seconds_between_tasks:
+    #                 testslogger.info(f"Time between tasks is too long: {seconds_since_last_task}")
+    #                 finished = True
+    #         continue
 
-        if task == "terminate":
-            finished = True
-        else:
-            next_command(testslogger, mqtt_client, task)
+    #     if time_of_last_task == 0:
+    #         time_of_last_task = time.time()
+    #     time_since_last_task = time.time() - time_of_last_task
+    #     time_of_last_task = time.time()
+    #     if time_since_last_task > max_seconds_between_tasks:
+    #         testslogger.info(f"Time between tasks is too long: {time_since_last_task}")
+    #         finished = True
+    #         continue
 
-    test_api.terminate_riaps_app(controller, app_name)
+    #     if task == "terminate":
+    #         finished = True
+    #     else:
+    #         next_command(testslogger, mqtt_client, task)
+
+    # test_api.terminate_riaps_app(controller, app_name)
     testslogger.info(f"Test complete at {time.time()}")
+    event_q_monitor_thread.stop()
+    log_file_observer_thread.stop()
+    
