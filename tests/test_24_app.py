@@ -270,13 +270,14 @@ class EventQMonitorThread(threading.Thread):
             print(f"Exception in EventQThread: {e}")
         finally:
             self.logger.info(f"EventQMonitorThread is stopping") if self.logger is not None else None
-            # self.event_q_handler.join()
             self.logger.info(f"event_q alive?: {self.event_q_handler.is_alive()}") if self.logger is not None else None
 
     def stop(self):
-        self.is_running = False
         self.stop_event.set()
         self.event_q_handler.join()
+        self.is_running = False
+        
+        
 
 def partial_with_missing_args(func, *args, **kwargs):
     partial_func = functools.partial(func, *args, **kwargs)
@@ -330,85 +331,92 @@ def test_app(testslogger, platform_log_server, log_server, mqtt_client):
     #     print(f"Default Value: {param_info.default}")
     
   
+    try: 
+        log_file_path = str(pathlib.Path(__file__).parents[1]) + "/server_logs"
+        log_file_observer_thread = test_api.FileObserverThread(event_q, folder_to_monitor=log_file_path, logger=testslogger)
+        log_file_observer_thread.start()
 
-    log_file_path = str(pathlib.Path(__file__).parents[1]) + "/server_logs"
-    log_file_observer_thread = test_api.FileObserverThread(event_q, folder_to_monitor=log_file_path, logger=testslogger)
-    log_file_observer_thread.start()
+        
+        event_q_monitor_thread = EventQMonitorThread(handler=event_thread_handler, logger=testslogger)
+        event_q_monitor_thread.start()
 
+        
+
+        client_list = utils.get_client_list(file_path=f"{app_folder_path}/{depl_file_name}")
+        testslogger.info(f"client list: {client_list}")
+
+        controller = None
+        app_name = None
+        controller, app_name = test_api.launch_riaps_app(
+            app_folder_path=app_folder_path,
+            app_file_name=app_file_name,
+            depl_file_name=depl_file_name,
+            database_type="dht",
+            required_clients=client_list,
+            logger=testslogger
+        )
+
+        print(f"Does print work?")
+        print(f"What happend to my testslogger?: {testslogger}")
+        testslogger.info(f"Test started at {time.time()}")
+        print(f"Why did my testslogger disappear?")
+
+
+        finished = False
+        time_of_last_task = 0
+        max_seconds_between_tasks = 600
+        first_task_start_timer = time.time()
+        max_seconds_until_first_task = 600
     
-    event_q_monitor_thread = EventQMonitorThread(handler=event_thread_handler, logger=testslogger)
-    event_q_monitor_thread.start()
+        while not finished:
+            now = time.time()
+            if int(now) % 10 == 0:
+                if not log_file_observer_thread.is_alive():
+                    testslogger.info(f"Log file observer is not alive. Restarting.")
+                    log_file_observer_thread.stop()
+                    log_file_observer_thread = test_api.FileObserverThread(event_q, folder_to_monitor=log_file_path)
+                    log_file_observer_thread.start()
 
-    
+                if not event_q_monitor_thread.is_alive():
+                    testslogger.info(f"event_q_monitor_thread is not alive. Restarting.")
+                    event_q_monitor_thread.stop()
+                    event_q_monitor_thread = EventQMonitorThread(testslogger, event_q, task_q, end_time=end_time, handler=event_thread_handler)
+                    event_q_monitor_thread.start()
 
-    client_list = utils.get_client_list(file_path=f"{app_folder_path}/{depl_file_name}")
-    testslogger.info(f"client list: {client_list}")
+            try:
+                task = task_q.get(timeout=1)
+            except queue.Empty:
+                testslogger.info(f"No tasks in queue")
+                if time_of_last_task == 0:
+                    seconds_waiting_for_first_task = now - first_task_start_timer
+                    if seconds_waiting_for_first_task > max_seconds_until_first_task:
+                        testslogger.info(f"Test timed out after {seconds_waiting_for_first_task} seconds")
+                        finished = True
+                else:
+                    seconds_since_last_task = now - time_of_last_task
+                    if seconds_since_last_task > max_seconds_between_tasks:
+                        testslogger.info(f"Time between tasks is too long: {seconds_since_last_task}")
+                        finished = True
+                continue
 
-    input("Press a key to terminate the app\n")
+            if time_of_last_task == 0:
+                time_of_last_task = time.time()
+            time_since_last_task = time.time() - time_of_last_task
+            time_of_last_task = time.time()
+            if time_since_last_task > max_seconds_between_tasks:
+                testslogger.info(f"Time between tasks is too long: {time_since_last_task}")
+                finished = True
+                continue
 
-    # controller, app_name = test_api.launch_riaps_app(
-    #     app_folder_path=app_folder_path,
-    #     app_file_name=app_file_name,
-    #     depl_file_name=depl_file_name,
-    #     database_type="dht",
-    #     required_clients=client_list
-    # )
+            if task == "terminate":
+                finished = True
+            else:
+                next_command(testslogger, mqtt_client, task)
+    except KeyboardInterrupt:
+        testslogger.info(f"KeyboardInterrupt")
 
-    # finished = False
-    # time_of_last_task = 0
-    # max_seconds_between_tasks = 600
-    # first_task_start_timer = time.time()
-    # max_seconds_until_first_task = 600
-    # while not finished:
-    #     now = time.time()
-    #     if int(now) % 10 == 0:
-    #         testslogger.debug(f"Checking threads at {now}")
-    #         for handler in [testslogger.handlers]:
-    #             print(f"flushing handler: {handler}")
-    #             handler.stream.flush()
-    #         if not log_file_observer_thread.is_alive():
-    #             testslogger.info(f"Log file observer is not alive. Restarting.")
-    #             log_file_observer_thread.stop()
-    #             log_file_observer_thread = test_api.FileObserverThread(event_q, folder_to_monitor=log_file_path)
-    #             log_file_observer_thread.start()
-
-    #         if not event_q_monitor_thread.is_alive():
-    #             testslogger.info(f"event_q_monitor_thread is not alive. Restarting.")
-    #             event_q_monitor_thread.stop()
-    #             event_q_monitor_thread = EventQMonitorThread(testslogger, event_q, task_q, end_time=end_time, handler=event_thread_handler)
-    #             event_q_monitor_thread.start()
-
-    #     try:
-    #         task = task_q.get(timeout=1)
-    #     except queue.Empty:
-    #         testslogger.info(f"No tasks in queue")
-    #         if time_of_last_task == 0:
-    #             seconds_waiting_for_first_task = now - first_task_start_timer
-    #             if seconds_waiting_for_first_task > max_seconds_until_first_task:
-    #                 testslogger.info(f"Test timed out after {seconds_waiting_for_first_task} seconds")
-    #                 finished = True
-    #         else:
-    #             seconds_since_last_task = now - time_of_last_task
-    #             if seconds_since_last_task > max_seconds_between_tasks:
-    #                 testslogger.info(f"Time between tasks is too long: {seconds_since_last_task}")
-    #                 finished = True
-    #         continue
-
-    #     if time_of_last_task == 0:
-    #         time_of_last_task = time.time()
-    #     time_since_last_task = time.time() - time_of_last_task
-    #     time_of_last_task = time.time()
-    #     if time_since_last_task > max_seconds_between_tasks:
-    #         testslogger.info(f"Time between tasks is too long: {time_since_last_task}")
-    #         finished = True
-    #         continue
-
-    #     if task == "terminate":
-    #         finished = True
-    #     else:
-    #         next_command(testslogger, mqtt_client, task)
-
-    # test_api.terminate_riaps_app(controller, app_name)
+    if controller is not None and app_name is not None:
+        test_api.terminate_riaps_app(controller, app_name)
     testslogger.info(f"Test complete at {time.time()}")
     event_q_monitor_thread.stop()
     log_file_observer_thread.stop()
