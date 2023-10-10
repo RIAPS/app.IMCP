@@ -21,14 +21,9 @@ def watch24(logger, event_q, task_q, end_time, nodes_to_watch, operator_node_id,
                 f"will run for {duration_seconds} seconds until {datetime_end}")
    
     while end_time > time.time() and no_errors and not stop_event.is_set():
-        logger.info(f"Watchdog loop at {datetime.datetime.utcnow()}")
-        time.sleep(1)
-
-def skip_watch24(logger, event_q, task_q, end_time, nodes_to_watch, operator_node_id):
-    while False:
+ 
         try:
             event_source = event_q.get(10)  #
-            logger.info(f"Received event from {event_source}")
         except queue.Empty:
             logger.info(f"No events received in the last 10 seconds")
             continue
