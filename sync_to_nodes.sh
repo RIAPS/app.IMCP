@@ -7,9 +7,9 @@ REMOTE_NODES=("riaps@192.168.10.111" "riaps@192.168.10.112" "riaps@192.168.10.11
 
 for item in "${REMOTE_NODES[@]}"
 do
+  echo "Syncing to $item"
   rsync -avz --rsync-path="mkdir -p $REMOTE && rsync" "cfg_ncsu" "$item:$REMOTE"
   rsync -avz --rsync-path="mkdir -p $REMOTE/tests && rsync" "tests/test_ncsu_setup.py" "$item:$REMOTE/tests"
-  rsync -avz --rsync-path="mkdir -p $REMOTE/tests && rsync" "tests/test_old.py" "$item:$REMOTE/tests"
 done
 
 
