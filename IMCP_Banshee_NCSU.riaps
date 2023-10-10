@@ -110,17 +110,8 @@ app IMCP_Banshee_NCSU{
 	    // send out commands for power devices.
         pub operator_pub: OperatorMsg;
 
-	    // For status updates from device (faults, errors, etc.)
-	    // sub local_event_port: LocalDeviceEvent;
-
-	    // Communicate with device
-	    // qry device_port: (Gen1DeviceQry, Gen1DeviceAns) timed;
-
 	    // message from relay
 	    sub relay_sub: RelayMsg;
-
-	    // message from FSM
-	    sub state_sub: StateMsg;
 
 	    // message from generator/computation component
 	    sub consensus_sub: DgMsg;
