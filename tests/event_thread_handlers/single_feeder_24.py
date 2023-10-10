@@ -5,7 +5,7 @@ import queue
 import time
 
 
-def watch24(logger, event_q, task_q, end_time, nodes_to_watch, operator_node_id):
+def watch24(logger, event_q, task_q, end_time, nodes_to_watch, operator_node_id, stop_event):
     files = {}
     start_time = time.time()
     datetime_start = datetime.datetime.fromtimestamp(start_time)
@@ -18,12 +18,14 @@ def watch24(logger, event_q, task_q, end_time, nodes_to_watch, operator_node_id)
     no_errors = True
 
     logger.info(f"Watchdog started at {datetime_start}, "
-                   f"will run for {duration_seconds} seconds until {datetime_end}")
-    while end_time > time.time() and no_errors:
+                f"will run for {duration_seconds} seconds until {datetime_end}")
+   
+    while end_time > time.time() and no_errors and not stop_event.is_set():
+ 
         try:
             event_source = event_q.get(10)  #
         except queue.Empty:
-            logger.info(f"File event queue is empty")
+            logger.info(f"No events received in the last 10 seconds")
             continue
 
         if ".log" not in event_source:  # required to filter out the directory events
@@ -138,5 +140,6 @@ def watch24(logger, event_q, task_q, end_time, nodes_to_watch, operator_node_id)
                         task_q.put(task)
 
                 logger.info(f"task_q: {list(task_q.queue)}")
-
+    
+    logger.info(f"Watchdog finished at {datetime.datetime.utcnow()}")
     task_q.put("terminate")
