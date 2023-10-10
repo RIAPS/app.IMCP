@@ -333,11 +333,11 @@ def test_app(testslogger, platform_log_server, log_server, mqtt_client):
   
     try: 
         log_file_path = str(pathlib.Path(__file__).parents[1]) + "/server_logs"
-        log_file_observer_thread = test_api.FileObserverThread(event_q, folder_to_monitor=log_file_path, logger=testslogger)
+        log_file_observer_thread = test_api.FileObserverThread(event_q, folder_to_monitor=log_file_path, logger=None)
         log_file_observer_thread.start()
 
         
-        event_q_monitor_thread = EventQMonitorThread(handler=event_thread_handler, logger=testslogger)
+        event_q_monitor_thread = EventQMonitorThread(handler=event_thread_handler, logger=None)
         event_q_monitor_thread.start()
 
         
@@ -355,12 +355,6 @@ def test_app(testslogger, platform_log_server, log_server, mqtt_client):
             required_clients=client_list,
             logger=testslogger
         )
-
-        print(f"Does print work?")
-        print(f"What happend to my testslogger?: {testslogger}")
-        testslogger.info(f"Test started at {time.time()}")
-        print(f"Why did my testslogger disappear?")
-
 
         finished = False
         time_of_last_task = 0
@@ -380,13 +374,14 @@ def test_app(testslogger, platform_log_server, log_server, mqtt_client):
                 if not event_q_monitor_thread.is_alive():
                     testslogger.info(f"event_q_monitor_thread is not alive. Restarting.")
                     event_q_monitor_thread.stop()
-                    event_q_monitor_thread = EventQMonitorThread(testslogger, event_q, task_q, end_time=end_time, handler=event_thread_handler)
+                    event_q_monitor_thread = EventQMonitorThread(None, event_q, task_q, end_time=end_time, handler=event_thread_handler)
                     event_q_monitor_thread.start()
 
             try:
                 task = task_q.get(timeout=1)
             except queue.Empty:
-                testslogger.info(f"No tasks in queue")
+                if int(now) % 10 == 0:
+                    testslogger.info(f"No tasks received in the last 10 seconds")
                 if time_of_last_task == 0:
                     seconds_waiting_for_first_task = now - first_task_start_timer
                     if seconds_waiting_for_first_task > max_seconds_until_first_task:
@@ -417,7 +412,8 @@ def test_app(testslogger, platform_log_server, log_server, mqtt_client):
 
     if controller is not None and app_name is not None:
         test_api.terminate_riaps_app(controller, app_name)
-    testslogger.info(f"Test complete at {time.time()}")
+    
     event_q_monitor_thread.stop()
     log_file_observer_thread.stop()
+    testslogger.info(f"Test complete at {time.time()}")
     
