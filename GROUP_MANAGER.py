@@ -19,7 +19,6 @@ debugMode = helper.debugMode
 def build_connected_group(my_group_id: int,
                           topology: dict,
                           status_of_relays: dict):
-    
     number_of_groups = len(topology["electrically_independent_groups"])
 
     identity_matrix = np.diag(np.ones(number_of_groups))
@@ -62,9 +61,7 @@ class GROUP_MANAGER(Component):
         self.requestedAction = 'NONE'
 
         modbus_device_config = load_config_file(config)
-
         self.device_name = modbus_device_config["Name"]
-        self.pccRelayID = modbus_device_config['Feeder']
         self.uuid = modbus_device_config['uuid']
         self.MAX_GROUP_PUBLISH_DELAY_SECONDS = modbus_device_config['MAX_GROUP_PUBLISH_DELAY_SECONDS']
 
@@ -88,11 +85,10 @@ class GROUP_MANAGER(Component):
         msg = imcp_capnp.RelayMsg.from_bytes(msg_bytes)
 
         if debugMode:
-            self.logger.debug(f"{helper.BrightMagenta}\n"
-                             f"GROUP_MANAGER.py "
-                             f"on_relay_sub \n"
-                             f"msg: {msg}"
-                             f"{helper.RESET}")
+            self.logger.debug(f"{helper.BrightMagenta}"
+                              f"GROUP_MANAGER.py | on_relay_sub \n"
+                              f"msg: {msg}"
+                              f"{helper.RESET}")
 
         relay_id = msg.sender
         relay_connection_status = {"connected": msg.connected}
@@ -110,30 +106,26 @@ class GROUP_MANAGER(Component):
             self.time_of_last_broadcast = now
 
             self.group, self.group_name = self.group_management()
-            self.publish_group_update(timestamp=now)
+            self.publish_group_msg(timestamp=now)
 
             if debugMode or (self.group != self.future_group):
                 if relay_status_has_changed:
-                    reason = f"relay status has changed from {prior_relay_status} to {relay_connection_status}"
+                    reason = f"relay {relay_id} changed from {prior_relay_status} to {relay_connection_status}"
                 else:
                     reason = "max time between group updates elapsed "
 
                 self.logger.info(
-                    f"{helper.BrightMagenta}\n"
-                    f"GROUP_MANAGER.py - on_relay_sub \n"
-                    f"publish group update \n"
+                    f"{helper.BrightMagenta}"
+                    f"GROUP_MANAGER.py | on_relay_sub | publish group update \n"
                     f"reason: {reason} \n"
                     f"current group is {self.group} \n"
-                    f"future group is {self.future_group} \n"
-                    f"future breaker {self.requestedRelay} is to {self.requestedAction} "
+                    f"future group is {self.future_group}"
                     f"{helper.RESET}")
 
     def group_management(self):
-        self.logger.info(f"groups_connected_by_relay: {self.groups_connected_by_relay}")
         group, group_name = build_connected_group(my_group_id=self.my_group_id,
-                                      topology=self.group_config,
-                                      status_of_relays=self.status_of_relays)
-        self.logger.info(f"group name: {group_name} | members: {group} | type: {type(group)}")
+                                                  topology=self.group_config,
+                                                  status_of_relays=self.status_of_relays)
         return group, group_name
 
     # calculate future group with a single relay with future status
@@ -158,10 +150,10 @@ class GROUP_MANAGER(Component):
         operator_msg = imcp_capnp.OperatorMsg.from_bytes(operator_msg_bytes)
         if debugMode:
             self.logger.debug(f"{helper.Cyan}\n"
-                             f"GROUP_MANAGER.py "
-                             f"on_operator_sub \n"
-                             f"msg: {operator_msg}"
-                             f"{helper.RESET}")
+                              f"GROUP_MANAGER.py "
+                              f"on_operator_sub \n"
+                              f"msg: {operator_msg}"
+                              f"{helper.RESET}")
 
         # This was originally written to allow opening of all PCC relays simultaneously
         # by sending the string "PCC" as the requestedRelay and using the
@@ -181,12 +173,12 @@ class GROUP_MANAGER(Component):
                                                                                  self.requestedRelay,
                                                                                  self.requestedAction)  # sets self.futureGroup
 
-        self.publish_group_update(timestamp=time.time())
+        self.publish_group_msg(timestamp=time.time())
 
     def handleActivate(self):
         self.logger.info(f"group manager activate")
 
-    def publish_group_update(self, timestamp):
+    def publish_group_msg(self, timestamp):
 
         msg = imcp_capnp.GroupMsg.new_message()
         msg.sender = self.device_name

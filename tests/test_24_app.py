@@ -277,7 +277,6 @@ class EventQMonitorThread(threading.Thread):
         self.event_q_handler.join()
         self.is_running = False
         
-        
 
 def partial_with_missing_args(func, *args, **kwargs):
     partial_func = functools.partial(func, *args, **kwargs)

@@ -11,18 +11,6 @@ struct StabilizeVfMsg{
     activePower @4: Float64;
     voltageSetpointChange @5: Float64;
 }
-struct PrivateEstimatorMsg{
-    sender @0: Int16;
-    timestamp @1: Float64;
-    reactivePower @2: Float64;
-    powerEstimated @3: Float64;
-    sStateEstimated @4: Float64;
-    sw1 @5: Float64;
-    sw2 @6: Float64;
-    sw3 @7: Float64;
-    sw4 @8: Float64;
-    sw5 @9: Float64;
-}
 
 struct RelayMsg{
     sender @0: Text;

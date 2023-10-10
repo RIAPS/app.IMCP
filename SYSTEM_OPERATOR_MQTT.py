@@ -46,7 +46,6 @@ class SYSTEM_OPERATOR_MQTT(Component):
                      message=f"{self.getName()} component Initialized.",
                      event="COMPONENT_INITIALIZED")
             self.poller.halt()
-
     # riaps:keep_poller:end
 
     # riaps:keep_consensus_sub:begin
