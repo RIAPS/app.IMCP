@@ -33,8 +33,6 @@ class SYSTEM_OPERATOR_MQTT(Component):
         self.mqtt_peer_msg_counter = {}
 
         self.operator_msgs_sent = 0
-        self.node_states = {}  # records the current FSM state off all components that publish state.
-
         self.appInitReady = False
 
     # riaps:keep_constr:end
@@ -48,25 +46,7 @@ class SYSTEM_OPERATOR_MQTT(Component):
                      message=f"{self.getName()} component Initialized.",
                      event="COMPONENT_INITIALIZED")
             self.poller.halt()
-
     # riaps:keep_poller:end
-
-    # riaps:keep_state_sub:begin
-    def on_state_sub(self):
-        msg_bytes = self.state_sub.recv()
-        msg = imcp_capnp.StateMsg.from_bytes(msg_bytes)
-        if debugMode:
-            self.logger.info(f"{helper.Yellow}"
-                             f"Operator\n"
-                             f"on_state_sub:{msg.sender} \n"
-                             f"recv state sub msgcounter: {msg.msgcounter} \n"
-                             f"state: {msg.currentState} \n"
-                             f" breaker: {msg.breaker} and action: {msg.action} \n"
-                             f" group: {msg.group}  and reconfigcontrol {msg.reconfigcontrol}\n"
-                             f"{helper.RESET}")
-
-        self.node_states[msg.sender] = msg.currentState
-    # riaps:keep_state_sub:end
 
     # riaps:keep_consensus_sub:begin
     def on_consensus_sub(self):

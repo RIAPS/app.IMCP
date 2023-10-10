@@ -5,6 +5,7 @@ from applibs.ComputationalComponentAll import ComputationalComponent
 import applibs.helper as helper
 
 import imcp_capnp
+
 # riaps:keep_import:end
 
 debugMode = helper.debugMode
@@ -14,11 +15,13 @@ debugMode = helper.debugMode
 class GEN1_PWR_MANAGER(ComputationalComponent):
     def __init__(self, config, Ts, topology_config):
         super(GEN1_PWR_MANAGER, self).__init__(config, Ts, topology_config)
+
     # riaps:keep_constr:end
 
     # riaps:keep_local_event_port:begin
     def on_local_event_port(self):
         local_event = self.local_event_port.recv()
+
     # riaps:keep_local_event_port:end
 
     # riaps:keep_consensus_clock:begin
@@ -33,14 +36,14 @@ class GEN1_PWR_MANAGER(ComputationalComponent):
 
         if debugMode:
             self.logger.debug(f"{helper.Cyan}\n"
-                             f"GEN1_PWR_MANAGER.py on_operator_sub \n"
-                             f"msg: {operator_msg}"
-                             f"{helper.RESET}")
+                              f"GEN1_PWR_MANAGER.py on_operator_sub \n"
+                              f"msg: {operator_msg}"
+                              f"{helper.RESET}")
 
         # regulationSignal, regulationSignal2 are the only parameters used here.
         # They correspond to the setpoint for the active and reactive power at the POI to the main grid.
         StartStop_opal, gridBreaker_opal, secondaryCtrl_opal, \
-        secondaryAngleCtrl_opal, regulationSignal, regulationSignal2 = operator_msg.opalValues
+            secondaryAngleCtrl_opal, regulationSignal, regulationSignal2 = operator_msg.opalValues
 
         # TODO: The max is grid dependent and should be stored in the config and checked. Probably in the operator.
         #  this also depends on the predicted real-time load. We need some logic in the operator to compute safe limits.

@@ -141,7 +141,7 @@ class FSM(IMCP_FSM):
 
         if self.debugMode:
             self.logger.info(f"{TerminalColors.Orange}\n"
-                             f"FSM.py - on_group_sub - convert_requested_action_to_trigger\n"
+                             f"FSM.py | on_group_sub | convert_requested_action_to_trigger\n"
                              f"self.pcc_relay_id: {self.pcc_relay_id}\n"
                              f"requestedRelayID: {requestedRelayID}\n"
                              f"groupChange: {groupChange}\n"
