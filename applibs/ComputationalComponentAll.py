@@ -184,6 +184,10 @@ class ComputationalComponent(Component):
         self.appInitReady = False
         self.consensus_clock.halt()
 
+        # Is relay_sub connected?
+        self.logger.info(f"self.relay_sub.connected(): {self.relay_sub.connected()}")
+
+
         self.appInitCounter += 1
         if self.appInitCounter < 6:
             self.logger.info(f"\nComputationalComponentAll.py - on_init_clock\n"
