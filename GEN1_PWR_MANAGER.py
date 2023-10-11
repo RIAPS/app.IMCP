@@ -50,6 +50,11 @@ class GEN1_PWR_MANAGER(ComputationalComponent):
         #  we probably also want to make sure the operator cannot create a loop by closing too many breakers.
         # for direct PQ command
         self.regulationPower = [regulationSignal, regulationSignal2]  # regulation power from operator P kW, Q kVar
-# riaps:keep_impl:begin
+    # riaps:keep_impl:begin
 
-# riaps:keep_impl:end
+    def handleActivate(self):
+        self.logger.info(f"self.owner.thread.sock2NameMap: {self.owner.thread.sock2NameMap}")
+        self.logger.info(f"self.relay_sub.connected(): {self.relay_sub.connected()}")
+
+
+    # riaps:keep_impl:end
