@@ -26,7 +26,6 @@ vanderbilt_config = {"VM_IP": "172.21.20.70",
                      "depl_file_name": "IMCP_SingleFeeder_VU.depl",
                      "event_thread_handler": single}
 
-
 full = functools.partial(full_24, nodes_to_watch=["122_", "113_"], operator_node_id="192.168.10.122")
 ncsu_config = {"VM_IP": "192.168.10.106",
                "mqtt_config": f"{pathlib.Path(__file__).parents[1]}/cfg_ncsu/mqtt.yaml",
@@ -39,7 +38,7 @@ ncsu_config = {"VM_IP": "192.168.10.106",
 configs = {"vu": vanderbilt_config,
            "ncsu": ncsu_config}
 
-test_cfg = configs["ncsu"]
+test_cfg = configs["vu"]
 
 mqtt_config = {
     "broker_ip": test_cfg["VM_IP"],
@@ -57,7 +56,7 @@ def test_testslogger(testslogger):
     for handler in testslogger.handlers:
         print(f"flushing handler: {handler}")
         handler.flush()
-        
+
     for ix in range(10):
         testslogger.info(f"Test {ix}")
         time.sleep(1)
@@ -65,6 +64,7 @@ def test_testslogger(testslogger):
     log_file_path = f"{pathlib.Path(__file__).parents[1]}/tests/test_logs"
 
     assert pathlib.Path(f"{log_file_path}/debug.log").exists(), "Expected file does not exist"
+
 
 def test_testslogger_thread(testslogger):
     def threaded_logger_function(logger):
@@ -80,7 +80,7 @@ def test_testslogger_thread(testslogger):
 
     threaded_logger = threading.Thread(target=threaded_logger_function, args=(testslogger,))
     threaded_logger.start()
-        
+
     for ix in range(10):
         testslogger.info(f"Test {ix}")
         time.sleep(1)
@@ -130,7 +130,7 @@ def save_to_csv(data, filename):
     # Append the timestamp to the data
     data_with_timestamp = f"{timestamp}\n{data}"
 
-    #TODO: Create file if it doesn't exist
+    # TODO: Create file if it doesn't exist
     # Write the data to the CSV file
     with open(filename, 'a', newline='') as csv_file:
         csv_file.write(data_with_timestamp)
@@ -210,7 +210,9 @@ def test_mqtt_2_riaps_communication(log_server, mqtt_client):
 # -- GUI DRIVEN APP TESTS -- #
 # -------------------------- #
 @pytest.mark.parametrize('platform_log_server', [{'server_ip': test_cfg["VM_IP"]}], indirect=True)
-@pytest.mark.parametrize('log_server', [{'server_ip': test_cfg["VM_IP"]}], indirect=True)
+@pytest.mark.parametrize('log_server', indirect=True,
+                         argvalues=[{'server_ip': test_cfg["VM_IP"],
+                                     'log_config_path': f"{test_cfg['app_folder_path']}/riaps-log.conf"}])
 @pytest.mark.parametrize('mqtt_client', [mqtt_config], indirect=True)
 def test_app_with_gui(platform_log_server, log_server, mqtt_client):
     # TODO: Check that depl file `host all` has the correct ip address
@@ -264,7 +266,8 @@ class EventQMonitorThread(threading.Thread):
             self.is_running = True
             self.event_q_handler.start()
             while self.is_running:
-                self.logger.debug(f"EventQMonitorThread is alive: {self.event_q_handler.is_alive()}") if self.logger is not None else None
+                self.logger.debug(
+                    f"EventQMonitorThread is alive: {self.event_q_handler.is_alive()}") if self.logger is not None else None
                 time.sleep(1)
         except Exception as e:
             print(f"Exception in EventQThread: {e}")
@@ -276,19 +279,19 @@ class EventQMonitorThread(threading.Thread):
         self.stop_event.set()
         self.event_q_handler.join()
         self.is_running = False
-        
+
 
 def partial_with_missing_args(func, *args, **kwargs):
     partial_func = functools.partial(func, *args, **kwargs)
-    
+
     def missing_args(*args, **kwargs):
         signature = inspect.signature(func)
         bound_args = signature.bind_partial(*args, **kwargs)
-        
+
         missing_params = [param for param, value in bound_args.arguments.items() if value is param.default]
-        
+
         return partial_func, missing_params
-    
+
     return missing_args
 
 
@@ -310,12 +313,12 @@ def test_app(testslogger, platform_log_server, log_server, mqtt_client):
 
     # logger, event_q, task_q, end_time, stop_event
 
-    event_thread_handler = functools.partial(partial_event_thread_handler, 
-                                             logger=testslogger, 
-                                             event_q=event_q, 
+    event_thread_handler = functools.partial(partial_event_thread_handler,
+                                             logger=testslogger,
+                                             event_q=event_q,
                                              task_q=task_q,
                                              end_time=end_time)
-    
+
     # partial_event_thread_handler_signature = inspect.signature(partial_event_thread_handler)
     # event_thread_handler_signature = inspect.signature(event_thread_handler)
     # partial_event_thread_handler_parameters = partial_event_thread_handler_signature.parameters
@@ -328,18 +331,14 @@ def test_app(testslogger, platform_log_server, log_server, mqtt_client):
     # for param_name, param_info in event_thread_handler_parameters.items():
     #     print(f"Parameter: {param_name}")
     #     print(f"Default Value: {param_info.default}")
-    
-  
-    try: 
+
+    try:
         log_file_path = str(pathlib.Path(__file__).parents[1]) + "/server_logs"
         log_file_observer_thread = test_api.FileObserverThread(event_q, folder_to_monitor=log_file_path, logger=None)
         log_file_observer_thread.start()
 
-        
         event_q_monitor_thread = EventQMonitorThread(handler=event_thread_handler, logger=None)
         event_q_monitor_thread.start()
-
-        
 
         client_list = utils.get_client_list(file_path=f"{app_folder_path}/{depl_file_name}")
         testslogger.info(f"client list: {client_list}")
@@ -360,7 +359,7 @@ def test_app(testslogger, platform_log_server, log_server, mqtt_client):
         max_seconds_between_tasks = 600
         first_task_start_timer = time.time()
         max_seconds_until_first_task = 600
-    
+
         while not finished:
             now = time.time()
             if int(now) % 10 == 0:
@@ -373,7 +372,8 @@ def test_app(testslogger, platform_log_server, log_server, mqtt_client):
                 if not event_q_monitor_thread.is_alive():
                     testslogger.info(f"event_q_monitor_thread is not alive. Restarting.")
                     event_q_monitor_thread.stop()
-                    event_q_monitor_thread = EventQMonitorThread(None, event_q, task_q, end_time=end_time, handler=event_thread_handler)
+                    event_q_monitor_thread = EventQMonitorThread(None, event_q, task_q, end_time=end_time,
+                                                                 handler=event_thread_handler)
                     event_q_monitor_thread.start()
 
             try:
@@ -411,8 +411,7 @@ def test_app(testslogger, platform_log_server, log_server, mqtt_client):
 
     if controller is not None and app_name is not None:
         test_api.terminate_riaps_app(controller, app_name)
-    
+
     event_q_monitor_thread.stop()
     log_file_observer_thread.stop()
     testslogger.info(f"Test complete at {time.time()}")
-    
