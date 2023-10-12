@@ -28,7 +28,6 @@ class ComputationalComponent(Component):
         super().__init__()
         self.pid = os.getpid()
         self.appInitReady = False
-        self.appInitCounter = 0
 
         # Configure the component from the configuration file
         modbus_device_config = load_config_file(config)
@@ -125,6 +124,11 @@ class ComputationalComponent(Component):
         self.logger.info(f"ComputationalComponent: {str(self.pid)} - starting")
         log_json(self.logger, "info", f"{str(self.pid)} - starting", event="COMPONENT_STARTING")
 
+    def handleActivate(self):
+        self.consensus_clock.halt()
+        
+
+    
     def on_state_sub(self):
         msg_bytes = self.state_sub.recv()
         msg = imcp_capnp.StateMsg.from_bytes(msg_bytes).to_dict()
@@ -154,9 +158,8 @@ class ComputationalComponent(Component):
 
         if debugMode:
             self.logger.debug(f"{helper.BrightMagenta}\n"
-                             f"ComputationalComponentAll.py "
-                             f"on_relay_sub \n"
-                             f"msg: {msg}"
+                             f"ComputationalComponentAll.py | on_relay_sub | msg: \n"
+                             f"{msg}"
                              f"{helper.RESET}")
 
         relayID = msg.sender
@@ -165,6 +168,19 @@ class ComputationalComponent(Component):
         # Store actual PCC state. Used to determine value of self.CONTROL.
         if relayID == self.pccRelayID:
             self.pccRelay_closed = self.relayMessages[relayID]["connected"]
+
+        if not self.appInitReady:
+            self.logger.info(f"self.relay_sub.connected(): {self.relay_sub.connected()}")
+            if self.pccRelay_closed is None:
+                self.logger.warn(f"{helper.Red} ComputationalComponentAll.py | on_relay_sub | state of PCC relay is unknown. {helper.RESET}") if debugMode else None
+                return
+            
+            self.appInitReady = True
+            self.consensus_clock.launch()
+            self.logger.info(f"ComputationalComponentAll.py - on_relay_sub | "
+                             f"app initialized. Starting consensus_clock")
+            log_json(self.logger, "info", f"app initialized. Starting consensus_clock", event="COMPONENT_INITIALIZED")
+
 
         # The config file specifies which relays are "downstream" of this generator.
         # If the relay is downstream we flip the sign of the measurements.
@@ -179,31 +195,9 @@ class ComputationalComponent(Component):
 
         # Given a set of feeders
 
-    def on_init_clock(self):
-        now = self.init_clock.recv_pyobj()
-        self.appInitReady = False
-        self.consensus_clock.halt()
-
-        # Is relay_sub connected?
-        self.logger.info(f"self.relay_sub.connected(): {self.relay_sub.connected()}")
-
-
-        self.appInitCounter += 1
-        if self.appInitCounter < 6:
-            self.logger.info(f"\nComputationalComponentAll.py - on_init_clock\n"
-                             f"app initializing")
-            return
-
-        self.appInitReady = True
-        self.consensus_clock.launch()
-        self.init_clock.halt()
-        self.logger.info(f"ComputationalComponentAll.py - on_init_clock | "
-                         f"app initialized. Starting consensus_clock")
-        log_json(self.logger, "info", f"app initialized. Starting consensus_clock", event="COMPONENT_INITIALIZED")
-
     def on_consensus_clock(self):
-        on_clock_start = time.time()
         now = self.consensus_clock.recv_pyobj()
+
         if not self.appInitReady:
             return
 
@@ -245,8 +239,7 @@ class ComputationalComponent(Component):
         if self.pccRelay_closed is None:
             if debugMode:
                 self.logger.warn(f"{helper.Red}\n"
-                                 f"ComputationalComponentAll.py - on_device_qry_port \n"
-                                 f"state of PCC relay is unknown. Skip control for now?"
+                                 f"ComputationalComponentAll.py | on_device_qry_port | state of PCC relay is unknown. Skip control for now?"
                                  f"{helper.RESET}")
             return
 
