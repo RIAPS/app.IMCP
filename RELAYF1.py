@@ -30,11 +30,6 @@ class RELAYF1(ModbusDeviceComponent):
         self.send_modbus(modbus_msg)
     # riaps:keep_device_port:end
 
-    # riaps:keep_poller:begin
-    def on_poller(self):
-        now = self.poller.recv_pyobj()
-    # riaps:keep_poller:end
-
     # riaps:keep_modbus_cmd_port:begin
     def on_modbus_command_port(self):
         # Receive response from modbus device
