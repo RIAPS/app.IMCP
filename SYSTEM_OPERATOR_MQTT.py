@@ -37,19 +37,15 @@ class SYSTEM_OPERATOR_MQTT(Component):
 
     # riaps:keep_constr:end
 
-    # riaps:keep_poller:begin
-    def on_poller(self):
-        now = self.poller.recv_pyobj()
+
+    # riaps:keep_consensus_sub:begin
+    def on_consensus_sub(self):
         if not self.appInitReady:
             self.appInitReady = True
             log_json(self.logger, "info",
                      message=f"{self.getName()} component Initialized.",
                      event="COMPONENT_INITIALIZED")
-            self.poller.halt()
-    # riaps:keep_poller:end
-
-    # riaps:keep_consensus_sub:begin
-    def on_consensus_sub(self):
+        
         msg_bytes = self.consensus_sub.recv()
         msg = imcp_capnp.DgGeneralMsg.from_bytes(msg_bytes).to_dict()
 
