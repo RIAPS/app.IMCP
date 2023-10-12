@@ -51,53 +51,23 @@ def test_modbus_tcp():
 
 
 def poll_modbus_parameters(modbus_interface, parameter_list):
-    
+    results = {}
     for parameter in parameter_list:
-        print(f"poll parameter: {parameter}")
         modbus_result = modbus_interface.read_modbus(parameter=parameter)
         assert modbus_result is not None, f"Parameter {parameter} returned {modbus_result}"
-        print(f"{parameter} output: {modbus_result['values']}")
+        results[parameter] = modbus_result
+    return results
 
-
-# The DSP tests need to be run from the nodes connected via serial to the DSP.
-def start_dsp(der):
-    cfg_path = f"{pathlib.Path(__file__).parents[1]}/cfg_ncsu"
-    path_to_file = f"{cfg_path}/{der}.yaml"
-    mbi =  ModbusInterface.ModbusInterface(path_to_file)
-
-    parameters_to_poll = ["CONTROL", "P", "Q"]
-
-    # poll_modbus_parameters(modbus_interface=mbi, parameter_list=parameters_to_poll)
-
-    mbi.write_modbus(parameter="CONTROL", values=[1])
-    time.sleep(10)
-
-    # poll_modbus_parameters(modbus_interface=mbi, parameter_list=parameters_to_poll)
-
-    
-def query_dsp(der):
-    cfg_path = f"{pathlib.Path(__file__).parents[1]}/cfg_ncsu"
-    path_to_file = f"{cfg_path}/{der}.yaml"
-    DER_parameters = ["FREQ", "VA_RMS", "P", "Q", "VREF", "WREF"]
-    
-    mbi = ModbusInterface.ModbusInterface(path_to_file)
-
-    poll_modbus_parameters(modbus_interface=mbi,
-                           parameter_list=DER_parameters)
-    
 
 # Define a function to check if ttyS1 exists
 def has_ttyS1_access():
     return os.access('/dev/ttyS1', os.R_OK | os.W_OK)
 
-
+@pytest.fixture
 @pytest.mark.skipif(not has_ttyS1_access(), reason="No access to ttyS1")
-def test_modbustk_serial():
+def modbustk_serial():
     import serial
-    import modbus_tk
-    import modbus_tk.defines as cst
     import modbus_tk.modbus_rtu as modbus_rtu
-    
     serial_connection = serial.Serial(port="/dev/ttyS1",
                                       baudrate=115200,
                                       bytesize=8,
@@ -106,87 +76,121 @@ def test_modbustk_serial():
                                       xonxoff=0)
     master = modbus_rtu.RtuMaster(serial_connection)
     master.set_timeout((1000 / 1000.0), use_sw_timeout=True)
+    yield master
+    master.close()
+
+@pytest.mark.skipif(not has_ttyS1_access(), reason="No access to ttyS1")
+def test_modbustk_serial_read(modbustk_serial):
+    import modbus_tk.defines as cst
 
     starting_address = 2000  # CONTROL
     length = 1
     data_fmt = ""
 
+    # starting_address = 22  # FREQ
+    # length = 1
+    # data_fmt = ""
+
+    result: tuple = modbustk_serial.execute(slave=10,
+                                            function_code=cst.READ_HOLDING_REGISTERS,
+                                            starting_address=starting_address,
+                                            quantity_of_x=length,
+                                            data_format=data_fmt)
+    
+    print(f"Read control register result: {result}")
+
+
     print("Write control register")
 
-    result=  master.execute(slave=10,
-                                    function_code=cst.WRITE_MULTIPLE_REGISTERS,
-                                    starting_address=starting_address,
-                                    quantity_of_x=length,
-                                    data_format=data_fmt,
-                                    output_value=[1],)
+    result=  modbustk_serial.execute(slave=10,
+                                     function_code=cst.WRITE_MULTIPLE_REGISTERS,
+                                     starting_address=starting_address,
+                                     quantity_of_x=length,
+                                     data_format=data_fmt,
+                                     output_value=[0],)
     
     print(f"Write control register result: {result}")
     
 
-    result: tuple = master.execute(slave=10,
-                                    function_code=cst.READ_HOLDING_REGISTERS,
-                                    starting_address=starting_address,
-                                    quantity_of_x=length,
-                                    data_format=data_fmt)
+    result: tuple = modbustk_serial.execute(slave=10,
+                                            function_code=cst.READ_HOLDING_REGISTERS,
+                                            starting_address=starting_address,
+                                            quantity_of_x=length,
+                                            data_format=data_fmt)
     
     print(f"Read control register result: {result}")
     
 
-    starting_address = 22  # FREQ
-    length = 1
-    data_fmt = ""
-
-    result: tuple = master.execute(slave=10,
-                                    function_code=cst.READ_INPUT_REGISTERS,
-                                    starting_address=starting_address,
-                                    quantity_of_x=length,
-                                    data_format=data_fmt)
-
-    print(f"Read Freq result: {result}")
-
-
-@pytest.mark.skipif(not has_ttyS1_access(), reason="No access to ttyS1")        
-def test_modbus_serial():
+# The DSP tests need to be run from the nodes connected via serial to the DSP.
+def write_dsp(der, value):
     cfg_path = f"{pathlib.Path(__file__).parents[1]}/cfg_ncsu"
-    DERs = ["F1_DSP111", "F1_DSP112", "F2_DSP114", "F3_DSP115", "F3_DSP116"]
-    DER_parameters = ["FREQ", "VA_RMS", "P", "Q", "VREF", "WREF"]
+    path_to_file = f"{cfg_path}/{der}.yaml"
+    mbi =  ModbusInterface.ModbusInterface(path_to_file)
 
-    for der in DERs:
-        path_to_file = f"{cfg_path}/{der}.yaml"
-        mbi =  ModbusInterface.ModbusInterface(path_to_file)
-        print(f"\n {der}")
-        poll_modbus_parameters(modbus_interface=mbi,
-                               parameter_list=DER_parameters)
-        
+    if value == "start":
+        values = [1]
+    elif value == "stop":
+        values = [0]
+    else:
+        values = [value]
+    mbi.write_modbus(parameter="CONTROL", values=values)
+
+    
+def read_dsp(der):
+    cfg_path = f"{pathlib.Path(__file__).parents[1]}/cfg_ncsu"
+    path_to_file = f"{cfg_path}/{der}.yaml"
+    DER_parameters = ["CONTROL", "FREQ", "VA_RMS", "P", "Q", "VREF", "WREF"]
+    
+    mbi = ModbusInterface.ModbusInterface(path_to_file)
+
+    results = poll_modbus_parameters(modbus_interface=mbi,
+                                     parameter_list=DER_parameters)
+    return results
+    
+
+@pytest.mark.skipif(not has_ttyS1_access(), reason="No access to ttyS1")
+def test_dsp():
+    der = "F1_DSP111"
+    results = read_dsp(der=der)
+    started = results["CONTROL"]["values"][0] == 1
+    print(f"CONTROL ON: {started}, P: {results['P']['values']}")
+    write_dsp(der=der, value="stop" if started else "start")
+    started = results["CONTROL"]["values"][0] == 1
+    results = read_dsp(der=der)
+    print(f"CONTROL ON: {started}, P: {results['P']['values']}")
+    time.sleep(10)
+    results = read_dsp(der=der)
+    print(f"CONTROL ON: {started}, P: {results['P']['values']}")
+
 
 # Use the @pytest.mark.skipif decorator to skip the test if ttyS1 doesn't exist
 @pytest.mark.skipif(not has_ttyS1_access(), reason="No access to ttyS1")
 def test_start_dsp_111():
     der = "F1_DSP111"
-    start_dsp(der=der)
+    write_dsp(der=der, value="start")
 
 @pytest.mark.skipif(not has_ttyS1_access(), reason="No access to ttyS1")
 def test_dsp_111():
     der = "F1_DSP111"
-    query_dsp(der=der)
+    read_dsp(der=der)
 
 @pytest.mark.skipif(not has_ttyS1_access(), reason="No access to ttyS1")
 def test_dsp_112():
     der = "F1_DSP112"
-    query_dsp(der=der)
+    read_dsp(der=der)
 
 @pytest.mark.skipif(not has_ttyS1_access(), reason="No access to ttyS1")
 def test_dsp_114():
     der = "F2_DSP114"
-    query_dsp(der=der)
+    read_dsp(der=der)
 
 @pytest.mark.skipif(not has_ttyS1_access(), reason="No access to ttyS1")
 def test_dsp_115():
     der = "F3_DSP115"
-    query_dsp(der=der)
+    read_dsp(der=der)
 
 @pytest.mark.skipif(not has_ttyS1_access(), reason="No access to ttyS1")
 def test_dsp_116():
     der = "F3_DSP116"
-    query_dsp(der=der)
+    read_dsp(der=der)
 
