@@ -27,7 +27,6 @@ app IMCP_Banshee_NCSU{
 	//------------------------------------------------------
 
 	device GEN1(path_to_device_list){
-		timer poller 3600 sec;
     	inside modbus_command_port;
 		inside modbus_event_port;
 		pub event_port: LocalDeviceEvent;
@@ -35,11 +34,8 @@ app IMCP_Banshee_NCSU{
 	}
 
 	component GEN1_PWR_MANAGER(config, Ts, topology_config){
-	    timer init_clock 5 sec;
 
 	    // consensus clock
-        //timer poller 200 msec;
-        //timer consensus_clock 5000 msec;
         timer consensus_clock 1000 msec;
         
 	    // For status updates from device (faults, errors, etc.)
@@ -68,7 +64,6 @@ app IMCP_Banshee_NCSU{
     //------------------------------------------------------
 
     device RELAYF1(path_to_device_list){
-		timer poller 3600 sec;
 		inside modbus_command_port;
 		inside modbus_event_port;
 		pub event_port: LocalDeviceEvent;
@@ -76,7 +71,7 @@ app IMCP_Banshee_NCSU{
 	}
 
 	component RELAYF1_MANAGER(path_to_device_list){
-	    timer poller 1000 msec;
+	    timer poller 1000 msec;  // queries the relay, which triggers the relay publish, and sends commands to Open/Close the relay.
 
 	    // For status updates from device (faults, errors, etc.)
 	    sub local_event_port: LocalDeviceEvent;
@@ -102,10 +97,6 @@ app IMCP_Banshee_NCSU{
 	}
 
 	component SYSTEM_OPERATOR_MQTT(mqtt_subsample_rate){
-	    // timer init_clock 4 sec;
-
-	    // used to indicate the end of the initialization
-	    timer poller 5000 msec;
 
 	    // send out commands for power devices.
         pub operator_pub: OperatorMsg;
@@ -127,7 +118,6 @@ app IMCP_Banshee_NCSU{
 	component FSM(config, topology_config){
         timer state_timer;
         timer msg_timer;
-        // timer poller 5000 msec;
         sub relay_sub: RelayMsg;
         sub group_sub: GroupMsg;
         pub state_pub: StateMsg;
