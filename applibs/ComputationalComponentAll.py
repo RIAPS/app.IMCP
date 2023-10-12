@@ -131,6 +131,8 @@ class ComputationalComponent(Component):
     
     def on_state_sub(self):
         msg_bytes = self.state_sub.recv()
+        if not self.appInitReady: return
+
         msg = imcp_capnp.StateMsg.from_bytes(msg_bytes).to_dict()
         if msg.get("sender") != self.uuid:
             self.logger.debug(f"Ignore state messages from other devices")
@@ -198,8 +200,7 @@ class ComputationalComponent(Component):
     def on_consensus_clock(self):
         now = self.consensus_clock.recv_pyobj()
 
-        if not self.appInitReady:
-            return
+        if not self.appInitReady: return
 
         msg = msg_struct.DeviceQry.new_message()
         msg.device = self.device_name
@@ -533,11 +534,10 @@ class ComputationalComponent(Component):
 
     def on_consensus_sub(self):
         msg_bytes = self.consensus_sub.recv()
+        if not self.appInitReady: return
+
         msg = imcp_capnp.DgGeneralMsg.from_bytes(msg_bytes)
-
-        if msg.sender == self.uuid:
-            return
-
+        if msg.sender == self.uuid: return  # Ignore messages from self
         otherId = msg.sender
         otherTimestamp = msg.timestamp
         otherValue_activePower = msg.activePower
