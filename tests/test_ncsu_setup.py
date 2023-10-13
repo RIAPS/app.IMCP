@@ -154,13 +154,22 @@ def test_dsp():
     results = read_dsp(der=der)
     started = results["CONTROL"]["values"][0] == 1
     print(f"CONTROL ON: {started}, P: {results['P']['values']}")
+
     write_dsp(der=der, value="stop" if started else "start")
+    results = read_dsp(der=der)
     started = results["CONTROL"]["values"][0] == 1
-    results = read_dsp(der=der)
     print(f"CONTROL ON: {started}, P: {results['P']['values']}")
-    time.sleep(10)
-    results = read_dsp(der=der)
-    print(f"CONTROL ON: {started}, P: {results['P']['values']}")
+
+    for i in range(6):
+        time.sleep(10)
+        results = read_dsp(der=der)
+        started = results["CONTROL"]["values"][0] == 1
+        print(f"CONTROL ON: {started}, P: {results['P']['values']}")
+
+@pytest.mark.skipif(not has_ttyS1_access(), reason="No access to ttyS1")
+def test_dsp_stop():
+    der = "F1_DSP111"
+    write_dsp(der=der, value="stop")
 
 
 # Use the @pytest.mark.skipif decorator to skip the test if ttyS1 doesn't exist
@@ -172,7 +181,8 @@ def test_start_dsp_111():
 @pytest.mark.skipif(not has_ttyS1_access(), reason="No access to ttyS1")
 def test_dsp_111():
     der = "F1_DSP111"
-    read_dsp(der=der)
+    results = read_dsp(der=der)
+    print(results)
 
 @pytest.mark.skipif(not has_ttyS1_access(), reason="No access to ttyS1")
 def test_dsp_112():
