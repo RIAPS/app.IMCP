@@ -149,7 +149,7 @@ class GROUP_MANAGER(Component):
         operator_msg_bytes = self.operator_sub.recv()
         operator_msg = imcp_capnp.OperatorMsg.from_bytes(operator_msg_bytes)
         if debugMode:
-            self.logger.debug(f"{helper.Cyan}\n"
+            self.logger.info(f"{helper.Cyan}\n"
                               f"GROUP_MANAGER.py "
                               f"on_operator_sub \n"
                               f"msg: {operator_msg}"
