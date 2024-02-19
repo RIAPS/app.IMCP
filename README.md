@@ -391,10 +391,11 @@ For bug reports and other issues, please open an [issue](https://github.com/RIAP
 
 ## License
 
-Copyright (c) 2018, 2019, 2020, 2021, 2022, 2023 Vanderbilt University.
-Developed with the sponsorship of the
-Advanced Research Projects Agency – Energy (ARPA-E)
-of the Department of Energy.
+Copyright (c) Vanderbilt University and North Carolina State University
+
+Developed with the sponsorship of the  Department of Defense 
+Environmental Security Technology Certification Program (ESTCP) and 
+the United States Army Corps of Engineers under Contract No. W912HQ20C0040.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
