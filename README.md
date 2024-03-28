@@ -3,6 +3,8 @@
 <!-- TOC -->
 * [app.IMCP](#appimcp)
   * [Additional Documentation](#additional-documentation)
+    * [Folder Structure](README_pages/folder_structure.md)
+    * [Customizing the RIAPS Application](README_pages/customizing_the_riaps_application.md)
   * [Project Description](#project-description)
   * [Getting Started](#getting-started)
     * [Prerequisites](#prerequisites)
