@@ -9,6 +9,7 @@ import riaps.interfaces.mqtt.MQTT as MQTT
 @pytest.fixture
 def test_logger():
     import logging
+
     logger = logging.getLogger()
     logger.setLevel(logging.DEBUG)
     console_handler = logging.StreamHandler()
@@ -39,7 +40,9 @@ def mqtt_client(test_logger, request):
         print(f"{datetime.datetime.utcnow()} test's on_publish: {mid}")
 
     def on_message(client, userdata, msg):
-        print(f"{datetime.datetime.utcnow()} test's on_message: {msg.topic} {str(msg.payload)})")
+        print(
+            f"{datetime.datetime.utcnow()} test's on_message: {msg.topic} {str(msg.payload)})"
+        )
 
     test_client = paho_mqtt_client.Client()
     test_client.on_connect = on_connect
@@ -53,7 +56,6 @@ def mqtt_client(test_logger, request):
     yield test_client
 
     test_client.loop_stop()
-
 
 
 @pytest.fixture
@@ -94,20 +96,20 @@ def get_client_list(file_path):
     ip_addresses = []
 
     # Regular expression pattern to match lines with desired information
-    pattern = r'on\s*\((.*?)\)\s*(\w+)_ACTOR'
+    pattern = r"on\s*\((.*?)\)\s*(\w+)_ACTOR"
 
-    with open(file_path, 'r') as file:
+    with open(file_path, "r") as file:
         for line in file:
             # Remove leading and trailing whitespaces
             line = line.strip()
             # Skip lines that start with '//'
-            if line.startswith('//'):
+            if line.startswith("//"):
                 continue
             # Search for matches in the line using the pattern
             matches = re.findall(pattern, line)
             for match in matches:
                 # Split the matched portion to extract client names and IP addresses
-                parts = match[0].split(',')
+                parts = match[0].split(",")
                 for part in parts:
                     part = part.strip()
                     if part:
@@ -132,13 +134,12 @@ def get_client_list(file_path):
     return ip_addresses
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import pathlib
+
     # use pathlib to get to the grandparent folder
     app_folder_path = pathlib.Path(__file__).parent.parent.parent.absolute()
     print(app_folder_path)
     depl_file_name = "IMCP_Banshee_NCSU.depl"
     file_path = f"{app_folder_path}/{depl_file_name}"
     get_client_list(file_path=file_path)
-
-
