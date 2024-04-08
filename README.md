@@ -5,6 +5,7 @@
   * [Additional Documentation](#additional-documentation)
     * [Folder Structure](README_pages/folder_structure.md)
     * [Customizing the RIAPS Application](README_pages/customizing_the_riaps_application.md)
+    * [NCSU Testbed Configuration](README_pages/ncsu_testbed_configuration.md)
   * [Project Description](#project-description)
   * [Getting Started](#getting-started)
     * [Prerequisites](#prerequisites)
@@ -108,7 +109,7 @@ These can be installed on all target nodes simultaneously using the `riaps_fab` 
   * Numpy 
     > Note: Installing numpy on a BBB will take several hours.
     ```bash
-    riaps_fab sys.run:'"tmux new-session -d -s install_numpy sudo\ python3\ -m\ pip\ install\ numpy==1.24.4\ "'
+    riaps_fab sys.run:'"tmux new-session -d -s install_numpy sudo\ python3\ -m\ pip\ install\ numpy\=\=1.24.4\ "'
     ```
   * [RIAPS modbus interface](https://github.com/RIAPS/interface.modbus.libs):
       ```bash
@@ -123,11 +124,11 @@ These can be installed on all target nodes simultaneously using the `riaps_fab` 
   ![install_mqtt](README_images/install_mqtt.PNG) 
   * [modbus-tk](https://github.com/ljean/modbus-tk)
       ```bash
-      riaps_fab sys.run:'"tmux new-session -d -s install_dep sudo\ python3\ -m\ pip\ install\ modbus-tk==1.1.3"'
+      riaps_fab sys.run:'"tmux new-session -d -s install_dep sudo\ python3\ -m\ pip\ install\ modbus-tk\=\=1.1.3"'
       ```
   * [pytest](https://docs.pytest.org/en/7.1.x/getting-started.html)
       ```bash
-      riaps_fab sys.run:'"tmux new-session -d -s install_dep sudo\ python3\ -m\ pip\ install\ pytest==7.4.2"'
+      riaps_fab sys.run:'"tmux new-session -d -s install_dep sudo\ python3\ -m\ pip\ install\ pytest\=\=7.4.2"'
       ```
 
 
@@ -372,7 +373,25 @@ If the app is not behaving as expected here are some things to check.
   * **UNEXPECTED CONDITIONS** : Congratulations! You encountered an unanticipated combination of relay and fsm states that has not been handled. Please open a bug report. 
 
 **FAQ**
+* **Q**: Loading the modle gives the error 
+```
+ERROR: Modbus Slave: 'opal_ctrl'-> IP address/NIC configuration is invalid!
+ERROR: The possible values are:
+ERROR: * NIC:'eno2' - IP:'10.76.57.86'
+ERROR: * NIC:'lo' - IP:'127.0.0.1'
+ERROR: * NIC:'auto' - IP: A valid IP should be selected
+ERROR: If NIC is set to 'auto' and IP is set to '0.0.0.0' or 'auto', the server will listen on all interfaces.
+ERROR: I/O Manager: ModbusSlave_GUI / Modbus_grid initialization error. I/O is disabled.
+```
+  * **A**: The modbus is misconfigured in the OPAL-RT model. See the [OPAL-RT modbus documentation](https://www.opal-rt.com/support-knowledge-base/?article=AA-02091). Make sure that the NIC name matches the name of the network interface of the OPAL-RT target node.
 
+* **Q**: `test_modbustk_execute` fails with `socket.timeout: timed out`
+  * **A**: This can occur due to several reasons. 
+    1. The OPAL-RT model is not running.
+    2. The OPAL-RT modbus configuration is incorrect. see the [OPAL-RT modbus documentation](https://www.opal-rt.com/support-knowledge-base/?article=AA-02091). The ip address in the I/O interface must be in the same subnet as the OPAL target node.
+
+
+`
 
 ## Contributing
 
