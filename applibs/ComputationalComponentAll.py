@@ -159,7 +159,7 @@ class ComputationalComponent(Component):
         msg = imcp_capnp.RelayMsg.from_bytes(msg_bytes)
 
         if debugMode:
-            self.logger.debug(f"{helper.BrightMagenta}\n"
+            self.logger.info(f"{helper.BrightMagenta}\n"
                              f"ComputationalComponentAll.py | on_relay_sub | msg: \n"
                              f"{msg}"
                              f"{helper.RESET}")
