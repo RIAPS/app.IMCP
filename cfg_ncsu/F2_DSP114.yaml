@@ -44,7 +44,7 @@ MAX_STATE_PUBLISH_DELAY_SECONDS: 5  # Max time to wait before publishing state m
 # MODBUS
 Protocol: Serial
 TCP:
-   Address: 192.168.10.114
+   Address: 192.168.10.113
    Port: 502
 Serial:
    device: /dev/ttyS1

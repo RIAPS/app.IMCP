@@ -15,12 +15,14 @@ app IMCP_Banshee_NCSU{
     //DSPs
     on (192.168.10.111) GEN1_ACTOR(path_to_device_list = "./cfg_ncsu/DSP111-DeviceList.yaml", config = "./cfg_ncsu/F1_DSP111.yaml", Ts=0.2, topology_config="./cfg_ncsu/topology.yaml");
     on (192.168.10.112) GEN1_ACTOR(path_to_device_list = "./cfg_ncsu/DSP112-DeviceList.yaml", config = "./cfg_ncsu/F1_DSP112.yaml", Ts=0.2, topology_config="./cfg_ncsu/topology.yaml");
-    on (192.168.10.114) GEN1_ACTOR(path_to_device_list = "./cfg_ncsu/DSP114-DeviceList.yaml", config = "./cfg_ncsu/F2_DSP114.yaml", Ts=0.2, topology_config="./cfg_ncsu/topology.yaml");
+    on (192.168.10.113) GEN1_ACTOR(path_to_device_list = "./cfg_ncsu/DSP114-DeviceList.yaml", config = "./cfg_ncsu/F2_DSP114.yaml", Ts=0.2, topology_config="./cfg_ncsu/topology.yaml");
+    // 114 is not able to communicate with the DSP for some reason. 
     on (192.168.10.115) GEN1_ACTOR(path_to_device_list = "./cfg_ncsu/DSP115-DeviceList.yaml", config = "./cfg_ncsu/F3_DSP115.yaml", Ts=0.2, topology_config="./cfg_ncsu/topology.yaml");
     on (192.168.10.116) GEN1_ACTOR(path_to_device_list = "./cfg_ncsu/DSP116-DeviceList.yaml", config = "./cfg_ncsu/F3_DSP116.yaml", Ts=0.2, topology_config="./cfg_ncsu/topology.yaml");
 
     //Gens
-    on (192.168.10.113) GEN1_ACTOR(path_to_device_list="./cfg_ncsu/GEN1-Device.yaml", config = "./cfg_ncsu/GEN1-Banshee.yaml", Ts=0.2, topology_config="./cfg_ncsu/topology.yaml");
+    on (192.168.10.114) GEN1_ACTOR(path_to_device_list="./cfg_ncsu/GEN1-Device.yaml", config = "./cfg_ncsu/GEN1-Banshee.yaml", Ts=0.2, topology_config="./cfg_ncsu/topology.yaml");
+    // swap 113 and 114
     on (192.168.10.117) GEN1_ACTOR(path_to_device_list="./cfg_ncsu/GEN2-Device.yaml", config = "./cfg_ncsu/GEN2-Banshee.yaml", Ts=0.2, topology_config="./cfg_ncsu/topology.yaml");
     on (192.168.10.118) GEN1_ACTOR(path_to_device_list="./cfg_ncsu/GEN3-Device.yaml", config = "./cfg_ncsu/GEN3-Banshee.yaml", Ts=0.2, topology_config="./cfg_ncsu/topology.yaml");
 
