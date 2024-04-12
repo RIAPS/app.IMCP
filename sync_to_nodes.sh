@@ -3,7 +3,7 @@
 REMOTE_DIR="/home/riaps/projects/RIAPS"
 APP_SUBDIR="app.IMCP"
 REMOTE="$REMOTE_DIR/$APP_SUBDIR"
-REMOTE_NODES=("riaps@192.168.10.111" "riaps@192.168.10.112" "riaps@192.168.10.113" "riaps@192.168.10.114" "riaps@192.168.10.115" "riaps@192.168.10.116")
+REMOTE_NODES=("riaps@192.168.10.111" "riaps@192.168.10.112" "riaps@192.168.10.113" "riaps@192.168.10.114" "riaps@192.168.10.115" "riaps@192.168.10.116" "riaps@192.168.10.117" "riaps@192.168.10.118")
 
 for item in "${REMOTE_NODES[@]}"
 do

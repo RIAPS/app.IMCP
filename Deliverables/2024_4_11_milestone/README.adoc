@@ -1,0 +1,3 @@
+This folder is to set up a demo for the annual review
+
+The goal of the script is to read the set points from the Codesign tool. Specifically the output from the operating points code. 
