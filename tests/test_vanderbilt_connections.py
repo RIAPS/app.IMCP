@@ -9,7 +9,6 @@ logging.basicConfig(format='%(asctime)s %(message)s')
 def poll_modbus_parameters(modbus_interface, parameter_list):
 
     for parameter in parameter_list:
-        print(f"poll parameter: {parameter}")
         modbus_result = modbus_interface.read_modbus(parameter=parameter)
         assert modbus_result is not None, f"Parameter {parameter} returned {modbus_result}"
         print(f"{parameter} output: {modbus_result['values']}")
@@ -69,6 +68,7 @@ def test_gen_read():
 def test_relay_read():
     path_to_configs = "/home/riaps/projects/RIAPS/app.MgManage_refactor/cfg_vanderbilt"
     path_to_file = f"{path_to_configs}/F1PCC.yaml"
+    mb = ModbusInterface.ModbusInterface(path_to_file)
 
     parameters_to_poll = ["IS_GRID_CONNECTED_BIT",
                           "VA_RMS",
@@ -79,7 +79,7 @@ def test_relay_read():
                           "P",
                           "Q"]
 
-    poll_modbus_parameters(modbus_config_path=path_to_file,
+    poll_modbus_parameters(mb,
                            parameter_list=parameters_to_poll)
 
 
