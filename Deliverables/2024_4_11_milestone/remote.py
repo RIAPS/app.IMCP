@@ -14,6 +14,7 @@ pool.run('hostname')
 pool.run('mkdir -p ~/UC3_SET_OP_PNTS')
 top = pathlib.Path(__file__).absolute().parents[2]
 pool.put(f'{top}/FOO/2024_4_11_milestone/set_op.py', '/home/riaps/UC3_SET_OP_PNTS')
+pool.put(f'{top}/FOO/2024_4_11_milestone/output.yaml', '/home/riaps/UC3_SET_OP_PNTS')
 
 
 # Step 1: Create a tarball of the directory

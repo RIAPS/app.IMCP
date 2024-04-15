@@ -2,7 +2,9 @@
 import os
 import pathlib
 import time
-from riaps.interfaces.modbus.ModbusInterface import ModbusInterface
+import yaml
+# from riaps.interfaces.modbus.ModbusInterface import ModbusInterface
+
 
 
 tcp_DERs = ["GEN1-Banshee"]
@@ -33,51 +35,26 @@ def has_ttyS1_access():
 
     return has_access
 
-if has_ttyS1_access():
-    cfg_path = pathlib.Path(__file__).absolute().parents[0] / "cfg_ncsu"
-    print(f"bbb cfg_path: {cfg_path}")
-    DERs = serial_DERs
-else:
-    cfg_path = pathlib.Path(__file__).absolute().parents[2] / "cfg_ncsu"
-    print(f"vm cfg_path: {cfg_path}")
-    DERs = tcp_DERs
+def main():
 
-print(f"cfg_path: {cfg_path}")
+    with open("output.yaml", "r") as f:
+        output = yaml.safe_load(f)
 
-for der in DERs:
-    path_to_file = cfg_path / f"{der}.yaml"
-    assert path_to_file.is_file()
-
-    mbi = ModbusInterface(path_to_file)
-
-    results = poll_modbus_parameters(
-        modbus_interface=mbi, parameter_list=read_params
-    )
-
-    print(f"Polled {len(results)} parameters")
-    for result in results:
-        print(f'Param: {result}, Values:{results[result]["values"]}')
-
-    
-if True:
-    
-    for der in DERs:
-        path_to_file = cfg_path / f"{der}.yaml"
-        assert path_to_file.is_file()
-        mbi = ModbusInterface(path_to_file)
-        P = 600
-        Q = 300
-        results =  mbi.write_modbus(parameter="REAL_POWER", values=[P])
-        print(f"Real Power write outcome: {results}")
-        results =  mbi.write_modbus(parameter="REACTIVE_POWER", values=[Q]) 
-        print(f"Reactive Power write outcome: {results}")
+    my_ip = get_ip_addr()
 
 
-    # value = 0 # 0: stop 1: start
-    # mbi.write_modbus(parameter="CONTROL", values=[value])
-    for t in range(5):
-        time.sleep(1)
-        print(f"Slept for: {t}")
+
+
+    if has_ttyS1_access():
+        cfg_path = pathlib.Path(__file__).absolute().parents[0] / "cfg_ncsu"
+        print(f"bbb cfg_path: {cfg_path}")
+        DERs = serial_DERs
+    else:
+        cfg_path = pathlib.Path(__file__).absolute().parents[2] / "cfg_ncsu"
+        print(f"vm cfg_path: {cfg_path}")
+        DERs = tcp_DERs
+
+    print(f"cfg_path: {cfg_path}")
 
     for der in DERs:
         path_to_file = cfg_path / f"{der}.yaml"
@@ -92,3 +69,38 @@ if True:
         print(f"Polled {len(results)} parameters")
         for result in results:
             print(f'Param: {result}, Values:{results[result]["values"]}')
+
+        
+    if True:
+        
+        for der in DERs:
+            path_to_file = cfg_path / f"{der}.yaml"
+            assert path_to_file.is_file()
+            mbi = ModbusInterface(path_to_file)
+            P = 600
+            Q = 300
+            results =  mbi.write_modbus(parameter="REAL_POWER", values=[P])
+            print(f"Real Power write outcome: {results}")
+            results =  mbi.write_modbus(parameter="REACTIVE_POWER", values=[Q]) 
+            print(f"Reactive Power write outcome: {results}")
+
+
+        # value = 0 # 0: stop 1: start
+        # mbi.write_modbus(parameter="CONTROL", values=[value])
+        for t in range(5):
+            time.sleep(1)
+            print(f"Slept for: {t}")
+
+        for der in DERs:
+            path_to_file = cfg_path / f"{der}.yaml"
+            assert path_to_file.is_file()
+
+            mbi = ModbusInterface(path_to_file)
+
+            results = poll_modbus_parameters(
+                modbus_interface=mbi, parameter_list=read_params
+            )
+
+            print(f"Polled {len(results)} parameters")
+            for result in results:
+                print(f'Param: {result}, Values:{results[result]["values"]}')
