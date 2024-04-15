@@ -11,6 +11,11 @@ serial_DERs = ["F1_DSP111"]
 read_params = ["CONTROL", "FREQ", "VA_RMS", "P", "Q", "VREF", "WREF"]
 write_params = ["CONTROL", "REAL_POWER", "REACTIVE_POWER"]
 
+def get_ip_addr():
+    import socket
+    hostname = socket.gethostname()
+    IPAddr = socket.gethostbyname(hostname)
+
 def poll_modbus_parameters(modbus_interface, parameter_list):
     results = {}
     for parameter in parameter_list:
