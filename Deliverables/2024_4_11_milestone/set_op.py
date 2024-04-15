@@ -3,12 +3,10 @@ import os
 import pathlib
 import time
 import yaml
-# from riaps.interfaces.modbus.ModbusInterface import ModbusInterface
+from riaps.interfaces.modbus.ModbusInterface import ModbusInterface
 
-
-
-tcp_DERs = ["GEN1-Banshee"]
-serial_DERs = ["F1_DSP111"]
+my_map = {"BATTERY_7000_kWh": "F1_DSP111", 
+          "DG_3000_kW": "GEN1-Banshee",}
 
 read_params = ["CONTROL", "FREQ", "VA_RMS", "P", "Q", "VREF", "WREF"]
 write_params = ["CONTROL", "REAL_POWER", "REACTIVE_POWER"]
@@ -26,6 +24,10 @@ def poll_modbus_parameters(modbus_interface, parameter_list):
             modbus_result is not None
         ), f"Parameter {parameter} returned {modbus_result}"
         results[parameter] = modbus_result
+
+    print(f"Polled {len(results)} parameters")
+    for result in results:
+        print(f'Param: {result}, Values:{results[result]["values"]}')
     return results
 
 # Define a function to check if ttyS1 exists
@@ -42,65 +44,53 @@ def main():
 
     my_ip = get_ip_addr()
 
+    design_id = 0
+    design = output["designs"][design_id]["plant"]["design"]
+    for bus in design:
+        DERs_installed = design[bus]["DERs_installed"]
+        if not DERs_installed:
+            continue
+        for der in DERs_installed:
+            op_P, op_Q = DERs_installed[der]["OP"]
+            model_name = DERs_installed[der]["MODEL_NAME"]
 
+            if "DG" in model_name:
+                # DGs are connected via TCP
+                cfg_path = pathlib.Path(__file__).absolute().parents[2] / "cfg_ncsu"
+            else:
+                # Batteries are connected via serial
+                cfg_path = pathlib.Path(__file__).absolute().parents[0] / "cfg_ncsu"
 
-
-    if has_ttyS1_access():
-        cfg_path = pathlib.Path(__file__).absolute().parents[0] / "cfg_ncsu"
-        print(f"bbb cfg_path: {cfg_path}")
-        DERs = serial_DERs
-    else:
-        cfg_path = pathlib.Path(__file__).absolute().parents[2] / "cfg_ncsu"
-        print(f"vm cfg_path: {cfg_path}")
-        DERs = tcp_DERs
-
-    print(f"cfg_path: {cfg_path}")
-
-    for der in DERs:
-        path_to_file = cfg_path / f"{der}.yaml"
-        assert path_to_file.is_file()
-
-        mbi = ModbusInterface(path_to_file)
-
-        results = poll_modbus_parameters(
-            modbus_interface=mbi, parameter_list=read_params
-        )
-
-        print(f"Polled {len(results)} parameters")
-        for result in results:
-            print(f'Param: {result}, Values:{results[result]["values"]}')
-
-        
-    if True:
-        
-        for der in DERs:
-            path_to_file = cfg_path / f"{der}.yaml"
-            assert path_to_file.is_file()
-            mbi = ModbusInterface(path_to_file)
-            P = 600
-            Q = 300
-            results =  mbi.write_modbus(parameter="REAL_POWER", values=[P])
-            print(f"Real Power write outcome: {results}")
-            results =  mbi.write_modbus(parameter="REACTIVE_POWER", values=[Q]) 
-            print(f"Reactive Power write outcome: {results}")
-
-
-        # value = 0 # 0: stop 1: start
-        # mbi.write_modbus(parameter="CONTROL", values=[value])
-        for t in range(5):
-            time.sleep(1)
-            print(f"Slept for: {t}")
-
-        for der in DERs:
-            path_to_file = cfg_path / f"{der}.yaml"
+            path_to_file = cfg_path / f"{my_map[model_name]}.yaml"
             assert path_to_file.is_file()
 
             mbi = ModbusInterface(path_to_file)
 
+            # Check initial values
             results = poll_modbus_parameters(
                 modbus_interface=mbi, parameter_list=read_params
-            )
+                )
+            
+            # Start the DER
+            results =  mbi.write_modbus(parameter="CONTROL", values=[1])
+            print(f"Control write outcome: {results}")
 
-            print(f"Polled {len(results)} parameters")
-            for result in results:
-                print(f'Param: {result}, Values:{results[result]["values"]}')
+            # See if the DER is started
+            results = poll_modbus_parameters(
+                modbus_interface=mbi, parameter_list=read_params
+                )
+            
+            # Set the DER to the desired OP
+            results =  mbi.write_modbus(parameter="REAL_POWER", values=[op_P])
+            print(f"Real Power write outcome: {results}")
+            results =  mbi.write_modbus(parameter="REACTIVE_POWER", values=[op_Q])
+            print(f"Reactive Power write outcome: {results}")
+            
+            # Check the OP values
+            results = poll_modbus_parameters(
+                modbus_interface=mbi, parameter_list=read_params
+                )
+         
+
+if __name__ == "__main__":
+    main()  
