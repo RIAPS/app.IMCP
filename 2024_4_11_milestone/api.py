@@ -1,20 +1,45 @@
-
-import os
+import argparse
+import json
 import pathlib
 import time
 import yaml
 from riaps.interfaces.modbus.ModbusInterface import ModbusInterface
 
-my_map = {"BATTERY_7000_kWh": "F1_DSP111", 
-          "DG_3000_kW": "GEN1-Banshee",}
 
 read_params = ["CONTROL", "FREQ", "VA_RMS", "P", "Q", "VREF", "WREF"]
 write_params = ["CONTROL", "REAL_POWER", "REACTIVE_POWER"]
 
-def get_ip_addr():
-    import socket
-    hostname = socket.gethostname()
-    IPAddr = socket.gethostbyname(hostname)
+
+def set_OP(key, PQ_map):
+    cfg_path = pathlib.Path(__file__).absolute().parents[1] / "cfg_ncsu"
+
+    path_to_file = cfg_path / f"{key}.yaml"
+    assert path_to_file.is_file()
+
+    mbi = ModbusInterface(path_to_file)
+
+    print(f"Reading inital values from {key}")
+    result = poll_modbus_parameters(mbi, read_params)
+
+    # Check if the DER is started
+    if result["CONTROL"]["values"][0] != 1:
+        # Start the DER
+        print(f"Setting {key} CONTROL to 1")
+        results = mbi.write_modbus(parameter="CONTROL", values=[1])
+        time.sleep(1)
+
+        # Make sure the DER is started
+        result = poll_modbus_parameters(mbi, read_params)
+        assert result["CONTROL"]["values"][0] == 1, f"Control is {result['CONTROL']}"
+
+    # Set the DER
+    print(f"Setting {key} to {PQ_map}")
+    set_PQ(mbi, PQ_map["P"], PQ_map["Q"])
+    time.sleep(1)
+
+    # Check the new values
+    poll_modbus_parameters(mbi, read_params)
+
 
 def poll_modbus_parameters(modbus_interface, parameter_list):
     results = {}
@@ -30,19 +55,26 @@ def poll_modbus_parameters(modbus_interface, parameter_list):
         print(f'Param: {result}, Values:{results[result]["values"]}')
     return results
 
-# Define a function to check if ttyS1 exists
-def has_ttyS1_access():
-    has_access = os.access("/dev/ttyS1", os.R_OK | os.W_OK)
-    print(f"has_access: {has_access}")
 
-    return has_access
+def set_PQ(mbi, op_P, op_Q):
+    """
+    Set the DER to the desired OP
+    """
+    results = mbi.write_modbus(parameter="REAL_POWER", values=[op_P])
+    print(f"Real Power write outcome: {results}")
+    results = mbi.write_modbus(parameter="REACTIVE_POWER", values=[op_Q])
+    print(f"Reactive Power write outcome: {results}")
 
-def main():
+
+def set_from_output():
+
+    my_map = {
+        "BATTERY_7000_kWh": "F1_DSP111",
+        "DG_3000_kW": "GEN1-Banshee",
+    }
 
     with open("output.yaml", "r") as f:
         output = yaml.safe_load(f)
-
-    my_ip = get_ip_addr()
 
     design_id = 0
     design = output["designs"][design_id]["plant"]["design"]
@@ -69,28 +101,45 @@ def main():
             # Check initial values
             results = poll_modbus_parameters(
                 modbus_interface=mbi, parameter_list=read_params
-                )
-            
+            )
+
             # Start the DER
-            results =  mbi.write_modbus(parameter="CONTROL", values=[1])
+            results = mbi.write_modbus(parameter="CONTROL", values=[1])
             print(f"Control write outcome: {results}")
 
             # See if the DER is started
             results = poll_modbus_parameters(
                 modbus_interface=mbi, parameter_list=read_params
-                )
-            
+            )
+
             # Set the DER to the desired OP
-            results =  mbi.write_modbus(parameter="REAL_POWER", values=[op_P])
+            results = mbi.write_modbus(parameter="REAL_POWER", values=[op_P])
             print(f"Real Power write outcome: {results}")
-            results =  mbi.write_modbus(parameter="REACTIVE_POWER", values=[op_Q])
+            results = mbi.write_modbus(parameter="REACTIVE_POWER", values=[op_Q])
             print(f"Reactive Power write outcome: {results}")
-            
+
             # Check the OP values
             results = poll_modbus_parameters(
                 modbus_interface=mbi, parameter_list=read_params
-                )
-         
+            )
+
 
 if __name__ == "__main__":
-    main()  
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--der_name",
+        type=str,
+        required=True,
+        help="Name of the DER to set OP for",
+    )
+    parser.add_argument(
+        "--PQ_map",
+        type=str,
+        required=True,
+        help="Dictionary of P and Q values to set for the DER",
+    )
+
+    args = parser.parse_args()
+
+    # PQ_map = yaml.safe_load(args.der_name, args.PQ_map)
+    set_OP(args.der_name, json.loads(args.PQ_map))
