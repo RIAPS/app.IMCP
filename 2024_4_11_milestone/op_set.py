@@ -14,11 +14,12 @@ def main():
     COS_PHI = 0.95  # Power factor. Set in the coop design file
 
     P_map = {
-        # "F1_DSP111": 100,
+        "F1_DSP111": 100,
         "F1_DSP112": 200,
         "GEN1-Banshee": 1000,
     }
 
+   
     PQ_map = {
         key: {"P": value, "Q": value * math.tan(math.acos(COS_PHI))}
         for key, value in P_map.items()
