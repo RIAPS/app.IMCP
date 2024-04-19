@@ -7,7 +7,19 @@ from riaps.interfaces.modbus.ModbusInterface import ModbusInterface
 
 
 read_params = ["CONTROL", "FREQ", "VA_RMS", "P", "Q", "VREF", "WREF"]
+PCC_read_params = [
+    "IS_GRID_CONNECTED_BIT",
+    "VA_RMS",
+    "FREQ",
+    # "SYNCHK_FREQ_SLIP",
+    # "SYNCHK_VOLT_DIFF",
+    # "SYNCHK_ANG_DIFF",
+    "P",
+    "Q",
+]
+
 write_params = ["CONTROL", "REAL_POWER", "REACTIVE_POWER"]
+
 
 def read_OP(key):
     cfg_path = pathlib.Path(__file__).absolute().parents[1] / "cfg_ncsu"
@@ -17,19 +29,30 @@ def read_OP(key):
 
     mbi = ModbusInterface(path_to_file)
 
+    with open(path_to_file, "r") as f:
+        device_config = yaml.safe_load(f)
+
+    if "PCC" in device_config["Name"]:
+        params = PCC_read_params
+    else:
+        params = read_params
+
     print(f"Reading inital values from {key}")
-    result = poll_modbus_parameters(mbi, read_params)
+    result = poll_modbus_parameters(mbi, params)
 
     # Check if the DER is started
-    if result.get("CONTROL").get("values")[0] != 1:
-        # Start the DER
-        print(f"Setting {key} CONTROL to 1")
-        results = mbi.write_modbus(parameter="CONTROL", values=[1])
-        time.sleep(1)
+    if result.get("CONTROL"):
+        if result["CONTROL"]["values"][0] != 1:
+            # Start the DER
+            print(f"Setting {key} CONTROL to 1")
+            results = mbi.write_modbus(parameter="CONTROL", values=[1])
+            time.sleep(1)
 
-        # Make sure the DER is started
-        result = poll_modbus_parameters(mbi, read_params)
-        assert result["CONTROL"]["values"][0] == 1, f"Control is {result['CONTROL']}"
+            # Make sure the DER is started
+            result = poll_modbus_parameters(mbi, read_params)
+            assert (
+                result["CONTROL"]["values"][0] == 1
+            ), f"Control is {result['CONTROL']}"
 
 
 def set_OP(key, PQ_map):
@@ -50,6 +73,7 @@ def set_OP(key, PQ_map):
 
     # Check the new values
     poll_modbus_parameters(mbi, read_params)
+
 
 def reset_OP(key):
     cfg_path = pathlib.Path(__file__).absolute().parents[1] / "cfg_ncsu"

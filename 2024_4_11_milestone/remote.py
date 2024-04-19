@@ -6,14 +6,18 @@ import tarfile
 import time
 
 mask = "192.168.10"
-nodes = [f"{mask}.{x}" for x in [111, 112]]  # , 115, 116]]
+nodes = [f"{mask}.{x}" for x in [111, 112, 115, 116]]
 
 pool = Group(*nodes)
 
 pool.run("hostname")
 pool.run("mkdir -p ~/UC3_SET_OP_PNTS/scripts")
 top = pathlib.Path(__file__).absolute().parents[1]
-pool.put(f"{top}/2024_4_11_milestone/set_op.py", "/home/riaps/UC3_SET_OP_PNTS/scripts")
+pool.put(f"{top}/2024_4_11_milestone/op_read.py", "/home/riaps/UC3_SET_OP_PNTS/scripts")
+pool.put(f"{top}/2024_4_11_milestone/op_set.py", "/home/riaps/UC3_SET_OP_PNTS/scripts")
+pool.put(
+    f"{top}/2024_4_11_milestone/op_reset.py", "/home/riaps/UC3_SET_OP_PNTS/scripts"
+)
 pool.put(
     f"{top}/2024_4_11_milestone/output.yaml", "/home/riaps/UC3_SET_OP_PNTS/scripts"
 )

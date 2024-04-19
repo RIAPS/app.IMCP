@@ -6,21 +6,22 @@ import api
 
 
 def main():
-    
+
     DER_map = {
-        "F1_DSP111",
+        # "F1_DSP111",
         "F1_DSP112",
-        "F3_DSP115",
-        "F3_DSP116",
-        "GEN1-Banshee",
-        "GEN2-Banshee",
-        "GEN3-Banshee",
+        # "F3_DSP115",
+        # "F3_DSP116",
+        # "GEN1-Banshee",
+        # "GEN2-Banshee",
+        # "GEN3-Banshee",
     }
 
-    DEV_map = {*DER_map, 
-               "F1PCC",
-               "F2PCC",
-               "F3PCC",
+    DEV_map = {
+        *DER_map,
+        "F1PCC",
+        # "F2PCC",
+        # "F3PCC",
     }
 
     cfg_path = pathlib.Path(__file__).absolute().parents[1] / "cfg_ncsu"
@@ -42,7 +43,6 @@ def main():
             c.run(
                 f"python3 ~/UC3_SET_OP_PNTS/scripts/api.py --der_name {key} --fun 'read'"
             )
-
 
 
 if __name__ == "__main__":
