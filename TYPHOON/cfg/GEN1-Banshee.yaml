@@ -45,7 +45,7 @@ MAX_STATE_PUBLISH_DELAY_SECONDS: 5  # Max time to wait before publishing state m
 # MODBUS
 Protocol: TCP
 TCP:
-   Address: 192.168.10.230
+   Address: 192.168.0.230
    Port:
       502
 SlaveID: 1
