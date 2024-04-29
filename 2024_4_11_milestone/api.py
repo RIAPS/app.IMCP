@@ -6,11 +6,12 @@ import yaml
 from riaps.interfaces.modbus.ModbusInterface import ModbusInterface
 
 
-read_params = ["CONTROL", "FREQ", "VA_RMS", "P", "Q", "VREF", "WREF"]
+# read_params = ["CONTROL", "FREQ", "VA_RMS", "P", "Q", "VREF", "WREF"]
+read_params = ["CONTROL", "P", "Q"]
 PCC_read_params = [
-    "IS_GRID_CONNECTED_BIT",
-    "VA_RMS",
-    "FREQ",
+    # "IS_GRID_CONNECTED_BIT",
+    # "VA_RMS",
+    # "FREQ",
     # "SYNCHK_FREQ_SLIP",
     # "SYNCHK_VOLT_DIFF",
     # "SYNCHK_ANG_DIFF",
@@ -69,7 +70,7 @@ def set_OP(key, PQ_map):
     # Set the DER
     print(f"Setting {key} to {PQ_map}")
     set_PQ(mbi, PQ_map["P"], PQ_map["Q"])
-    time.sleep(5)
+    time.sleep(1)
 
     # Check the new values
     poll_modbus_parameters(mbi, read_params)
