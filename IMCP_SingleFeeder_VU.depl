@@ -5,14 +5,16 @@ app IMCP_Single_VU{
     }
 
     //system operator
-    on (riaps-5eb7.local) SYSTEM_OPERATOR_ACTOR(config = "./cfg_vanderbilt/OPAL-Device.yaml", mqtt_config="./cfg_vanderbilt/mqtt.yaml", mqtt_subsample_rate=5);
+    //on (riaps-5eb7.local) SYSTEM_OPERATOR_ACTOR(config = "./cfg_vanderbilt/OPAL-Device.yaml", mqtt_config="./cfg_vanderbilt/mqtt.yaml", mqtt_subsample_rate=5);
+    on (riaps-0e8a.local) SYSTEM_OPERATOR_ACTOR(config = "./cfg_vanderbilt/OPAL-Device.yaml", mqtt_config="./cfg_vanderbilt/mqtt.yaml", mqtt_subsample_rate=5);
 
     // actors for multi-relays
     on (riaps-2f37.local) RELAYF1_ACTOR(path_to_device_list = "./cfg_vanderbilt/RELAYF1.yaml");
 
 
     // Gens
-    on (riaps-aab1.local) GEN1_ACTOR(path_to_device_list="./cfg_vanderbilt/GEN1-Device.yaml", config = "./cfg_vanderbilt/GEN1-Banshee.yaml", Ts=0.2, topology_config="./cfg_vanderbilt/topology.yaml");
+    //on (riaps-aab1.local) GEN1_ACTOR(path_to_device_list="./cfg_vanderbilt/GEN1-Device.yaml", config = "./cfg_vanderbilt/GEN1-Banshee.yaml", Ts=0.2, topology_config="./cfg_vanderbilt/topology.yaml");
+    on (riaps-10cd.local) GEN1_ACTOR(path_to_device_list="./cfg_vanderbilt/GEN1-Device.yaml", config = "./cfg_vanderbilt/GEN1-Banshee.yaml", Ts=0.2, topology_config="./cfg_vanderbilt/topology.yaml");
     on (riaps-11c5.local) GEN1_ACTOR(path_to_device_list="./cfg_vanderbilt/GEN2-Device.yaml", config = "./cfg_vanderbilt/GEN2-Banshee.yaml", Ts=0.2, topology_config="./cfg_vanderbilt/topology.yaml");
 
 }

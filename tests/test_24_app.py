@@ -45,7 +45,7 @@ ncsu_config = {
 
 configs = {"vu": vanderbilt_config, "ncsu": ncsu_config}
 
-test_cfg = configs["ncsu"]
+test_cfg = configs["vu"]
 
 mqtt_config = {
     "broker_ip": test_cfg["VM_IP"],
