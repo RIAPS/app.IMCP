@@ -1,16 +1,19 @@
 import argparse
+import fabric2 as fab
 import json
+import math
 import pathlib
 import time
 import yaml
 from riaps.interfaces.modbus.ModbusInterface import ModbusInterface
 
-
-read_params = ["CONTROL", "FREQ", "VA_RMS", "P", "Q", "VREF", "WREF"]
+cfg_path = pathlib.Path(__file__).absolute().parents[1] / "cfg_ncsu"
+# read_params = ["CONTROL", "FREQ", "VA_RMS", "P", "Q", "VREF", "WREF"]
+read_params = ["CONTROL", "P", "Q"]
 PCC_read_params = [
-    "IS_GRID_CONNECTED_BIT",
-    "VA_RMS",
-    "FREQ",
+    # "IS_GRID_CONNECTED_BIT",
+    # "VA_RMS",
+    # "FREQ",
     # "SYNCHK_FREQ_SLIP",
     # "SYNCHK_VOLT_DIFF",
     # "SYNCHK_ANG_DIFF",
@@ -22,7 +25,6 @@ write_params = ["CONTROL", "REAL_POWER", "REACTIVE_POWER"]
 
 
 def read_OP(key):
-    cfg_path = pathlib.Path(__file__).absolute().parents[1] / "cfg_ncsu"
 
     path_to_file = cfg_path / f"{key}.yaml"
     assert path_to_file.is_file()
@@ -55,8 +57,42 @@ def read_OP(key):
             ), f"Control is {result['CONTROL']}"
 
 
+def set_DERs(P_map):
+    """
+    Set the DERs to the desired OP
+    """
+    COS_PHI = 0.95  # Power factor. Set in the coop design file
+
+    PQ_map = {
+        key: {"P": value, "Q": value * math.tan(math.acos(COS_PHI))}
+        for key, value in P_map.items()
+    }
+
+    for key in PQ_map:
+
+        path_to_file = cfg_path / f"{key}.yaml"
+        assert path_to_file.is_file()
+
+        with open(path_to_file, "r") as f:
+            device_config = yaml.safe_load(f)
+
+        protocol = device_config["Protocol"]
+        ip = device_config["TCP"]["Address"]
+
+        if protocol == "TCP":
+            set_OP(key, PQ_map[key])
+        elif protocol == "Serial":
+            c = fab.Connection(ip)
+            c.run("hostname")
+            print(f"Send OP for {key} with {json.dumps(PQ_map[key])}")
+            c.run(
+                f"python3 ~/UC3_SET_OP_PNTS/scripts/api.py --der_name {key} --PQ_map '{json.dumps(PQ_map[key])}'"
+            )
+
+    return PQ_map
+
+
 def set_OP(key, PQ_map):
-    cfg_path = pathlib.Path(__file__).absolute().parents[1] / "cfg_ncsu"
 
     path_to_file = cfg_path / f"{key}.yaml"
     assert path_to_file.is_file()
@@ -69,14 +105,13 @@ def set_OP(key, PQ_map):
     # Set the DER
     print(f"Setting {key} to {PQ_map}")
     set_PQ(mbi, PQ_map["P"], PQ_map["Q"])
-    time.sleep(5)
+    time.sleep(1)
 
     # Check the new values
     poll_modbus_parameters(mbi, read_params)
 
 
 def reset_OP(key):
-    cfg_path = pathlib.Path(__file__).absolute().parents[1] / "cfg_ncsu"
 
     path_to_file = cfg_path / f"{key}.yaml"
     assert path_to_file.is_file()
