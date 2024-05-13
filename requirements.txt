@@ -1,0 +1,4 @@
+pandas
+pytest
+riaps-interfaces-mqtt @ git+https://github.com/RIAPS/interface.mqtt.git
+riaps.interfaces.modbus @ git+https://github.com/RIAPS/interface.modbus.libs.git
