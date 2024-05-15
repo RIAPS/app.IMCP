@@ -2,15 +2,15 @@
 Name: F1_DSP112
 Description: TI DSP BOARD
 Type: BATTERY
-Rating: 1000 #in kW
+Rating: 1600 #in kW
 nominalVoltage: 480 # in V
 nominalFrequency: 60 # in Hz
 
 # Instance Information
 Feeder: 'F1PCC'
 uuid: "112"
-Initial_real_power : 500 # in kW
-Initial_reactive_power: 50 # in kVar
+Initial_real_power : 100 # in kW
+Initial_reactive_power: 30 # in kVar
 #Interval: 5000 # TODO: Delete this if not needed
 VoltageRegulateDG: 1
 CostFunction:

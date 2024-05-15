@@ -59,6 +59,7 @@ def test_run():
     pcc_status = pcc_mbi.read_modbus("IS_GRID_CONNECTED_BIT")
     print(f"pcc_status: {pcc_status}")
 
+    # ------ Energize DERs ----------------------------------
     input("Press enter to energize bess 1")
     b1_status = b1_mbi.read_modbus("CONTROL")
     print(f"b1_status: {b1_status}")
@@ -66,6 +67,14 @@ def test_run():
     b1_status = b1_mbi.read_modbus("CONTROL")
     print(f"b1_status: {b1_status}")
 
+    input("Press enter to energize bess 2")
+    b2_status = b2_mbi.read_modbus("CONTROL")
+    print(f"b2_status: {b2_status}")
+    b2_mbi.write_modbus("CONTROL", values=[1])
+    b2_status = b2_mbi.read_modbus("CONTROL")
+    print(f"b2_status: {b2_status}")
+
+    # ------ Set values ----------------------------------
     input("Press enter to send PQ commands to bess 1")
     b1_P = b1_mbi.read_modbus("REAL_POWER")
     b1_Q = b1_mbi.read_modbus("REACTIVE_POWER")
@@ -78,18 +87,60 @@ def test_run():
     print(f"b1_P: {b1_P}")
     print(f"b1_Q: {b1_Q}")
 
+    input("Press enter to send PQ commands to bess 2")
+    b2_P = b2_mbi.read_modbus("REAL_POWER")
+    b2_Q = b2_mbi.read_modbus("REACTIVE_POWER")
+    print(f"b2_P: {b2_P}")
+    print(f"b2_Q: {b2_Q}")
+    b2_mbi.write_modbus("REAL_POWER", values=[1000])
+    b2_mbi.write_modbus("REACTIVE_POWER", values=[400])
+    b2_P = b2_mbi.read_modbus("REAL_POWER")
+    b2_Q = b2_mbi.read_modbus("REACTIVE_POWER")
+    print(f"b2_P: {b2_P}")
+    print(f"b2_Q: {b2_Q}")
+
+    # ------ DG ----------------------------------
+    # input("Press enter to energize DG")
+    # dg_status = dg_mbi.read_modbus("CONTROL")
+    # print(f"b1_status: {dg_status}")
+    # dg_mbi.write_modbus("CONTROL", values=[1])
+    # dg_status = dg_mbi.read_modbus("CONTROL")
+    # print(f"b1_status: {dg_status}")
+
+    # input("Press enter to send PQ commands to DG")
+    # dg_P = dg_mbi.read_modbus("REAL_POWER")
+    # dg_Q = dg_mbi.read_modbus("REACTIVE_POWER")
+    # print(f"b1_P: {dg_P}")
+    # print(f"b1_Q: {dg_Q}")
+    # dg_mbi.write_modbus("REAL_POWER", values=[1000])
+    # dg_mbi.write_modbus("REACTIVE_POWER", values=[400])
+    # dg_mbi.write_modbus("VOLTAGE", values=[1])
+    # dg_mbi.write_modbus("FREQUENCY", values=[0.001])
+    # dg_P = dg_mbi.read_modbus("REAL_POWER")
+    # dg_Q = dg_mbi.read_modbus("REACTIVE_POWER")
+    # print(f"b1_P: {dg_P}")
+    # print(f"b1_Q: {dg_Q}")
+
     # CLEANUP
     input("Press Enter to set PQ to 0")
     b1_mbi.write_modbus("REAL_POWER", values=[0])
     b1_mbi.write_modbus("REACTIVE_POWER", values=[0])
-    input("Press enter to shutdown battery")
+    b2_mbi.write_modbus("REAL_POWER", values=[0])
+    b2_mbi.write_modbus("REACTIVE_POWER", values=[0])
+    dg_mbi.write_modbus("REAL_POWER", values=[0])
+    dg_mbi.write_modbus("REACTIVE_POWER", values=[0])
+    dg_mbi.write_modbus("VOLTAGE", values=[0])
+    dg_mbi.write_modbus("FREQUENCY", values=[0])
+    input("Press enter to shutdown DERs")
     b1_mbi.write_modbus("CONTROL", values=[0])
+    b2_mbi.write_modbus("CONTROL", values=[0])
+    dg_mbi.write_modbus("CONTROL", values=[0])
     input("Press enter to disconnect PCC")
     pcc_mbi.write_modbus("LOGIC", values=[0])
 
 
 def test_modbus_interface():
-    ders = ["F1_DSP111", "GEN1-Banshee"]
+    ders = ["F1_DSP111", "F1_DSP112", "GEN1-Banshee"]
     der_parameters = [
         "FREQ",
         "VA_RMS",

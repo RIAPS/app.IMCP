@@ -1,0 +1,19 @@
+app IMCP_Banshee_Typhoon{
+
+    host all{
+        network 192.168.10.100;
+    }
+
+    //system operator
+    on (192.168.10.105) SYSTEM_OPERATOR_ACTOR(config = "./cfg_typhoon/OPAL-Device.yaml", mqtt_config="./cfg_typhoon/mqtt.yaml", mqtt_subsample_rate=5);
+
+    // actors for multi-relays
+    on (192.168.10.104) RELAYF1_ACTOR(path_to_device_list = "./cfg_typhoon/RELAYF1.yaml");
+
+    //DSPs
+    on (192.168.10.101) GEN1_ACTOR(path_to_device_list = "./cfg_typhoon/DSP111-DeviceList.yaml", config = "./cfg_typhoon/F1_DSP111.yaml", Ts=0.2, topology_config="./cfg_typhoon/topology.yaml");
+    on (192.168.10.102) GEN1_ACTOR(path_to_device_list = "./cfg_typhoon/DSP112-DeviceList.yaml", config = "./cfg_typhoon/F1_DSP112.yaml", Ts=0.2, topology_config="./cfg_typhoon/topology.yaml");
+    
+    //Gens
+    on (192.168.10.103) GEN1_ACTOR(path_to_device_list="./cfg_typhoon/GEN1-Device.yaml", config = "./cfg_typhoon/GEN1-Banshee.yaml", Ts=0.2, topology_config="./cfg_typhoon/topology.yaml");
+}

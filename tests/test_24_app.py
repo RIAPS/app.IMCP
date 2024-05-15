@@ -15,6 +15,9 @@ import riaps.test_suite.test_api as test_api
 from event_thread_handlers.single_feeder_24 import watch24 as single_24
 from event_thread_handlers.full_24 import watch24 as full_24
 
+import riaps.interfaces.modbus.ModbusInterface as ModbusInterface
+
+
 # --------------- #
 # -- Config -- #
 # --------------- #
@@ -43,9 +46,23 @@ ncsu_config = {
     "event_thread_handler": full,
 }
 
-configs = {"vu": vanderbilt_config, "ncsu": ncsu_config}
+typhoon = functools.partial(
+    full_24, nodes_to_watch=["115_", "111_"], operator_node_id="192.168.10.110"
+)
+typhoon_config = {
+    "VM_IP": "192.168.10.100",
+    "mqtt_config": f"{pathlib.Path(__file__).parents[1]}/cfg_typhoon/mqtt.yaml",
+    "app_folder_path": pathlib.Path(__file__).parents[1],
+    "app_file_name": "IMCP_Banshee_TYPHOON.riaps",
+    "depl_file_name": "IMCP_Banshee_TYPHOON.depl",
+    "test_mqtt_depl_file_name": "IMCP_Banshee_TYPHOON_test.depl",
+    "event_thread_handler": typhoon,
+}
 
-test_cfg = configs["vu"]
+
+configs = {"vu": vanderbilt_config, "ncsu": ncsu_config, "typhoon": typhoon_config}
+
+test_cfg = configs["typhoon"]
 
 mqtt_config = {
     "broker_ip": test_cfg["VM_IP"],
@@ -269,6 +286,14 @@ def test_mqtt_2_riaps_communication(log_server, mqtt_client):
 )
 @pytest.mark.parametrize("mqtt_client", [mqtt_config], indirect=True)
 def test_app_with_gui(platform_log_server, log_server, mqtt_client):
+
+    # Start typhoon simulation in grid tied mode
+    cfg_path = f"{pathlib.Path(__file__).parents[1]}/cfg_typhoon"
+    pcc_mbi = ModbusInterface.ModbusInterface(f"{cfg_path}/F1PCC.yaml")
+    pcc_mbi.write_modbus("LOGIC", values=[1])
+    pcc_status = pcc_mbi.read_modbus("IS_GRID_CONNECTED_BIT")
+    print(f"pcc_status: {pcc_status}")
+
     # TODO: Check that depl file `host all` has the correct ip address
 
     app_folder_path = test_cfg["app_folder_path"]

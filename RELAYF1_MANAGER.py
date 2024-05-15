@@ -57,6 +57,10 @@ class RELAYF1_MANAGER(Component):
     def __init__(self, path_to_device_list):
         super().__init__()
 
+        # Config to manage operator messages
+        self.op_msg_interarrival_time_sec = 10
+        self.last_op_msg = 0
+
         self.pid = os.getpid()
         self.counter = 0
         self.sequence = 0
@@ -228,4 +232,14 @@ class RELAYF1_MANAGER(Component):
 
         self.requestedRelay = operator_msg.requestedRelay
         self.requestedAction = operator_msg.requestedAction
+
+        now = time.time()
+        if self.last_op_msg + self.op_msg_interarrival_time_sec < now:
+            self.last_op_msg = now
+            self.logger.info(
+                f"{helper.Cyan}\n"
+                f"RELAYF1_MANAGER.py on_operator_sub \n"
+                f"msg: {operator_msg}"
+                f"{helper.RESET}"
+            )
         # TODO: Allow control of all PCCs

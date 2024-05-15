@@ -2,15 +2,15 @@
 Name: GEN1-Banshee
 Description: Diesel Generator
 Type: DIESEL
-Rating: 2000 #  in kW.
+Rating: 2200 #  in kW.
 nominalVoltage: 13800 # in V
 nominalFrequency: 60 # in Hz
 
 # Instance Information
 Feeder: 'F1PCC'
 uuid: "201"
-Initial_real_power : 1000  # in kW
-Initial_reactive_power: 300 # in kVar
+Initial_real_power : 1500  # in kW
+Initial_reactive_power: 500 # in kVar 
 #Interval: 10000 # TODO: Delete this if not needed
 VoltageRegulateDG: 1
 CostFunction:

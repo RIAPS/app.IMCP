@@ -55,6 +55,12 @@ class GROUP_MANAGER(Component):
     # riaps:keep_constr:begin
     def __init__(self, config, topology_config):
         super().__init__()
+
+        # Config to manage operator messages
+        self.op_msg_interarrival_time_sec = 10
+        self.last_op_msg = 0
+        # -------------------------------------
+
         self.msg_counter = 0
         self.time_of_last_broadcast = time.time()
 
@@ -167,14 +173,18 @@ class GROUP_MANAGER(Component):
     def on_operator_sub(self):
         operator_msg_bytes = self.operator_sub.recv()
         operator_msg = from_bytes(imcp_capnp.OperatorMsg, operator_msg_bytes)
-        if debugMode:
-            self.logger.info(
-                f"{helper.Cyan}\n"
-                f"GROUP_MANAGER.py "
-                f"on_operator_sub \n"
-                f"msg: {operator_msg}"
-                f"{helper.RESET}"
-            )
+
+        now = time.time()
+        if self.last_op_msg + self.op_msg_interarrival_time_sec < now:
+            self.last_op_msg = now
+            if debugMode:
+                self.logger.info(
+                    f"{helper.Cyan}\n"
+                    f"GROUP_MANAGER.py "
+                    f"on_operator_sub \n"
+                    f"msg: {operator_msg}"
+                    f"{helper.RESET}"
+                )
 
         # This was originally written to allow opening of all PCC relays simultaneously
         # by sending the string "PCC" as the requestedRelay and using the
