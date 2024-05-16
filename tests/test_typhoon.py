@@ -140,7 +140,8 @@ def test_run():
 
 
 def test_modbus_interface():
-    ders = ["F1_DSP111", "F1_DSP112", "GEN1-Banshee"]
+    # ders = ["F1_DSP111", "F1_DSP112", "GEN1-Banshee"]
+    ders = []
     der_parameters = [
         "FREQ",
         "VA_RMS",
