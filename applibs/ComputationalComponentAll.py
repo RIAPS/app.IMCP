@@ -144,8 +144,11 @@ class ComputationalComponent(Component):
             logger=self.logger,
         )
         self.secondApp.consensus.setGains(
-            (const.active_pwr_ctrl_gain, const.reactive_pwr_ctrl_gain),
-            (const.freq_ctrl_gain, const.voltage_ctrl_gain_island),
+            (
+                const.active_pwr_ctrl_gain,
+                const.reactive_pwr_ctrl_gain,
+            ),  # consensus gains
+            (const.freq_ctrl_gain, const.voltage_ctrl_gain_island),  # pining gains
         )
 
         # POI power control app, with economic dispatch

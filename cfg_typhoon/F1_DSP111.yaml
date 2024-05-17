@@ -12,13 +12,13 @@ Feeder: 'F1PCC'
 uuid: "111"
 # Initial_real_power : 100 # in kW
 # Initial_reactive_power: 30 # in kVar
-Initial_real_power : 1500  # in kW
-Initial_reactive_power: 500 # in kVar 
+Initial_real_power : 900  # in kW
+Initial_reactive_power: 300 # in kVar 
 VoltageRegulateDG: 1
 CostFunction:
-      a: 0.025
-      b: 8
-      c: 0.0
+   a: 0.005
+   b: 20
+   c: 0.0
 DOWNSTREAM_RELAYS: ['F1108']
 debugMode: True
 
