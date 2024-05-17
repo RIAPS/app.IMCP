@@ -12,8 +12,8 @@ Feeder: 'F1PCC'
 uuid: "111"
 # Initial_real_power : 100 # in kW
 # Initial_reactive_power: 30 # in kVar
-Initial_real_power : 900  # in kW
-Initial_reactive_power: 300 # in kVar 
+Initial_real_power : 1080  # in kW
+Initial_reactive_power: 360 # in kVar 
 VoltageRegulateDG: 1
 CostFunction:
    a: 0.005
