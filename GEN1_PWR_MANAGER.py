@@ -1,8 +1,10 @@
 # riaps:keep_import:begin
 import capnp
+import time
 
 from applibs.ComputationalComponentAll import ComputationalComponent
 import applibs.helper as helper
+from applibs.wrappers import from_bytes
 
 import imcp_capnp
 
@@ -14,6 +16,10 @@ debugMode = helper.debugMode
 # riaps:keep_constr:begin
 class GEN1_PWR_MANAGER(ComputationalComponent):
     def __init__(self, config, Ts, topology_config):
+        # Config to manage operator messages
+        self.op_msg_interarrival_time_sec = 10
+        self.last_op_msg = 0
+
         super(GEN1_PWR_MANAGER, self).__init__(config, Ts, topology_config)
 
     # riaps:keep_constr:end
@@ -32,29 +38,44 @@ class GEN1_PWR_MANAGER(ComputationalComponent):
 
     def on_operator_sub(self):
         operator_msg_bytes = self.operator_sub.recv()
-        operator_msg = imcp_capnp.OperatorMsg.from_bytes(operator_msg_bytes)
+        operator_msg = from_bytes(imcp_capnp.OperatorMsg, operator_msg_bytes)
 
-        if debugMode:
-            self.logger.debug(f"{helper.Cyan}\n"
-                              f"GEN1_PWR_MANAGER.py on_operator_sub \n"
-                              f"msg: {operator_msg}"
-                              f"{helper.RESET}")
+        now = time.time()
+        if self.last_op_msg + self.op_msg_interarrival_time_sec < now:
+            self.last_op_msg = now
+            self.logger.info(
+                f"{helper.Cyan}\n"
+                f"GEN1_PWR_MANAGER.py on_operator_sub \n"
+                f"msg: {operator_msg}"
+                f"{helper.RESET}"
+            )
 
         # regulationSignal, regulationSignal2 are the only parameters used here.
         # They correspond to the setpoint for the active and reactive power at the POI to the main grid.
-        StartStop_opal, gridBreaker_opal, secondaryCtrl_opal, \
-            secondaryAngleCtrl_opal, regulationSignal, regulationSignal2 = operator_msg.opalValues
+        (
+            StartStop_opal,
+            gridBreaker_opal,
+            secondaryCtrl_opal,
+            secondaryAngleCtrl_opal,
+            regulationSignal,
+            regulationSignal2,
+        ) = operator_msg.opalValues
 
         # TODO: The max is grid dependent and should be stored in the config and checked. Probably in the operator.
         #  this also depends on the predicted real-time load. We need some logic in the operator to compute safe limits.
         #  we probably also want to make sure the operator cannot create a loop by closing too many breakers.
         # for direct PQ command
-        self.regulationPower = [regulationSignal, regulationSignal2]  # regulation power from operator P kW, Q kVar
+        self.regulationPower = [
+            regulationSignal,
+            regulationSignal2,
+        ]  # regulation power from operator P kW, Q kVar
+
     # riaps:keep_impl:begin
 
     def handleActivate(self):
-        self.logger.info(f"self.owner.thread.sock2NameMap: {self.owner.thread.sock2NameMap}")
+        self.logger.info(
+            f"self.owner.thread.sock2NameMap: {self.owner.thread.sock2NameMap}"
+        )
         self.logger.info(f"self.relay_sub.connected(): {self.relay_sub.connected()}")
-
 
     # riaps:keep_impl:end

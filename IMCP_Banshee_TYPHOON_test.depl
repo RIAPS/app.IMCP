@@ -1,0 +1,9 @@
+app IMCP_Banshee_Typhoon{
+
+    host all{
+        network 192.168.10.100; // heist
+    }
+
+    //system operator (a bbb)
+    on (192.168.10.105) SYSTEM_OPERATOR_ACTOR(config = "./cfg_typhoon/OPAL-Device.yaml", mqtt_config="./cfg_typhoon/mqtt.yaml", mqtt_subsample_rate=5);
+}

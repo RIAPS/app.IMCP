@@ -11,6 +11,7 @@ from imcp_fsm import model
 import utils.TerminalColors as TerminalColors
 
 from applibs.log_preprocessor import log_json
+from applibs.wrappers import from_bytes
 
 
 # riaps:keep_import:end
@@ -24,7 +25,9 @@ class IMCP_FSM(Component):
         with open(topology_config, "r") as f:
             group_config = yaml.safe_load(f)
         super(IMCP_FSM, self).__init__()
-        self.logger.info(f"{TerminalColors.Green} IMCP_FSM.py - init {TerminalColors.RESET}")
+        self.logger.info(
+            f"{TerminalColors.Green} IMCP_FSM.py - init {TerminalColors.RESET}"
+        )
         self.debugMode = cfg.get("debugMode", False)
         self.uuid = cfg["uuid"]
 
@@ -66,10 +69,12 @@ class IMCP_FSM(Component):
         #  If the time on this message is before the time when the previous state was exited then it is
         #  no longer relevant.
         if now < machine.global_state_log["prior"]["timestamp"]:
-            self.logger.info(f"TIMEOUT at {now} "
-                             f"was canceled "
-                             f"{machine.global_state_log['prior']['timestamp'] - now} "
-                             f"seconds before the timeout fired")
+            self.logger.info(
+                f"TIMEOUT at {now} "
+                f"was canceled "
+                f"{machine.global_state_log['prior']['timestamp'] - now} "
+                f"seconds before the timeout fired"
+            )
             return
 
         state = self.machine.get_state(self.model.state)
@@ -77,15 +82,17 @@ class IMCP_FSM(Component):
         #  If the state has a timeout, process the timeout callbacks.
         if state.timeout > 0:
             event_data = state.runner[id(self.model)]["event_data"]
-            current = machine.global_state_log['current']
-            prior = machine.global_state_log['prior']
-            self.logger.info(f"{TerminalColors.Green}\n"
-                             f"IMCP_FSM.py - on_state_timer\n"
-                             f"STATE TIMEOUT at {now} \n"
-                             f"Exited prior state: {prior['state']} at {prior['timestamp']} \n"
-                             f"Entered current state: {current['state']} at {current['timestamp']} \n"
-                             f"Processing callbacks..."
-                             f"{TerminalColors.RESET}")
+            current = machine.global_state_log["current"]
+            prior = machine.global_state_log["prior"]
+            self.logger.info(
+                f"{TerminalColors.Green}\n"
+                f"IMCP_FSM.py - on_state_timer\n"
+                f"STATE TIMEOUT at {now} \n"
+                f"Exited prior state: {prior['state']} at {prior['timestamp']} \n"
+                f"Entered current state: {current['state']} at {current['timestamp']} \n"
+                f"Processing callbacks..."
+                f"{TerminalColors.RESET}"
+            )
 
             for callback in state.on_timeout:
                 self.logger.debug(f"Processing callback: {callback}")
@@ -109,14 +116,18 @@ class IMCP_FSM(Component):
             if value < now + 0.05:
                 time_of_last_msg = getattr(self, f"time_of_last_{source}_msg")
                 time_since_last_msg = now - time_of_last_msg
-                self.logger.info(f"{TerminalColors.Green}\n"
-                                 f"IMCP_FSM.py - on_msg_timer \n"
-                                 f"MISSING {source} MESSAGES. \n"
-                                 f"Last {source} msg was at: {self.time_of_last_group_msg} \n"
-                                 f"Current time is: {now} \n"
-                                 f"time since last {source} msg: {time_since_last_msg}"
-                                 f"{TerminalColors.RESET}")
-                self.msg_timeouts["time"][source] = now + self.msg_timeouts["delay"][source]
+                self.logger.info(
+                    f"{TerminalColors.Green}\n"
+                    f"IMCP_FSM.py - on_msg_timer \n"
+                    f"MISSING {source} MESSAGES. \n"
+                    f"Last {source} msg was at: {self.time_of_last_group_msg} \n"
+                    f"Current time is: {now} \n"
+                    f"time since last {source} msg: {time_since_last_msg}"
+                    f"{TerminalColors.RESET}"
+                )
+                self.msg_timeouts["time"][source] = (
+                    now + self.msg_timeouts["delay"][source]
+                )
 
         self.trigger(event="missingMessages", publish_reason="on_msg_timer")
         self.set_next_timer()
@@ -128,14 +139,16 @@ class IMCP_FSM(Component):
 
         # --- Reset group timer ---
         self.time_of_last_group_msg = time.time()
-        self.msg_timeouts["time"]["group"] = time.time() + self.msg_timeouts["delay"]["group"]
+        self.msg_timeouts["time"]["group"] = (
+            time.time() + self.msg_timeouts["delay"]["group"]
+        )
         if self.msg_timeouts["next"] == "group":
             self.msg_timer.cancel()
             self.set_next_timer()
 
         # --- Fetch the message --
         msg_bytes = self.group_sub.recv()
-        msg = imcp_capnp.GroupMsg.from_bytes(msg_bytes)
+        msg = from_bytes(imcp_capnp.GroupMsg, msg_bytes)
 
         # --- Begin msg contents ---
         msg_device_name = msg.sender
@@ -149,19 +162,29 @@ class IMCP_FSM(Component):
         self.futureGroup = list(msg.futureGroup)
         commands = list(msg.commands)
 
-        log_json(self.logger, "info", "received group message",
-                 event={"GROUP_MSG": msg.to_dict(),
-                        "model state": self.model.state if self.model else None,
-                        "pcc_relays_status": self.relays_status.get(self.pcc_relay_id, False),
-                        "requested_relay": f"{self.requestedRelay} type: {type(self.requestedRelay)} compare: {self.requestedRelay == 'NONE'}",
-                        "requested_action": self.requestedAction,
-                        "relays_status": self.relays_status.get(self.requestedRelay, False)})
+        log_json(
+            self.logger,
+            "info",
+            "received group message",
+            event={
+                "GROUP_MSG": msg.to_dict(),
+                "model state": self.model.state if self.model else None,
+                "pcc_relays_status": self.relays_status.get(self.pcc_relay_id, False),
+                "requested_relay": f"{self.requestedRelay} type: {type(self.requestedRelay)} compare: {self.requestedRelay == 'NONE'}",
+                "requested_action": self.requestedAction,
+                "relays_status": self.relays_status.get(self.requestedRelay, False),
+            },
+        )
         # --- End msg contents ---
 
         # Check Preconditions
         if not self.model:
-            log_json(self.logger, level="error", message="How did we get here with an undefined model?",
-                     event="UNEXPECTED LACK OF MODEL DEFINITION")
+            log_json(
+                self.logger,
+                level="error",
+                message="How did we get here with an undefined model?",
+                event="UNEXPECTED LACK OF MODEL DEFINITION",
+            )
             return False  # TODO: This should be removed eventually.
         if not self.relays_status.get(self.pcc_relay_id):
             return False  # No relay status for the PCC relay yet, so no need to process the message.
@@ -169,13 +192,15 @@ class IMCP_FSM(Component):
             return False  # The operator has not specified the desired state yet.
         if not instance_name:
             return False  # If there is no instance_name the group manager hasn't run group management yet so skip.
-        
+
         # Do work
-        if self.requestedRelay != 'NONE':
+        if self.requestedRelay != "NONE":
             # If the requested state (OPEN/CLOSE) is different from the current state then a transition is required.
             relay_state = self.relays_status[self.requestedRelay]["relay_state"]
             if relay_state and relay_state != self.requestedAction:
-                self.relays_status[self.requestedRelay]["requested_state"] = self.requestedAction
+                self.relays_status[self.requestedRelay][
+                    "requested_state"
+                ] = self.requestedAction
                 self.relays_status[self.requestedRelay]["transition_required"] = True
 
         self.update_dc_group(instance_name=instance_name, group_members=self.group)
@@ -184,17 +209,21 @@ class IMCP_FSM(Component):
         trigger, coordinated = self.convert_requested_action_to_trigger(msg)
 
         if self.debugMode:
-            self.logger.info(f"{TerminalColors.Green}\n"
-                             f"IMCP_FSM.py - on_group_sub | convert_requested_action_to_trigger | "
-                             f"trigger: {trigger}, coordinated: {coordinated}"
-                             f"{TerminalColors.RESET}")
+            self.logger.info(
+                f"{TerminalColors.Green}\n"
+                f"IMCP_FSM.py - on_group_sub | convert_requested_action_to_trigger | "
+                f"trigger: {trigger}, coordinated: {coordinated}"
+                f"{TerminalColors.RESET}"
+            )
 
         if not trigger:
             return
         if not coordinated:
             relay_status = self.get_relay_status(self.pcc_relay_id)
             self.model.trigger(trigger, relay_status=relay_status)
-            self.publish_state(cause="on_group_sub")  # TODO: When should I actually publish state updates?
+            self.publish_state(
+                cause="on_group_sub"
+            )  # TODO: When should I actually publish state updates?
             return
 
         # Otherwise start a vote for a coordinated transition:
@@ -216,22 +245,26 @@ class IMCP_FSM(Component):
             "kind": self.kind,
             "vote_start": time.time(),
             "requestRelay": msg.requestedRelay,
-            "requestAction": msg.requestedAction
+            "requestAction": msg.requestedAction,
         }
 
-        self.logger.info(f"{TerminalColors.White}\n"
-                         f"IMCP_FSM.py - on_group_sub | send vote request: {vote_msg}"
-                         f"{TerminalColors.RESET}")
+        self.logger.info(
+            f"{TerminalColors.White}\n"
+            f"IMCP_FSM.py - on_group_sub | send vote request: {vote_msg}"
+            f"{TerminalColors.RESET}"
+        )
 
         # The default value for "kind" appears to be "consensus", specified in riaps/lang/riaps.tx
-        rfv_id = self.dcgroup.requestActionVote_pyobj(vote_msg,
-                                                      when,
-                                                      kind=self.kind,
-                                                      timeout=self.vote_timeout)
+        rfv_id = self.dcgroup.requestActionVote_pyobj(
+            vote_msg, when, kind=self.kind, timeout=self.vote_timeout
+        )
 
-        log_json(self.logger, "info", "sent request for vote",
-                 event={"REQUESTED_ACTION_VOTE": trigger,
-                        "rfvId": rfv_id})
+        log_json(
+            self.logger,
+            "info",
+            "sent request for vote",
+            event={"REQUESTED_ACTION_VOTE": trigger, "rfvId": rfv_id},
+        )
 
     # riaps:keep_group_sub:end
 
@@ -240,14 +273,16 @@ class IMCP_FSM(Component):
 
         # --- Reset relay timer ---
         self.time_of_last_relay_msg = time.time()
-        self.msg_timeouts["time"]["relay"] = time.time() + self.msg_timeouts["delay"]["relay"]
+        self.msg_timeouts["time"]["relay"] = (
+            time.time() + self.msg_timeouts["delay"]["relay"]
+        )
         if self.msg_timeouts["next"] == "relay":
             self.msg_timer.cancel()
             self.set_next_timer()
 
         # --- Fetch the message --
         msg_bytes = self.relay_sub.recv()
-        msg = imcp_capnp.RelayMsg.from_bytes(msg_bytes)
+        msg = from_bytes(imcp_capnp.RelayMsg, msg_bytes)
         msg_dict = msg.to_dict()
 
         # --- Begin msg contents ---
@@ -277,12 +312,16 @@ class IMCP_FSM(Component):
                 if self.relays_status[relay_id].get("transition_required") is False:
                     unplanned = True
 
-        trigger, coordinated = self.convert_relay_msg_to_trigger(relay_id, connected, unplanned)
+        trigger, coordinated = self.convert_relay_msg_to_trigger(
+            relay_id, connected, unplanned
+        )
         if self.debugMode:
-            self.logger.info(f"{TerminalColors.Green}"
-                             f"IMCP_FSM.py - on_relay_sub | convert_relay_msg_to_trigger | "
-                             f"trigger: {trigger}, coordinated: {coordinated}"
-                             f"{TerminalColors.RESET}")
+            self.logger.info(
+                f"{TerminalColors.Green}"
+                f"IMCP_FSM.py - on_relay_sub | convert_relay_msg_to_trigger | "
+                f"trigger: {trigger}, coordinated: {coordinated}"
+                f"{TerminalColors.RESET}"
+            )
 
         if not trigger:
             self.publish_state(cause="on_relay_sub")
@@ -309,22 +348,26 @@ class IMCP_FSM(Component):
             "kind": self.kind,
             "vote_start": time.time(),
             "requestRelay": relay_id,
-            "requestAction": relay_state
+            "requestAction": relay_state,
         }
 
-        self.logger.info(f"{TerminalColors.White}\n"
-                         f"IMCP_FSM.py - on_relay_sub | send vote request: {vote_msg}"
-                         f"{TerminalColors.RESET}")
+        self.logger.info(
+            f"{TerminalColors.White}\n"
+            f"IMCP_FSM.py - on_relay_sub | send vote request: {vote_msg}"
+            f"{TerminalColors.RESET}"
+        )
 
         # The default value for "kind" appears to be "consensus", specified in riaps/lang/riaps.tx
-        rfv_id = self.dcgroup.requestActionVote_pyobj(vote_msg,
-                                                      time.time(),
-                                                      kind=self.kind,
-                                                      timeout=self.vote_timeout)
+        rfv_id = self.dcgroup.requestActionVote_pyobj(
+            vote_msg, time.time(), kind=self.kind, timeout=self.vote_timeout
+        )
 
-        log_json(self.logger, "info", "sent request for vote",
-                 event={"REQUESTED_ACTION_VOTE": trigger,
-                        "rfvId": rfv_id})
+        log_json(
+            self.logger,
+            "info",
+            "sent request for vote",
+            event={"REQUESTED_ACTION_VOTE": trigger, "rfvId": rfv_id},
+        )
 
     # riaps:keep_event_sub:end
 
@@ -344,8 +387,10 @@ class IMCP_FSM(Component):
         if not cause and not max_publish_delay_exceeded:
             return
 
-        if self.model.state == 'ACTIVE_PREPARE-DISCONNECT':
-            groupToSend = self.futureGroup  # future group for power sharing when disconnect
+        if self.model.state == "ACTIVE_PREPARE-DISCONNECT":
+            groupToSend = (
+                self.futureGroup
+            )  # future group for power sharing when disconnect
         else:
             groupToSend = self.group
 
@@ -358,16 +403,18 @@ class IMCP_FSM(Component):
             msg.breaker = self.relayUnderControl
             msg.action = self.actionUnderControl
         else:
-            msg.breaker = 'NONE'
-            msg.action = 'NONE'
+            msg.breaker = "NONE"
+            msg.action = "NONE"
         msg.group = groupToSend
         msg.reconfigcontrol = False
         msg_bytes = msg.to_bytes()
 
-        self.logger.info(f"{TerminalColors.Red}\n"
-                         f"IMCP_FSM.py - publish_state | cause: {cause}\n"
-                         f"msg: {msg}"
-                         f"{TerminalColors.RESET}")
+        self.logger.info(
+            f"{TerminalColors.Red}\n"
+            f"IMCP_FSM.py - publish_state | cause: {cause}\n"
+            f"msg: {msg}"
+            f"{TerminalColors.RESET}"
+        )
         self.state_pub.send(msg_bytes)
 
     def trigger(self, event, relay_status=None, publish_reason=None):
@@ -404,22 +451,26 @@ class IMCP_FSM(Component):
 
     def handleActivate(self):
 
-        extra_args = dict(auto_transitions=False,
-                          initial=self.inital_state,
-                          # initial='ACTIVE_GRID-TIED',
-                          # title='DYNAMIC MG FSM',
-                          # show_conditions=True,
-                          # show_state_attributes=True,
-                          ignore_invalid_triggers=True)
+        extra_args = dict(
+            auto_transitions=False,
+            initial=self.inital_state,
+            # initial='ACTIVE_GRID-TIED',
+            # title='DYNAMIC MG FSM',
+            # show_conditions=True,
+            # show_state_attributes=True,
+            ignore_invalid_triggers=True,
+        )
 
         self.model = model.ICMPModel(self.state_timer)
-        self.machine = machine.RIAPSStateMachine(model=self.model,
-                                                 states=model.states,
-                                                 transitions=model.transitions,
-                                                 before_state_change="before_state_change",
-                                                 after_state_change="after_state_change",
-                                                 send_event=True,
-                                                 **extra_args)
+        self.machine = machine.RIAPSStateMachine(
+            model=self.model,
+            states=model.states,
+            transitions=model.transitions,
+            before_state_change="before_state_change",
+            after_state_change="after_state_change",
+            send_event=True,
+            **extra_args,
+        )
 
         now = time.time()
         self.time_of_last_group_msg = now
@@ -441,7 +492,7 @@ class IMCP_FSM(Component):
         pass
 
     def __destroy__(self):
-        self.logger.info('Stopping...')
+        self.logger.info("Stopping...")
         self.logger.flush()
 
         # riaps:keep_impl:end
