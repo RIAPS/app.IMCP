@@ -8,7 +8,7 @@ import api
 def main():
 
     DER_map = {
-        # "F1_DSP111",
+        "F1_DSP111",
         "F1_DSP112",
         # "F3_DSP115",
         # "F3_DSP116",
@@ -19,7 +19,7 @@ def main():
 
     DEV_map = {
         *DER_map,
-        "F1PCC",
+        # "F1PCC",
         # "F2PCC",
         # "F3PCC",
     }

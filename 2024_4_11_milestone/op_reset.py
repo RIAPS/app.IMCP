@@ -10,11 +10,11 @@ def main():
     DER_map = {
         "F1_DSP111",
         "F1_DSP112",
-        # "F3_DSP115",
-        # "F3_DSP116",
-        # "GEN1-Banshee",
-        # "GEN2-Banshee",
-        # "GEN3-Banshee",
+        "F3_DSP115",
+        "F3_DSP116",
+        "GEN1-Banshee",
+        "GEN2-Banshee",
+        "GEN3-Banshee",
     }
 
     cfg_path = pathlib.Path(__file__).absolute().parents[1] / "cfg_ncsu"

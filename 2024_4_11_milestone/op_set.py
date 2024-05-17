@@ -14,13 +14,13 @@ def main():
     COS_PHI = 0.95  # Power factor. Set in the coop design file
 
     P_map = {
-        "F1_DSP111": 100,
-        "F1_DSP112": 200,
-        # "F3_DSP115": 300,
-        # "F3_DSP116": 400,
-        "GEN1-Banshee": 1000,
-        "GEN2-Banshee": 1000,
-        "GEN3-Banshee": 1000,
+        "F1_DSP111": 0,
+        "F1_DSP112": 0,
+        # "F3_DSP115": 0,
+        # "F3_DSP116": 0,
+        "GEN1-Banshee": 0,
+        # "GEN2-Banshee": 0,
+        # "GEN3-Banshee": 0,
     }
 
     PQ_map = {
@@ -45,7 +45,7 @@ def main():
             c.run("hostname")
             print(f"Send OP for {key} with {json.dumps(PQ_map[key])}")
             c.run(
-                f"python3 ~/UC3_SET_OP_PNTS/scripts/api.py --der_name {key} --PQ_map '{json.dumps(PQ_map[key])}'"
+                f"python3 ~/UC3_SET_OP_PNTS/scripts/api.py --der_name {key} --PQ_map '{json.dumps(PQ_map[key])}' --fun 'set'"
             )
 
             # api.set_OP(PQ_map)
