@@ -15,7 +15,7 @@ consensus_gain = 0.25  # VoltageEstimation
 
 # ---- RESYNCHRONIZATION, RELAY OPEN/CLOSE, SECONDARY CONTROL PARAMETERS ----
 # freq_ctrl_gain = 15 / 3  # ResynchronizationControl/RelayCloseControl/SecondaryControl
-freq_ctrl_gain = 1
+freq_ctrl_gain = 2
 # active and reactive power control gains control the balance between the active and reactive power(?).
 # TODO: I don't know what these actually balance. Hao just said they are for balance.
 active_pwr_ctrl_gain = 0.8 * 0.1 * 100
@@ -23,7 +23,7 @@ active_pwr_ctrl_gain = 0.8 * 0.1 * 100
 reactive_pwr_ctrl_gain = 200 * 0.1
 # ResynchronizationControl/RelayCloseControl/RelayOpenControl/SecondaryControl
 
-voltage_ctrl_gain_relay = 0.05  # ResynchronizationControl/RelayCloseControl
+voltage_ctrl_gain_relay = 0.2  # ResynchronizationControl/RelayCloseControl
 # voltage_ctrl_gain_island = 0.2 * 20 * 480  # SecondaryControl
 voltage_ctrl_gain_island = 0.05 * 20 * 480  # SecondaryControl
 # Multiply by 480 to make it easier to compare generator voltage with inverter voltage
