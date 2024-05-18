@@ -1,0 +1,2436 @@
+[
+    {
+        "id": "a39d20f75e0d30ae",
+        "type": "tab",
+        "label": "single_line_diag",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "520e1b03eff3095c",
+        "type": "tab",
+        "label": "power_monitor",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "e0417dabd759a418",
+        "type": "tab",
+        "label": "Scenario",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "7eae45accf058418",
+        "type": "tab",
+        "label": "2relay_monitor",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "1c08431c1f1ae271",
+        "type": "tab",
+        "label": "Regulation",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "237a399a35976532",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-light",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#097479",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "reset": false
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#0094CE",
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#fafafa",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#1bbfff",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#0094ce",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "IMCP Dashboard",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "icon",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 50,
+                "sy": 50,
+                "gx": 10,
+                "gy": 10,
+                "cx": 50,
+                "cy": 5,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "9cdb817b.45e12",
+        "type": "ui_tab",
+        "name": "IMCP App",
+        "icon": "dashboard",
+        "order": 41,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "09731996b6370fe7",
+        "type": "ui_group",
+        "name": "Default",
+        "tab": "9cdb817b.45e12",
+        "order": 1,
+        "disp": true,
+        "width": "8",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "1754afcaecca2a50",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "b5ae5b45c7dcb908",
+        "type": "ui_group",
+        "name": "PQ Monitor",
+        "tab": "9cdb817b.45e12",
+        "order": 5,
+        "disp": true,
+        "width": "12",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "aeebcbbe7cbd5997",
+        "type": "ui_group",
+        "name": "Scenario Control",
+        "tab": "9cdb817b.45e12",
+        "order": 2,
+        "disp": true,
+        "width": "7",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "f85923273feee74a",
+        "type": "ui_group",
+        "name": "Relay Monitor",
+        "tab": "9cdb817b.45e12",
+        "order": 4,
+        "disp": true,
+        "width": "7",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "5275318c16cf59ec",
+        "type": "ui_group",
+        "name": "Regulation Control",
+        "tab": "9cdb817b.45e12",
+        "order": 3,
+        "disp": true,
+        "width": "7",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "dd55451d9712d404",
+        "type": "mqtt in",
+        "z": "a39d20f75e0d30ae",
+        "name": "",
+        "topic": "riaps/ctrl",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "1754afcaecca2a50",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 460,
+        "y": 220,
+        "wires": [
+            [
+                "eaf06c787d5aa1ce",
+                "6eb5c8c9c77f70b2"
+            ]
+        ]
+    },
+    {
+        "id": "eaf06c787d5aa1ce",
+        "type": "function",
+        "z": "a39d20f75e0d30ae",
+        "name": "function 2",
+        "func": "//node.warn(msg)\n\nvar new_msg = {\n    \"payload\": msg.payload\n}\n\nreturn new_msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 640,
+        "y": 220,
+        "wires": [
+            [
+                "255e927efcacf26c",
+                "f5105c90f70d6756"
+            ]
+        ]
+    },
+    {
+        "id": "6eb5c8c9c77f70b2",
+        "type": "debug",
+        "z": "a39d20f75e0d30ae",
+        "name": "debug 9",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 680,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "c0653c2f3ba44738",
+        "type": "debug",
+        "z": "a39d20f75e0d30ae",
+        "name": "debug 11",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1060,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "4d9ba140fb4c94bd",
+        "type": "mqtt out",
+        "z": "a39d20f75e0d30ae",
+        "name": "",
+        "topic": "mg/event",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "1754afcaecca2a50",
+        "x": 1040,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "49c551a42da2fdd4",
+        "type": "inject",
+        "z": "a39d20f75e0d30ae",
+        "name": "Test GEN1",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"command\":\"update_text\",\"selector\":\"#GEN1_text\",\"text\":\"12.345\"}",
+        "payloadType": "json",
+        "x": 160,
+        "y": 280,
+        "wires": [
+            [
+                "fa57647ac709ed50"
+            ]
+        ]
+    },
+    {
+        "id": "255e927efcacf26c",
+        "type": "debug",
+        "z": "a39d20f75e0d30ae",
+        "name": "debug 15",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 800,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "0c01106f41a090a9",
+        "type": "inject",
+        "z": "a39d20f75e0d30ae",
+        "name": "Test GEN2",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"command\":\"update_text\",\"selector\":\"#GEN2_text\",\"text\":\"12.345\"}",
+        "payloadType": "json",
+        "x": 160,
+        "y": 340,
+        "wires": [
+            [
+                "fa57647ac709ed50"
+            ]
+        ]
+    },
+    {
+        "id": "9c168e23eec28e6e",
+        "type": "inject",
+        "z": "a39d20f75e0d30ae",
+        "name": "Test GEN3",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"command\":\"update_text\",\"selector\":\"#GEN3_text\",\"text\":\"12.345\"}",
+        "payloadType": "json",
+        "x": 160,
+        "y": 400,
+        "wires": [
+            [
+                "fa57647ac709ed50"
+            ]
+        ]
+    },
+    {
+        "id": "7577d5bb78e3d818",
+        "type": "inject",
+        "z": "a39d20f75e0d30ae",
+        "name": "Test PCC Close",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "[{\"command\":\"update_text\",\"selector\":\"#F1PCC_text\",\"text\":\"12.345\"},{\"command\":\"update_style\",\"selector\":\"#F1PCC\",\"style\":{\"fill\":\"red\"}}]",
+        "payloadType": "json",
+        "x": 180,
+        "y": 460,
+        "wires": [
+            [
+                "fa57647ac709ed50"
+            ]
+        ]
+    },
+    {
+        "id": "fa57647ac709ed50",
+        "type": "function",
+        "z": "a39d20f75e0d30ae",
+        "name": "Random Text & Color",
+        "func": "\n\nif (Array.isArray(msg.payload)) {\n  // Perform actions if msg.payload is an array\n    msg.payload[0].text = \"P: \" + Date.now().toString().slice(-5);\n    // var color = Math.floor(Math.random() * 0xFFFFFF).toString(16).slice(-6);\n    // msg.payload[1].style.fill = \"#\"+color;\n    // var coin_flip = Math.floor(Math.random() * 100) % 2;\n    // if (coin_flip == 1) {\n      // msg.payload[1].style.fill = \"green\";\n    // } else {\n      // msg.payload[1].style.fill = \"red\";\n    // }\n} else if (typeof msg.payload === 'object' && msg.payload !== null) {\n  // Perform actions if msg.payload is an object\n    msg.payload.text = \"P: \" + Date.now().toString().slice(-5);\n} else {\n  // Perform actions if msg.payload is neither an array nor an object\n  console.log(\"msg.payload is not an array or an object\");\n}\n\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 340,
+        "wires": [
+            [
+                "eaf06c787d5aa1ce",
+                "6eb5c8c9c77f70b2"
+            ]
+        ]
+    },
+    {
+        "id": "34b07f37e1cfc5fe",
+        "type": "inject",
+        "z": "a39d20f75e0d30ae",
+        "name": "Test PCC Open",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "[{\"command\":\"update_text\",\"selector\":\"#F1PCC_text\",\"text\":\"12.345\"},{\"command\":\"update_style\",\"selector\":\"#F1PCC\",\"style\":{\"fill\":\"green\"}}]",
+        "payloadType": "json",
+        "x": 180,
+        "y": 540,
+        "wires": [
+            [
+                "fa57647ac709ed50"
+            ]
+        ]
+    },
+    {
+        "id": "f5105c90f70d6756",
+        "type": "ui_svg_graphics",
+        "z": "a39d20f75e0d30ae",
+        "group": "09731996b6370fe7",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "svgString": "<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" version=\"1.1\" width=\"100%\" height=\"495px\" viewBox=\"200.0 -0.5 1000 1400\" preserveAspectRatio=\"xMidYMid meet\" xmlns:ev=\"http://www.w3.org/2001/xml-events\" width=\"18.4262in\" height=\"18.5838in\" viewBox=\"0 0 1326.68994140625 1338.030029296875\" xml:space=\"preserve\" color-interpolation-filters=\"sRGB\" class=\"st21\" preserveAspectRatio=\"xMidYMid meet\">\n  <rect id=\"svgEditorBackground\" x=\"0\" y=\"0\" width=\"1326.69\" height=\"1338.03\" style=\"fill: none; stroke: none;\" />\n  <path d=\"M573.758136,1060.37427v129.356\" style=\"fill:none;stroke:black;stroke-width:1.81px\" id=\"e22_pathV\" />\n  <path d=\"M747.367,555.022v-151.322\" style=\"fill:none;stroke:black;stroke-width:2.25\" id=\"e14_pathV\" />\n  <style type=\"text/css\">\n    .st1\n    {\n      stroke: #000000;\n      stroke-linecap: round;\n      stroke-linejoin: round;\n      stroke-width: 2.25\n    }\n\n    .st2\n    {\n      visibility: visible\n    }\n\n    .st3\n    {\n      fill: #5b9bd5;\n      fill-opacity: 0.22;\n      filter: url(#filter_2);\n      stroke: #5b9bd5;\n      stroke-opacity: 0.22\n    }\n\n    .st4\n    {\n      fill: #000000;\n      stroke: #002060;\n      stroke-width: 1.25\n    }\n\n    .st5\n    {\n      fill: #ff0000;\n      stroke: #002060;\n      stroke-width: 1.75\n    }\n\n    .st6\n    {\n      fill: none;\n      stroke: none;\n      stroke-width: 0.25\n    }\n\n    .st7\n    {\n      fill: #000000;\n      font-family: Arial;\n      font-size: 3em\n    }\n\n    .st8\n    {\n      font-size: 1em\n    }\n\n    .st9\n    {\n      fill: #000000;\n      font-family: Arial;\n      font-size: 3em;\n      font-weight: bold\n    }\n\n    .st10\n    {\n      stroke: #000000;\n      stroke-width: 2.25\n    }\n\n    .st11\n    {\n      fill: #c55a11;\n      stroke: #000000;\n      stroke-width: 2.25\n    }\n\n    .st12\n    {\n      fill: #c5e0b3;\n      stroke: #000000;\n      stroke-width: 2.25\n    }\n\n    .st13\n    {\n      fill: #f7cbac;\n      stroke: #000000;\n      stroke-width: 2.25\n    }\n\n    .st14\n    {\n      fill: none;\n      filter: url(#filter_2);\n      stroke: #5b9bd5;\n      stroke-opacity: 0.22\n    }\n\n    .st15\n    {\n      fill: none;\n      stroke: #000000;\n      stroke-width: 1\n    }\n\n    .st16\n    {\n      fill: none;\n      stroke: #000000;\n      stroke-width: 2.25\n    }\n\n    .st17\n    {\n      fill: #5b9bd5;\n      filter: url(#filter_2);\n      font-family: Times New Roman;\n      font-size: 3em;\n      font-weight: bold;\n      opacity: 0.219608\n    }\n\n    .st18\n    {\n      fill: #000000;\n      font-family: Times New Roman;\n      font-size: 3em;\n      font-weight: bold\n    }\n\n    .st19\n    {\n      fill: #5b9bd5;\n      stroke: #c8c8c8;\n      stroke-width: 0.25\n    }\n\n    .st20\n    {\n      fill: none;\n      stroke: #000000;\n      stroke-width: 0.75\n    }\n\n    .st21\n    {\n      fill: none;\n      fill-rule: evenodd;\n      font-size: 12px;\n      overflow: visible;\n      stroke-linecap: square;\n      stroke-miterlimit: 3\n    }\n\n    .st22\n    {\n      fill: #00ff00;\n    }\n  </style>\n  <defs id=\"Filters\">\n    <filter id=\"filter_2\">\n      <feGaussianBlur stdDeviation=\"2\" />\n    </filter>\n  </defs>\n  <g>\n    <title>Page-6</title>\n    <g id=\"shape1-1\" transform=\"translate(-524.966,217.659) rotate(-90.3721)\">\n      <title>Sheet.1</title>\n    </g>\n    <g id=\"shape2-4\" transform=\"translate(747.332,-1118.06)\">\n      <title>Sheet.2</title>\n      <g id=\"shadow2-5\" transform=\"matrix(1,0,0,1,0.345598,1.97279)\" class=\"st2\">\n        <rect x=\"0\" y=\"1327.03\" width=\"193.143\" height=\"11.0037\" class=\"st3\" />\n      </g>\n      <rect x=\"0\" y=\"1327.03\" width=\"193.143\" height=\"11.0037\" class=\"st4\" />\n    </g>\n    <g id=\"shape3-9\" transform=\"translate(803.483,-1170.33)\">\n      <title>Sheet.3</title>\n      <g id=\"shadow3-10\" transform=\"matrix(1,0,0,1,0.345598,1.97279)\" class=\"st2\">\n        <rect x=\"-31.6793\" y=\"1307.73\" width=\"19.1152\" height=\"26.4088\" class=\"st3\" id=\"e6_rect\" transform=\"matrix(1.47477, 0, 0, 1.47477, 41.4929, -626.759)\" />\n        <rect x=\"-31.6793\" y=\"1307.73\" width=\"19.1152\" height=\"26.4088\" class=\"st3\" id=\"e7_rect\" transform=\"matrix(1.47477, 0, 0, 1.47477, 41.4929, -626.759)\" />\n      </g>\n      <rect id=\"F1PCC\" x=\"-31.6793\" y=\"1307.73\" width=\"19.1152\" height=\"26.4088\" class=\"st5\" transform=\"matrix(1.47477, 0, 0, 1.47477, 41.3288, -627.695)\" />\n      <rect id=\"F1PCC_target\" x=\"8.09636\" y=\"1308.4\" width=\"19.1152\" height=\"26.4088\" style=\"stroke-width:1px\" fill=\"red\" transform=\"matrix(0.832515, 0, 0, 0.832515, -5.99537, 220.252)\" />\n    </g>\n    <g id=\"shape4-14\" transform=\"translate(-578.258,352.018) rotate(-90)\">\n      <title>Sheet.4</title>\n      <path d=\"M0 1338.03 L132.04 1338.03\" class=\"st1\" />\n    </g>\n    <g id=\"shape5-17\" transform=\"translate(750.651,-1041.04)\">\n      <title>Sheet.5</title>\n      <g id=\"shadow5-18\" transform=\"matrix(1,0,0,1,0.345598,1.97279)\" class=\"st2\">\n        <rect x=\"0\" y=\"1311.63\" width=\"19.1152\" height=\"26.4088\" class=\"st3\" />\n      </g>\n      <rect x=\"0\" y=\"1311.63\" width=\"19.1152\" height=\"26.4088\" class=\"st5\" />\n    </g>\n    <g id=\"shape6-22\" transform=\"translate(756.985,1690.05) rotate(-179.88)\">\n      <title>Sheet.6</title>\n      <path d=\"M 0 1338.03 L 742.2108358669956 1339.0880278328286\" class=\"st1\" />\n    </g>\n    <g id=\"shape7-25\" transform=\"translate(189.806,-930.999)\">\n      <title>Sheet.7</title>\n      <g id=\"shadow7-26\" transform=\"matrix(1,0,0,1,0.345598,1.97279)\" class=\"st2\">\n        <rect x=\"-271.728\" y=\"1323.78\" width=\"185.739\" height=\"11.0037\" class=\"st3\" />\n      </g>\n      <rect x=\"-271.728\" y=\"1323.78\" width=\"185.739\" height=\"11.0037\" class=\"st4\" />\n    </g>\n    <g id=\"shape8-30\" transform=\"translate(1627.33,352.018) rotate(90)\">\n      <title>Sheet.8</title>\n      <path d=\"M-3.254228,1609.758027L40.755772,1609.758027\" class=\"st1\" />\n    </g>\n    <g id=\"group9-33\" transform=\"translate(803.483,-986.017)\">\n      <title>Sheet.9</title>\n      <g id=\"shape10-34\" transform=\"translate(-1328.23,1338.03) rotate(-90)\">\n        <title>Sheet.10</title>\n        <path d=\"M0 1338.03 L132.04 1338.03\" class=\"st1\" />\n      </g>\n      <g id=\"shape11-37\" transform=\"translate(0,-55.0184)\">\n        <title>Sheet.11</title>\n        <g id=\"shadow11-38\" transform=\"matrix(1,0,0,1,0.345598,1.97279)\" class=\"st2\">\n          <rect x=\"0\" y=\"1311.63\" width=\"19.1152\" height=\"26.4088\" class=\"st3\" />\n        </g>\n        <rect x=\"0\" y=\"1311.63\" width=\"19.1152\" height=\"26.4088\" class=\"st5\" />\n      </g>\n    </g>\n    <g id=\"group12-42\" transform=\"translate(191.897,-796.204)\">\n      <title>Sheet.12</title>\n      <g id=\"shape13-43\" transform=\"translate(-1328.23,1338.03) rotate(-90)\">\n        <title>Sheet.13</title>\n        <path d=\"M3.254228,1066.301973L135.294228,1066.301973\" class=\"st1\" />\n      </g>\n      <g id=\"shape14-46\" transform=\"translate(0,-55.0184)\">\n        <title>Sheet.14</title>\n        <g id=\"shadow14-47\" transform=\"matrix(1,0,0,1,0.345598,1.97279)\" class=\"st2\">\n          <rect x=\"-271.728\" y=\"1308.38\" width=\"19.1152\" height=\"26.4088\" class=\"st3\" />\n        </g>\n        <rect x=\"-271.728\" y=\"1308.38\" width=\"19.1152\" height=\"26.4088\" class=\"st5\" />\n      </g>\n    </g>\n    <g id=\"shape15-51\" transform=\"translate(630.959,-1026.73)\">\n      <title>Sheet.15</title>\n      <desc>CB 101</desc>\n      <rect x=\"0\" y=\"1283.02\" width=\"164.864\" height=\"55.0184\" class=\"st6\" />\n      <text x=\"57.43\" y=\"1299.73\" class=\"st7\">CB <tspan x=\"52.4\" dy=\"1.2em\" class=\"st8\">101</tspan></text>\n    </g>\n    <g id=\"shape16-55\" transform=\"translate(772.236,-1024.53)\">\n      <title>Sheet.16</title>\n      <desc>CB 102</desc>\n      <rect x=\"0\" y=\"1283.02\" width=\"164.864\" height=\"55.0184\" class=\"st6\" />\n      <text x=\"57.43\" y=\"1299.73\" class=\"st7\">CB <tspan x=\"52.4\" dy=\"1.2em\" class=\"st8\">102</tspan></text>\n    </g>\n    <g id=\"shape17-59\" transform=\"translate(528.911,-1096.05)\">\n      <title>Sheet.17</title>\n      <desc>BUS 1</desc>\n      <rect x=\"0\" y=\"1283.02\" width=\"266.816\" height=\"55.0184\" class=\"st6\" />\n      <text x=\"80.39\" y=\"1321.33\" class=\"st9\">BUS 1</text>\n    </g>\n    <g id=\"shape18-62\" transform=\"translate(823.992,-1122.19)\">\n      <title>Sheet.18</title>\n      <desc>13.8 kV</desc>\n      <rect x=\"0\" y=\"1283.02\" width=\"164.864\" height=\"55.0184\" class=\"st6\" />\n      <text x=\"21.39\" y=\"1321.33\" class=\"st7\">13.8 kV</text>\n    </g>\n    <g id=\"group19-65\" transform=\"translate(175.967,-779.698)\">\n      <title>Sheet.19</title>\n      <g id=\"shape20-66\">\n        <title>Sheet.20</title>\n        <path d=\"M-271.728027,1321.025772A13.7546,8.3629,-90,0,0,-263.368027,1334.775772A13.7546,8.3629,-90,0,0,-254.998027,1321.025772\" class=\"st10\" style=\"fill:none\"/>\n      </g>\n      <g id=\"shape21-69\" transform=\"translate(17.124,2.27374E-13)\">\n        <title>Sheet.21</title>\n        <path d=\"M-271.728027,1321.025772A13.7546,8.3629,-90,0,0,-263.368027,1334.775772A13.7546,8.3629,-90,0,0,-254.998027,1321.025772\" class=\"st10\" style=\"fill:none\"/>\n      </g>\n      <g id=\"shape22-72\" transform=\"translate(34.2481,2.27374E-13)\">\n        <title>Sheet.22</title>\n        <path d=\"M-271.728027,1321.025772A13.7546,8.3629,-90,0,0,-263.368027,1334.775772A13.7546,8.3629,-90,0,0,-254.998027,1321.025772\" class=\"st10\" style=\"fill:none\"/>\n      </g>\n    </g>\n    <g id=\"group23-75\" transform=\"translate(226.941,1903.25) rotate(180)\">\n      <title>Sheet.23</title>\n      <g id=\"shape24-76\">\n        <title>Sheet.24</title>\n        <path d=\"M271.728027,1327.534228A13.7546,8.3629,-90,0,0,280.088027,1341.284228A13.7546,8.3629,-90,0,0,288.458027,1327.534228\" class=\"st10\" style=\"fill:none\"/>\n      </g>\n      <g id=\"shape25-79\" transform=\"translate(17.124,2.27374E-13)\">\n        <title>Sheet.25</title>\n        <path d=\"M271.728027,1327.534228A13.7546,8.3629,-90,0,0,280.088027,1341.284228A13.7546,8.3629,-90,0,0,288.458027,1327.534228\" class=\"st10\" style=\"fill:none\"/>\n      </g>\n      <g id=\"shape26-82\" transform=\"translate(34.2481,2.27374E-13)\">\n        <title>Sheet.26</title>\n        <path d=\"M271.728027,1327.534228A13.7546,8.3629,-90,0,0,280.088027,1341.284228A13.7546,8.3629,-90,0,0,288.458027,1327.534228\" class=\"st10\" style=\"fill:none\"/>\n      </g>\n    </g>\n    <g id=\"group27-85\" transform=\"translate(331.176,-796.204)\">\n      <title>Sheet.27</title>\n      <g id=\"shape28-86\" transform=\"translate(-1328.23,1338.03) rotate(-90)\">\n        <title>Sheet.28</title>\n        <path d=\"M3.254228,1066.301973L135.294228,1066.301973\" class=\"st1\" />\n      </g>\n      <g id=\"shape29-89\" transform=\"translate(0,-55.0184)\">\n        <title>Sheet.29</title>\n        <g id=\"shadow29-90\" transform=\"matrix(1,0,0,1,0.345598,1.97279)\" class=\"st2\">\n          <rect x=\"-271.728\" y=\"1308.38\" width=\"19.1152\" height=\"26.4088\" class=\"st3\" />\n        </g>\n        <rect x=\"-271.728\" y=\"1308.38\" width=\"19.1152\" height=\"26.4088\" class=\"st5\" />\n      </g>\n    </g>\n    <g id=\"group30-94\" transform=\"translate(315.247,-779.698)\">\n      <title>Sheet.30</title>\n      <g id=\"shape31-95\">\n        <title>Sheet.31</title>\n        <path d=\"M-271.728027,1321.025772A13.7546,8.3629,-90,0,0,-263.368027,1334.775772A13.7546,8.3629,-90,0,0,-254.998027,1321.025772\" class=\"st10\" style=\"fill:none\"/>\n      </g>\n      <g id=\"shape32-98\" transform=\"translate(17.124,2.27374E-13)\">\n        <title>Sheet.32</title>\n        <path d=\"M-271.728027,1321.025772A13.7546,8.3629,-90,0,0,-263.368027,1334.775772A13.7546,8.3629,-90,0,0,-254.998027,1321.025772\" class=\"st10\" style=\"fill:none\"/>\n      </g>\n      <g id=\"shape33-101\" transform=\"translate(34.2481,2.27374E-13)\">\n        <title>Sheet.33</title>\n        <path d=\"M-271.728027,1321.025772A13.7546,8.3629,-90,0,0,-263.368027,1334.775772A13.7546,8.3629,-90,0,0,-254.998027,1321.025772\" class=\"st10\" style=\"fill:none\"/>\n      </g>\n    </g>\n    <g id=\"group34-104\" transform=\"translate(366.22,1903.25) rotate(180)\">\n      <title>Sheet.34</title>\n      <g id=\"shape35-105\">\n        <title>Sheet.35</title>\n        <path d=\"M271.728027,1327.534228A13.7546,8.3629,-90,0,0,280.088027,1341.284228A13.7546,8.3629,-90,0,0,288.458027,1327.534228\" class=\"st10\" style=\"fill:none\"/>\n      </g>\n      <g id=\"shape36-108\" transform=\"translate(17.124,2.27374E-13)\">\n        <title>Sheet.36</title>\n        <path d=\"M271.728027,1327.534228A13.7546,8.3629,-90,0,0,280.088027,1341.284228A13.7546,8.3629,-90,0,0,288.458027,1327.534228\" class=\"st10\" style=\"fill:none\"/>\n      </g>\n      <g id=\"shape37-111\" transform=\"translate(34.2481,2.27374E-13)\">\n        <title>Sheet.37</title>\n        <path d=\"M271.728027,1327.534228A13.7546,8.3629,-90,0,0,280.088027,1341.284228A13.7546,8.3629,-90,0,0,288.458027,1327.534228\" class=\"st10\" style=\"fill:none\"/>\n      </g>\n    </g>\n    <g id=\"shape38-114\" transform=\"translate(1678.76,577.593) rotate(90)\">\n      <title>Sheet.38</title>\n      <path d=\"M-3.254228,1609.758027L40.755772,1609.758027\" class=\"st1\" />\n    </g>\n    <g id=\"shape39-117\" transform=\"translate(81.586,-834.717)\">\n      <title>Sheet.39</title>\n      <desc>CB 104</desc>\n      <rect x=\"-271.728\" y=\"1279.77\" width=\"129.426\" height=\"55.0184\" class=\"st6\" />\n      <text x=\"-232.018\" y=\"1296.48\" class=\"st7\">CB <tspan x=\"-237.048\" dy=\"1.2em\" class=\"st8\">104</tspan></text>\n    </g>\n    <g id=\"shape40-121\" transform=\"translate(302.14,-834.717)\">\n      <title>Sheet.40</title>\n      <desc>CB 105</desc>\n      <rect x=\"0\" y=\"1283.02\" width=\"178.27\" height=\"55.0184\" class=\"st6\" />\n      <text x=\"-207.598\" y=\"1296.48\" class=\"st7\">CB <tspan x=\"-212.628\" dy=\"1.2em\" class=\"st8\">10</tspan>5</text>\n    </g>\n    <g id=\"shape41-125\" transform=\"translate(288.825,-705.423)\">\n      <title>Sheet.41</title>\n      <g id=\"shadow41-126\" transform=\"matrix(1,0,0,1,0.345598,1.97279)\" class=\"st2\">\n        <rect x=\"-271.728\" y=\"1323.78\" width=\"103.817\" height=\"11.0037\" class=\"st3\" transform=\"matrix(3.2142, 0, 0, 0.989551, 610.628, 13.6648)\" />\n      </g>\n      <rect x=\"-271.728\" y=\"1323.78\" width=\"103.817\" height=\"11.0037\" class=\"st4\" transform=\"matrix(3.2142, 0, 0, 0.989551, 609.863, 13.6854)\" />\n    </g>\n    <g id=\"group42-130\" transform=\"translate(328.329,-633.655)\">\n      <title>Sheet.42</title>\n      <g id=\"shape43-131\" transform=\"translate(1351.09,1266.02) rotate(90)\">\n        <title>Sheet.43</title>\n      </g>\n      <g id=\"shape44-134\">\n        <title>Sheet.44</title>\n        <path d=\"M-279.340508,1373.826507L-265.890508,1345.836507L-292.880508,1346.026507L-279.340508,1373.826507Z\" class=\"st11\" style=\"fill:#C55a11\" />\n      </g>\n    </g>\n    <g id=\"shape45-136\" transform=\"translate(1020.85,1689.77) rotate(179.509)\">\n      <title>Sheet.45</title>\n    </g>\n    <g id=\"shape46-139\" transform=\"translate(939.912,-930.999)\">\n      <title>Sheet.46</title>\n      <g id=\"shadow46-140\" transform=\"matrix(1,0,0,1,0.345598,1.97279)\" class=\"st2\">\n        <rect x=\"253.016\" y=\"1328.66\" width=\"139.382\" height=\"11.0037\" class=\"st3\" />\n      </g>\n      <rect x=\"253.016\" y=\"1328.66\" width=\"139.382\" height=\"11.0037\" class=\"st4\" />\n    </g>\n    <g id=\"group47-144\" transform=\"translate(866.331,-984.522)\">\n      <title>Sheet.47</title>\n      <g id=\"group48-145\" transform=\"translate(34.6463,-1.49503)\">\n        <title>Sheet.48</title>\n        <g id=\"shape49-146\" transform=\"translate(-1328.88,1338.03) rotate(-90)\">\n          <title>Sheet.49</title>\n          <path d=\"M0 1338.03 L130.55 1338.03\" class=\"st1\" />\n        </g>\n        <g id=\"shape50-149\" transform=\"translate(0,-54.3955)\">\n          <title>Sheet.50</title>\n          <g id=\"shadow50-150\" transform=\"matrix(1,0,0,1,0.345598,1.97279)\" class=\"st2\">\n            <rect x=\"0\" y=\"1311.93\" width=\"19.1152\" height=\"26.1098\" class=\"st3\" />\n          </g>\n          <rect x=\"0\" y=\"1311.93\" width=\"19.1152\" height=\"26.1098\" class=\"st5\" />\n        </g>\n      </g>\n      <g id=\"shape51-154\" transform=\"translate(0,-41.2638)\">\n        <title>Sheet.51</title>\n        <desc>CB 103</desc>\n        <rect x=\"0\" y=\"1283.02\" width=\"190.446\" height=\"55.0184\" class=\"st6\" />\n        <text x=\"70.22\" y=\"1299.73\" class=\"st7\">CB <tspan x=\"65.19\" dy=\"1.2em\" class=\"st8\">103</tspan></text>\n      </g>\n    </g>\n    <g id=\"shape52-158\" transform=\"translate(-328.651,404.225) rotate(-90)\">\n      <title>Sheet.52</title>\n    </g>\n    <g id=\"shape53-161\" transform=\"translate(592.021,-930.999)\">\n      <title>Sheet.53</title>\n      <g id=\"shadow53-162\" transform=\"matrix(1,0,0,1,0.345598,1.97279)\" class=\"st2\">\n        <rect x=\"0\" y=\"1327.03\" width=\"266.816\" height=\"11.0037\" class=\"st3\" />\n      </g>\n      <rect x=\"0\" y=\"1327.03\" width=\"353.053\" height=\"11.8173\" class=\"st4\" />\n    </g>\n    <g id=\"shape54-166\" transform=\"translate(2151.32,352.018) rotate(90)\">\n      <title>Sheet.54</title>\n      <path d=\"M0 1338.03 L44.01 1338.03\" class=\"st1\" />\n    </g>\n    <g id=\"group55-169\" transform=\"translate(793.261,-796.204)\">\n      <title>Sheet.55</title>\n      <g id=\"shape56-170\" transform=\"translate(-1328.23,1338.03) rotate(-90)\">\n        <title>Sheet.56</title>\n      </g>\n      <g id=\"shape57-173\" transform=\"translate(0,-55.0184)\">\n        <title>Sheet.57</title>\n        <g id=\"shadow57-174\" transform=\"matrix(1,0,0,1,0.345598,1.97279)\" class=\"st2\">\n          <rect x=\"-56.1355\" y=\"1312.44\" width=\"19.1152\" height=\"26.4088\" class=\"st3\" />\n        </g>\n        <rect x=\"-56.1355\" y=\"1312.44\" width=\"19.1152\" height=\"26.4088\" class=\"st5\" />\n      </g>\n    </g>\n    <g id=\"group58-178\" transform=\"translate(776.855,-785.145)\">\n      <title>Sheet.58</title>\n      <g id=\"shape59-179\">\n        <title>Sheet.59</title>\n        <path d=\"M-55.321874,1336.483355A13.7546,8.3629,-90,0,0,-46.961874,1350.233355A13.7546,8.3629,-90,0,0,-38.591874,1336.483355\" class=\"st10\" style=\"fill:none\"/>\n      </g>\n      <g id=\"shape60-182\" transform=\"translate(17.124,2.27374E-13)\">\n        <title>Sheet.60</title>\n        <path d=\"M-55.321874,1336.483355A13.7546,8.3629,-90,0,0,-46.961874,1350.233355A13.7546,8.3629,-90,0,0,-38.591874,1336.483355\" class=\"st10\" style=\"fill:none\"/>\n      </g>\n      <g id=\"shape61-185\" transform=\"translate(34.2481,2.27374E-13)\">\n        <title>Sheet.61</title>\n        <path d=\"M-55.321874,1336.483355A13.7546,8.3629,-90,0,0,-46.961874,1350.233355A13.7546,8.3629,-90,0,0,-38.591874,1336.483355\" class=\"st10\" style=\"fill:none\"/>\n      </g>\n    </g>\n    <g id=\"group62-188\" transform=\"translate(827.828,1897.8) rotate(180)\">\n      <title>Sheet.62</title>\n      <g id=\"shape63-189\">\n        <title>Sheet.63</title>\n        <path d=\"M55.321874,1312.076645A13.7546,8.3629,-90,0,0,63.681874,1325.826645A13.7546,8.3629,-90,0,0,72.051874,1312.076645\" class=\"st10\" style=\"fill:none\"/>\n      </g>\n      <g id=\"shape64-192\" transform=\"translate(17.124,2.27374E-13)\">\n        <title>Sheet.64</title>\n        <path d=\"M55.321874,1312.076645A13.7546,8.3629,-90,0,0,63.681874,1325.826645A13.7546,8.3629,-90,0,0,72.051874,1312.076645\" class=\"st10\" style=\"fill:none\"/>\n      </g>\n      <g id=\"shape65-195\" transform=\"translate(34.2481,2.27374E-13)\">\n        <title>Sheet.65</title>\n        <path d=\"M55.321874,1312.076645A13.7546,8.3629,-90,0,0,63.681874,1325.826645A13.7546,8.3629,-90,0,0,72.051874,1312.076645\" class=\"st10\" style=\"fill:none\"/>\n      </g>\n    </g>\n    <g id=\"group66-198\" transform=\"translate(788.846,-693.57)\">\n      <title>Sheet.66</title>\n      <g id=\"shape67-199\" transform=\"translate(1351.09,1266.02) rotate(90)\">\n        <title>Sheet.67</title>\n        <path d=\"M12.203355,1393.351874L56.213355,1393.351874\" class=\"st1\" />\n      </g>\n      <g id=\"shape68-202\">\n        <title>Sheet.68</title>\n        <path d=\"M-41.781874,1350.233355L-28.331874,1322.243355L-55.321874,1322.433355L-41.781874,1350.233355Z\" class=\"st12\" style=\"fill:#c5e0b3\" />\n      </g>\n    </g>\n    <g id=\"shape69-204\" transform=\"translate(660.78,-834.717)\">\n      <title>Sheet.69</title>\n      <desc>CB 107</desc>\n      <rect x=\"-55.3219\" y=\"1295.22\" width=\"178.27\" height=\"55.0184\" class=\"st6\" />\n      <text x=\"8.80814\" y=\"1311.94\" class=\"st7\">CB <tspan x=\"3.77814\" dy=\"1.2em\" class=\"st8\">107</tspan></text>\n    </g>\n    <g id=\"shape70-208\" transform=\"translate(238.446,-551.133)\">\n      <title>Sheet.70</title>\n      <desc>C1 1200 kVA</desc>\n      <rect x=\"-271.728\" y=\"1279.77\" width=\"206.758\" height=\"55.0184\" class=\"st6\" />\n      <text x=\"-212.51\" y=\"1337.33\" class=\"st7\">C1 <tspan x=\"-267.561\" dy=\"1em\" class=\"st8\">1200 kVA</tspan></text>\n    </g>\n    <g id=\"shape71-212\" transform=\"translate(713.206,-607.826)\">\n      <title>Sheet.71</title>\n      <desc>I2 250kVA</desc>\n      <rect x=\"-55.3219\" y=\"1295.22\" width=\"178.27\" height=\"55.0184\" class=\"st6\" />\n      <text x=\"18.7981\" y=\"1311.94\" class=\"st7\">I2 <tspan x=\"-29.2319\" dy=\"1.2em\" class=\"st8\">250kVA</tspan></text>\n    </g>\n    <g id=\"group72-216\" transform=\"translate(604.765,-796.204)\">\n      <title>Sheet.72</title>\n      <g id=\"shape73-217\" transform=\"translate(-1328.23,1338.03) rotate(-90)\">\n        <title>Sheet.73</title>\n        <path d=\"M0 1338.03 L132.04 1338.03\" class=\"st1\" />\n      </g>\n      <g id=\"shape74-220\" transform=\"translate(0,-55.0184)\">\n        <title>Sheet.74</title>\n        <g id=\"shadow74-221\" transform=\"matrix(1,0,0,1,0.345598,1.97279)\" class=\"st2\">\n          <rect x=\"0\" y=\"1311.63\" width=\"19.1152\" height=\"26.4088\" class=\"st3\" />\n        </g>\n        <rect x=\"0\" y=\"1311.63\" width=\"19.1152\" height=\"26.4088\" class=\"st5\" />\n      </g>\n    </g>\n    <g id=\"group75-225\" transform=\"translate(588.836,-572.931)\">\n      <title>Sheet.75</title>\n      <g id=\"shape76-226\">\n        <title>Sheet.76</title>\n        <path d=\"M0 1324.28 A13.7546 8.3629 -90 0 0 8.36 1338.03 A13.7546 8.3629 -90 0 0 16.73 1324.28\" class=\"st10\" style=\"fill:none\"/>\n      </g>\n      <g id=\"shape77-229\" transform=\"translate(17.124,2.27374E-13)\">\n        <title>Sheet.77</title>\n        <path d=\"M0 1324.28 A13.7546 8.3629 -90 0 0 8.36 1338.03 A13.7546 8.3629 -90 0 0 16.73 1324.28\" class=\"st10\" style=\"fill:none\"/>\n      </g>\n      <g id=\"shape78-232\" transform=\"translate(34.2481,2.27374E-13)\">\n        <title>Sheet.78</title>\n        <path d=\"M0 1324.28 A13.7546 8.3629 -90 0 0 8.36 1338.03 A13.7546 8.3629 -90 0 0 16.73 1324.28\" class=\"st10\" style=\"fill:none\"/>\n      </g>\n    </g>\n    <g id=\"group79-235\" transform=\"translate(639.809,2110.02) rotate(180)\">\n      <title>Sheet.79</title>\n      <g id=\"shape80-236\">\n        <title>Sheet.80</title>\n        <path d=\"M0 1324.28 A13.7546 8.3629 -90 0 0 8.36 1338.03 A13.7546 8.3629 -90 0 0 16.73 1324.28\" class=\"st10\" style=\"fill:none\"/>\n      </g>\n      <g id=\"shape81-239\" transform=\"translate(17.124,2.27374E-13)\">\n        <title>Sheet.81</title>\n        <path d=\"M0 1324.28 A13.7546 8.3629 -90 0 0 8.36 1338.03 A13.7546 8.3629 -90 0 0 16.73 1324.28\" class=\"st10\" style=\"fill:none\"/>\n      </g>\n      <g id=\"shape82-242\" transform=\"translate(34.2481,2.27374E-13)\">\n        <title>Sheet.82</title>\n        <path d=\"M0 1324.28 A13.7546 8.3629 -90 0 0 8.36 1338.03 A13.7546 8.3629 -90 0 0 16.73 1324.28\" class=\"st10\" style=\"fill:none\"/>\n      </g>\n    </g>\n    <g id=\"shape83-245\" transform=\"translate(1951.91,784.36) rotate(90)\">\n      <title>Sheet.83</title>\n      <path d=\"M0 1338.03 L44.01 1338.03\" class=\"st1\" />\n    </g>\n    <g id=\"shape84-248\" transform=\"translate(486.852,-820.962)\">\n      <title>Sheet.84</title>\n      <desc>CB 106</desc>\n      <rect x=\"0\" y=\"1283.02\" width=\"154.813\" height=\"55.0184\" class=\"st6\" />\n      <text x=\"52.4\" y=\"1299.73\" class=\"st7\">CB <tspan x=\"47.37\" dy=\"1.2em\" class=\"st8\">106</tspan></text>\n    </g>\n    <g id=\"shape85-252\" transform=\"translate(1952.61,535.032) rotate(90)\">\n      <title>Sheet.85</title>\n      <path d=\"M0 1338.03 L220.17 1338.03\" class=\"st1\" />\n    </g>\n    <g id=\"shape86-255\" transform=\"translate(364.764,-498.656)\">\n      <title>Sheet.86</title>\n      <g id=\"shadow86-256\" transform=\"matrix(1,0,0,1,0.345598,1.97279)\" class=\"st2\">\n        <rect x=\"158.182\" y=\"1325.38\" width=\"325.517\" height=\"11.0037\" class=\"st3\" />\n      </g>\n      <rect x=\"158.182\" y=\"1325.38\" width=\"325.517\" height=\"11.0037\" class=\"st4\" />\n    </g>\n    <g id=\"group87-260\" transform=\"translate(406.165,-367.689)\">\n      <title>Sheet.87</title>\n      <g id=\"shape88-261\" transform=\"translate(-1328.23,1338.03) rotate(-90)\">\n        <title>Sheet.88</title>\n        <path d=\"M1.64773,1496.212136L133.68773,1496.212136\" class=\"st1\" />\n      </g>\n      <g id=\"shape89-264\" transform=\"translate(0,-55.0184)\">\n        <title>Sheet.89</title>\n        <g id=\"shadow89-265\" transform=\"matrix(1,0,0,1,0.345598,1.97279)\" class=\"st2\">\n          <rect x=\"158.182\" y=\"1309.98\" width=\"19.1152\" height=\"26.4088\" class=\"st3\" />\n        </g>\n        <rect x=\"158.182\" y=\"1309.98\" width=\"19.1152\" height=\"26.4088\" class=\"st5\" />\n      </g>\n    </g>\n    <g id=\"group90-269\" transform=\"translate(390.235,-351.183)\">\n      <title>Sheet.90</title>\n      <g id=\"shape91-270\">\n        <title>Sheet.91</title>\n        <path d=\"M158.182136,1322.63227A13.7546,8.3629,-90,0,0,166.542136,1336.38227A13.7546,8.3629,-90,0,0,174.912136,1322.63227\" class=\"st10\" style=\"fill:none\"/>\n      </g>\n      <g id=\"shape92-273\" transform=\"translate(17.124,2.27374E-13)\">\n        <title>Sheet.92</title>\n        <path d=\"M158.182136,1322.63227A13.7546,8.3629,-90,0,0,166.542136,1336.38227A13.7546,8.3629,-90,0,0,174.912136,1322.63227\" class=\"st10\" style=\"fill:none\"/>\n      </g>\n      <g id=\"shape93-276\" transform=\"translate(34.2481,2.27374E-13)\">\n        <title>Sheet.93</title>\n        <path d=\"M158.182136,1322.63227A13.7546,8.3629,-90,0,0,166.542136,1336.38227A13.7546,8.3629,-90,0,0,174.912136,1322.63227\" class=\"st10\" style=\"fill:none\"/>\n      </g>\n    </g>\n    <g id=\"group94-279\" transform=\"translate(441.209,2331.76) rotate(180)\">\n      <title>Sheet.94</title>\n      <g id=\"shape95-280\">\n        <title>Sheet.95</title>\n        <path d=\"M-158.182136,1325.92773A13.7546,8.3629,-90,0,0,-149.822136,1339.67773A13.7546,8.3629,-90,0,0,-141.452136,1325.92773\" class=\"st10\" style=\"fill:none\"/>\n      </g>\n      <g id=\"shape96-283\" transform=\"translate(17.124,2.27374E-13)\">\n        <title>Sheet.96</title>\n        <path d=\"M-158.182136,1325.92773A13.7546,8.3629,-90,0,0,-149.822136,1339.67773A13.7546,8.3629,-90,0,0,-141.452136,1325.92773\" class=\"st10\" style=\"fill:none\"/>\n      </g>\n      <g id=\"shape97-286\" transform=\"translate(34.2481,2.27374E-13)\">\n        <title>Sheet.97</title>\n        <path d=\"M-158.182136,1325.92773A13.7546,8.3629,-90,0,0,-149.822136,1339.67773A13.7546,8.3629,-90,0,0,-141.452136,1325.92773\" class=\"st10\" style=\"fill:none\"/>\n      </g>\n    </g>\n    <g id=\"shape98-289\" transform=\"translate(1753.75,1006.11) rotate(90)\">\n      <title>Sheet.98</title>\n      <path d=\"M-1.64773,1179.847864L42.36227,1179.847864\" class=\"st1\" />\n    </g>\n    <g id=\"shape99-292\" transform=\"translate(303.819,-402.075)\">\n      <title>Sheet.99</title>\n      <desc>CB 110</desc>\n      <rect x=\"158.182\" y=\"1281.37\" width=\"121.461\" height=\"55.0184\" class=\"st6\" />\n      <text x=\"193.912\" y=\"1298.08\" class=\"st7\">CB <tspan x=\"188.882\" dy=\"1.2em\" class=\"st8\">1</tspan>10</text>\n    </g>\n    <g id=\"shape100-296\" transform=\"translate(293.636,-276.908)\">\n      <title>Sheet.100</title>\n      <g id=\"shadow100-297\" transform=\"matrix(1,0,0,1,0.345598,1.97279)\" class=\"st2\">\n        <rect x=\"238.082\" y=\"1325.38\" width=\"173.995\" height=\"11.0037\" class=\"st3\" transform=\"matrix(0.664401, 0, 0, 1, 62.4941, 0)\" />\n      </g>\n      <rect x=\"238.082\" y=\"1325.38\" width=\"173.995\" height=\"11.0037\" class=\"st4\" style=\"fill:#000000\" transform=\"matrix(0.664401, 0, 0, 1, 62.6101, 0)\" />\n    </g>\n    <g id=\"shape101-301\" transform=\"translate(119.022,-609.501)\">\n      <title>Sheet.101</title>\n      <desc>I1 300kVA</desc>\n      <rect x=\"-271.728\" y=\"1279.77\" width=\"164.864\" height=\"55.0184\" class=\"st6\" />\n      <text x=\"-204.308\" y=\"1296.48\" class=\"st7\">I1 <tspan x=\"-252.338\" dy=\"1.2em\" class=\"st8\">300</tspan>kVA</text>\n    </g>\n    <g id=\"group102-305\" transform=\"translate(604.393,-367.689)\">\n      <title>Sheet.102</title>\n      <g id=\"shape103-306\" transform=\"translate(-1328.23,1338.03) rotate(-90)\">\n        <title>Sheet.103</title>\n        <path d=\"M1.64773,1496.212136L133.68773,1496.212136\" class=\"st1\" />\n      </g>\n    </g>\n    <g id=\"group104-309\" transform=\"translate(588.464,-351.183)\">\n      <title>Sheet.104</title>\n      <g id=\"shape105-310\">\n        <title>Sheet.105</title>\n        <path d=\"M158.182136,1322.63227A13.7546,8.3629,-90,0,0,166.542136,1336.38227A13.7546,8.3629,-90,0,0,174.912136,1322.63227\" class=\"st10\" style=\"fill:none\"/>\n      </g>\n      <g id=\"shape106-313\" transform=\"translate(17.124,2.27374E-13)\">\n        <title>Sheet.106</title>\n        <path d=\"M158.182136,1322.63227A13.7546,8.3629,-90,0,0,166.542136,1336.38227A13.7546,8.3629,-90,0,0,174.912136,1322.63227\" class=\"st10\" style=\"fill:none\"/>\n      </g>\n      <g id=\"shape107-316\" transform=\"translate(34.2481,2.27374E-13)\">\n        <title>Sheet.107</title>\n        <path d=\"M158.182136,1322.63227A13.7546,8.3629,-90,0,0,166.542136,1336.38227A13.7546,8.3629,-90,0,0,174.912136,1322.63227\" class=\"st10\" style=\"fill:none\"/>\n      </g>\n    </g>\n    <g id=\"group108-319\" transform=\"translate(639.438,2331.76) rotate(180)\">\n      <title>Sheet.108</title>\n      <g id=\"shape109-320\">\n        <title>Sheet.109</title>\n        <path d=\"M-158.182136,1325.92773A13.7546,8.3629,-90,0,0,-149.822136,1339.67773A13.7546,8.3629,-90,0,0,-141.452136,1325.92773\" class=\"st10\" style=\"fill:none\"/>\n      </g>\n      <g id=\"shape110-323\" transform=\"translate(17.124,2.27374E-13)\">\n        <title>Sheet.110</title>\n        <path d=\"M-158.182136,1325.92773A13.7546,8.3629,-90,0,0,-149.822136,1339.67773A13.7546,8.3629,-90,0,0,-141.452136,1325.92773\" class=\"st10\" style=\"fill:none\"/>\n      </g>\n      <g id=\"shape111-326\" transform=\"translate(34.2481,2.27374E-13)\">\n        <title>Sheet.111</title>\n        <path d=\"M-158.182136,1325.92773A13.7546,8.3629,-90,0,0,-149.822136,1339.67773A13.7546,8.3629,-90,0,0,-141.452136,1325.92773\" class=\"st10\" style=\"fill:none\"/>\n      </g>\n    </g>\n    <g id=\"group112-329\" transform=\"translate(602.612,-256.797)\">\n      <title>Sheet.112</title>\n      <g id=\"shape113-330\" transform=\"translate(1351.09,1266.02) rotate(90)\">\n        <title>Sheet.113</title>\n        <path d=\"M-1.64773,1179.847864L42.36227,1179.847864\" class=\"st1\" />\n      </g>\n      <g id=\"shape114-333\">\n        <title>Sheet.114</title>\n        <path d=\"M171.722136,1336.38227L185.172136,1308.39227L158.182136,1308.58227L171.722136,1336.38227Z\" class=\"st11\" style=\"fill:#C55a11\" />\n      </g>\n    </g>\n    <g id=\"group115-335\" transform=\"translate(442.141,-148.871)\">\n      <title>Sheet.115</title>\n      <g id=\"shape116-336\" transform=\"translate(-1328.23,1338.03) rotate(-90)\">\n        <title>Sheet.116</title>\n      </g>\n      <g id=\"shape117-339\" transform=\"translate(0,-55.0184)\">\n        <title>Sheet.117</title>\n        <g id=\"shadow117-340\" transform=\"matrix(1,0,0,1,0.345598,1.97279)\" class=\"st2\">\n          <rect x=\"122.386\" y=\"1310.79\" width=\"19.1152\" height=\"26.4088\" class=\"st3\" />\n        </g>\n        <rect x=\"122.386\" y=\"1310.79\" width=\"19.1152\" height=\"26.4088\" class=\"st5\" />\n      </g>\n    </g>\n    <g id=\"shape118-344\" transform=\"translate(438.203,-118.122)\">\n      <title>Sheet.118</title>\n      <path d=\"M135.925629,1337.195827L149.375629,1309.205827L122.385629,1309.395827L135.925629,1337.195827Z\" class=\"st13\" style=\"fill:#f7cbac\"/>\n    </g>\n    <g id=\"shape119-346\" transform=\"translate(305.624,-187.384)\">\n      <title>Sheet.119</title>\n      <desc>CB 114</desc>\n      <rect x=\"155.742\" y=\"1282.18\" width=\"197.125\" height=\"55.0184\" class=\"st6\" />\n      <text x=\"195.946\" y=\"1298.89\" class=\"st7\">CB <tspan x=\"190.916\" dy=\"1.2em\" class=\"st8\">114</tspan></text>\n    </g>\n    <g id=\"shape120-350\" transform=\"translate(338.804,-33.691)\">\n      <title>Sheet.120</title>\n      <desc>P1 1000kVA</desc>\n      <rect x=\"158.182\" y=\"1281.37\" width=\"225.788\" height=\"55.0184\" class=\"st6\" />\n      <text x=\"213.266\" y=\"1298.89\" class=\"st7\">P1 <tspan x=\"162.226\" dy=\"1.2em\" class=\"st8\">1</tspan>000kVA</text>\n    </g>\n    <g id=\"shape125-354\" transform=\"translate(1071.83,-908.991)\">\n      <title>Sheet.125</title>\n      <desc>BUS 3</desc>\n      <rect x=\"0\" y=\"1283.02\" width=\"206.758\" height=\"55.0184\" class=\"st6\" />\n      <text x=\"283.316\" y=\"1324.63\" class=\"st9\">BUS 3</text>\n    </g>\n    <g id=\"shape126-357\" transform=\"translate(408.525,-908.299)\">\n      <title>Sheet.126</title>\n      <desc>BUS 5</desc>\n      <rect x=\"0\" y=\"1283.02\" width=\"206.758\" height=\"55.0184\" class=\"st6\" />\n      <text x=\"50.36\" y=\"1321.33\" class=\"st9\">BUS 5</text>\n    </g>\n    <g id=\"shape127-360\" transform=\"translate(18.25,-913.968)\">\n      <title>Sheet.127</title>\n      <desc>BUS 2</desc>\n      <rect x=\"-271.728\" y=\"1289.78\" width=\"164.864\" height=\"45.0032\" class=\"st6\" />\n      <text x=\"-242.308\" y=\"1323.08\" class=\"st9\">BUS 2</text>\n    </g>\n    <g id=\"shape128-363\" transform=\"translate(387.179,-680.367)\">\n      <title>Sheet.128</title>\n      <desc>BUS 4</desc>\n      <rect x=\"-263.592\" y=\"1278.14\" width=\"178.27\" height=\"55.0184\" class=\"st6\" transform=\"matrix(0.647529, 0, 0, 1, -127.002, 0)\" />\n      <text x=\"-11.6197\" y=\"1314.8\" class=\"st9\">BUS 4</text>\n    </g>\n    <g id=\"shape129-366\" transform=\"translate(665.958,-475.896)\">\n      <title>Sheet.129</title>\n      <desc>BUS 6</desc>\n      <rect x=\"0\" y=\"1283.02\" width=\"225.788\" height=\"55.0184\" class=\"st6\" />\n      <text x=\"218.062\" y=\"1319.68\" class=\"st9\">BUS 6</text>\n    </g>\n    <g id=\"shape130-369\" transform=\"translate(98.3913,-251.121)\">\n      <title>Sheet.130</title>\n      <desc>BUS 7</desc>\n      <rect x=\"0\" y=\"1283.02\" width=\"181.071\" height=\"55.0184\" class=\"st6\" />\n      <text x=\"261.6\" y=\"1314.8\" class=\"st9\">BUS 7</text>\n    </g>\n    <g id=\"shape131-372\" transform=\"translate(503.214,-187.384)\">\n      <title>Sheet.131</title>\n      <desc>C2 1500kVA</desc>\n      <rect x=\"158.182\" y=\"1281.37\" width=\"225.788\" height=\"55.0184\" class=\"st6\" />\n      <text x=\"248.062\" y=\"1298.08\" class=\"st7\">C2 <tspan x=\"198.022\" dy=\"1.2em\" class=\"st8\">1</tspan>500kVA</text>\n    </g>\n    <g id=\"shape132-376\" transform=\"translate(913.162,-116.703)\">\n      <title>Sheet.132</title>\n      <desc>C = Critical P = Priority I = Interruptible</desc>\n      <rect x=\"158.182\" y=\"1281.37\" width=\"395.277\" height=\"55.0184\" class=\"st6\" />\n      <text x=\"162.182\" y=\"1276.48\" class=\"st7\">C = Critical <tspan x=\"162.182\" dy=\"1.2em\" class=\"st8\">P = Priority </tspan>\n        <tspan x=\"162.182\" dy=\"1.2em\" class=\"st8\">I = Interruptible</tspan>\n      </text>\n    </g>\n    <g id=\"shape133-381\" transform=\"translate(869.856,-175.477)\">\n      <title>Sheet.133</title>\n      <path d=\"M171.722136,1336.38227L185.172136,1308.39227L158.182136,1308.58227L171.722136,1336.38227Z\" class=\"st11\" style=\"fill:#C55a11\" />\n    </g>\n    <g id=\"shape134-383\" transform=\"translate(869.856,-127.462)\">\n      <title>Sheet.134</title>\n      <path d=\"M171.722136,1336.38227L185.172136,1308.39227L158.182136,1308.58227L171.722136,1336.38227Z\" class=\"st13\" style=\"fill:#f7cbac\" />\n    </g>\n    <g id=\"shape135-385\" transform=\"translate(869.856,-84.7685)\">\n      <title>Sheet.135</title>\n      <path d=\"M171.722136,1336.38227L185.172136,1308.39227L158.182136,1308.58227L171.722136,1336.38227Z\" class=\"st12\" style=\"fill:#c5e0b3\"/>\n    </g>\n    <g id=\"group136-387\" transform=\"translate(187.958,-685.623)\">\n      <title>Sheet.136</title>\n      <g id=\"shape137-388\" transform=\"translate(1351.09,1266.02) rotate(90)\">\n        <title>Sheet.137</title>\n        <path d=\"M-3.254228,1609.758027L40.755772,1609.758027\" class=\"st1\" />\n      </g>\n      <g id=\"shape138-391\">\n        <title>Sheet.138</title>\n        <path d=\"M-258.188027,1334.775772L-244.738027,1306.785772L-271.728027,1306.975772L-258.188027,1334.775772Z\" class=\"st12\" style=\"fill:#c5e0b3\"/>\n      </g>\n    </g>\n    <g id=\"shape139-393\" transform=\"translate(813.793,-47.607)\">\n      <title>Sheet.139</title>\n      <g id=\"shadow139-394\" transform=\"matrix(1,0,0,1,0.345598,1.97279)\" class=\"st2\">\n        <rect x=\"158.182\" y=\"1156.38\" width=\"395.433\" height=\"180\" class=\"st14\" />\n      </g>\n      <rect x=\"158.182\" y=\"1156.38\" width=\"395.433\" height=\"180\" class=\"st15\" />\n    </g>\n    <g id=\"shape140-398\" transform=\"translate(775.283,-1231.45)\">\n      <title>Sheet.140</title>\n      <desc>⁓</desc>\n      <g id=\"shadow140-399\" transform=\"matrix(1,0,0,1,0.345598,1.97279)\" class=\"st2\">\n        <ellipse cx=\"37.093\" cy=\"1300.94\" rx=\"37.093\" ry=\"37.093\" class=\"st14\" />\n        <text x=\"28.09\" y=\"1312.04\" class=\"st17\">~</text>\n      </g>\n      <text x=\"28.09\" y=\"1312.04\" class=\"st18\">~</text>\n      <ellipse cx=\"37.093\" cy=\"1300.94\" rx=\"37.093\" ry=\"37.093\" class=\"st16\" />\n    </g>\n    <g id=\"shape141-403\" transform=\"translate(741.51,-1176.43)\">\n      <title>Sheet.141</title>\n      <desc>POI</desc>\n      <rect x=\"0\" y=\"1283.02\" width=\"266.816\" height=\"55.0184\" class=\"st6\" />\n      <text x=\"102.4\" y=\"1321.33\" class=\"st9\">POI</text>\n    </g>\n    <g id=\"shape142-406\" transform=\"translate(972.51,-805.883)\">\n      <title>Sheet.142</title>\n      <desc>G</desc>\n      <g id=\"shadow142-407\" transform=\"matrix(1,0,0,1,0.345598,1.97279)\" class=\"st2\">\n        <ellipse cx=\"290.109\" cy=\"1303.66\" rx=\"37.093\" ry=\"36.0065\" class=\"st14\" />\n        <ellipse cx=\"-661.864\" cy=\"1507.73\" rx=\"37.093\" ry=\"36.0065\" class=\"st14\" id=\"e5_ellipse\" />\n      </g>\n      <ellipse cx=\"290.109\" cy=\"1303.66\" rx=\"37.093\" ry=\"36.0065\" class=\"st16\" />\n      <text x=\"268.106\" y=\"1316.67\" class=\"st18\">G1</text>\n      <ellipse cx=\"-661.864\" cy=\"1507.73\" rx=\"37.093\" ry=\"36.0065\" class=\"st16\" id=\"e4_ellipse\" />\n      <text x=\"-682.867\" y=\"1520.74\" class=\"st18\" id=\"e4_text\">G3</text>\n    </g>\n    <g id=\"shape143-414\" transform=\"translate(273.543,-161.575)\">\n      <title>Sheet.143</title>\n      <desc>G</desc>\n      <g id=\"shadow143-415\" transform=\"matrix(1,0,0,1,0.345598,1.97279)\" class=\"st2\">\n        <ellipse cx=\"632.616\" cy=\"660.132\" rx=\"37.093\" ry=\"36.0065\" class=\"st14\" />\n      </g>\n      <ellipse cx=\"632.616\" cy=\"660.132\" rx=\"37.093\" ry=\"36.0065\" class=\"st16\" />\n      <text x=\"609.613\" y=\"673.142\" class=\"st18\">G2</text>\n    </g>\n    <g id=\"shape144-422\" transform=\"translate(-327.617,456.735) rotate(-89.8514)\">\n      <title>Sheet.144</title>\n      <path d=\"M-.970907,1591.049593L52.199093,1591.049593\" class=\"st1\" />\n    </g>\n    <g id=\"shape145-425\" transform=\"translate(1648.5,1061.13) rotate(90)\">\n      <title>Sheet.145</title>\n    </g>\n    <g id=\"shape165-428\" transform=\"translate(388.346,-105.165)\">\n      <title>Sheet.165</title>\n      <g id=\"shadow165-429\" transform=\"matrix(1,0,0,1,0.345598,1.97279)\" class=\"st2\">\n        <rect x=\"122.386\" y=\"1336.06\" width=\"1.41732\" height=\"1.13386\" class=\"st3\" />\n      </g>\n      <rect x=\"122.386\" y=\"1336.06\" width=\"1.41732\" height=\"1.13386\" class=\"st19\" />\n    </g>\n    <g id=\"shape166-433\" transform=\"translate(89.2913,-142.299)\">\n      <title>Sheet.166</title>\n      <g id=\"shadow166-434\" transform=\"matrix(1,0,0,1,0.345598,1.97279)\" class=\"st2\">\n        <rect x=\"986.383\" y=\"1049.41\" width=\"1.98425\" height=\"1.41732\" class=\"st3\" />\n      </g>\n      <rect x=\"986.383\" y=\"1049.41\" width=\"1.98425\" height=\"1.41732\" class=\"st19\" />\n    </g>\n    <g id=\"group171-438\" transform=\"translate(147.284,-84.3645)\">\n      <title>Sheet.171</title>\n      <g id=\"shape147-439\" transform=\"translate(6.4168,-10.3753)\">\n        <title>Sheet.147</title>\n        <desc>P: DG2</desc>\n        <rect x=\"681.761\" y=\"659.431\" width=\"134.016\" height=\"34.2677\" class=\"st6\" />\n        <text id=\"GEN2_text\" x=\"683.761\" y=\"687.361\" class=\"st7\" transform=\"matrix(1, 0, 0, 1, 0, -1.14225)\">P:</text>\n        <rect x=\"73.6934\" y=\"854.706\" width=\"134.016\" height=\"34.2677\" class=\"st6\" id=\"e4_rect\" />\n        <text id=\"GEN3_text\" x=\"75.6934\" y=\"882.636\" class=\"st7\" transform=\"matrix(1, 0, 0, 1, 0, -1.14225)\">P:</text>\n      </g>\n      <g id=\"shape164-442\">\n        <title>Sheet.164</title>\n        <g id=\"shadow164-443\" transform=\"matrix(1,0,0,1,0.345598,1.97279)\" class=\"st2\">\n          <rect x=\"681.761\" y=\"638.682\" width=\"197.125\" height=\"55.0184\" class=\"st14\" />\n          <rect x=\"73.6934\" y=\"833.957\" width=\"197.125\" height=\"55.0184\" class=\"st14\" id=\"e9_rect\" />\n        </g>\n        <rect x=\"681.761\" y=\"638.682\" width=\"197.125\" height=\"55.0184\" class=\"st20\" />\n        <rect x=\"73.6934\" y=\"833.957\" width=\"197.125\" height=\"55.0184\" class=\"st20\" id=\"e8_rect\" />\n      </g>\n    </g>\n    <g id=\"group172-447\" transform=\"translate(926.812,-730.178)\">\n      <title>Sheet.172</title>\n      <g id=\"shape167-448\" transform=\"translate(6.4168,-10.3753)\">\n        <title>Sheet.167</title>\n        <desc>P: DG1</desc>\n        <rect x=\"244.067\" y=\"1302.96\" width=\"134.016\" height=\"34.2677\" class=\"st6\" />\n        <text id=\"GEN1_text\" x=\"246.067\" y=\"1330.89\" class=\"st7\" transform=\"matrix(1, 0, 0, 1, 0, 1.14225)\">P:</text>\n      </g>\n      <g id=\"shape168-451\">\n        <title>Sheet.168</title>\n        <g id=\"shadow168-452\" transform=\"matrix(1,0,0,1,0.345598,1.97279)\" class=\"st2\">\n          <rect x=\"244.067\" y=\"1282.21\" width=\"197.125\" height=\"55.0184\" class=\"st14\" />\n        </g>\n        <rect x=\"244.067\" y=\"1282.21\" width=\"197.125\" height=\"55.0184\" class=\"st20\" />\n      </g>\n    </g>\n    <g id=\"group173-456\" transform=\"translate(868.819,-1241.03)\">\n      <title>Sheet.173</title>\n      <g id=\"shape169-457\" transform=\"translate(6.4168,-10.3753)\">\n        <title>Sheet.169</title>\n        <desc>P: PCC</desc>\n        <rect x=\"0\" y=\"1303.77\" width=\"134.016\" height=\"34.2677\" class=\"st6\" />\n        <text id=\"F1PCC_text\" x=\"2\" y=\"1331.7\" class=\"st7\">P:</text>\n      </g>\n      <g id=\"shape170-460\">\n        <title>Sheet.170</title>\n        <g id=\"shadow170-461\" transform=\"matrix(1,0,0,1,0.345598,1.97279)\" class=\"st2\">\n          <rect x=\"0\" y=\"1283.02\" width=\"197.125\" height=\"55.0184\" class=\"st14\" />\n        </g>\n        <rect x=\"0\" y=\"1283.02\" width=\"197.125\" height=\"55.0184\" class=\"st20\" />\n      </g>\n    </g>\n  </g>\n  <line id=\"e1_line\" x1=\"812.562\" y1=\"106.62\" x2=\"812.664\" y2=\"129.908\" style=\"stroke:black;fill:none;stroke-width:2.25\" />\n  <line id=\"e2_line\" x1=\"812.968\" y1=\"171.704\" x2=\"813.477\" y2=\"212.484\" style=\"stroke:black;fill:none;stroke-width:2.25\" />\n  <path d=\"M47.702,630.625v82.169\" style=\"fill:none;stroke:black;stroke-width:2.25\" id=\"e6_pathV\" />\n  <path d=\"M910.662,352.648h352.27\" style=\"fill:none;stroke:black;stroke-width:1.81px\" id=\"e16_pathH\" />\n  <path d=\"M1262.932,354.275v104.949\" style=\"fill:none;stroke:black;stroke-width:1.81px\" id=\"e18_pathV\" />\n  <path d=\"M906.651,463.307v-58.576\" style=\"fill:none;stroke:black;stroke-width:1.81px\" id=\"e20_pathV\" />\n  <path d=\"M310.966685,664.212269v-37.898\" style=\"fill:none;stroke:black;stroke-width:1.81px\" id=\"e24_pathV\" />\n</svg>",
+        "clickableShapes": [],
+        "javascriptHandlers": [
+            {
+                "selector": "#F1PCC_target",
+                "action": "click",
+                "sourceCode": "var color = $(\"#F1PCC_target\").attr(\"fill\");\nvar red = \"rgb(255, 0, 0)\";\nvar green = \"rgb(0, 255, 0)\";\nvar requestedAction = \"\";\nvar out_color = \"\";\nif (color == \"green\"){\n    $(\"#F1PCC_target\").attr(\"fill\",\"red\");\n    requestedAction = \"CLOSE\";\n    out_color = \"red\";\n}\nelse if (color == \"red\"){\n    $(\"#F1PCC_target\").attr(\"fill\",\"green\");\n    requestedAction = \"OPEN\";\n    out_color = \"green\";\n}\n\n// color = $(\"#PCC1\")[0].style.fill;\n\n//$(\"#PCC1\")[0].style.fill = color;\nvar payload = {\n    \"event\": \"relay_click\",\n    \"requestedRelay\": \"F1PCC\",\n    \"requestedAction\": requestedAction,\n    \"color\": out_color\n    };\n$scope.send({payload: payload, topic: 'mg/event'})"
+            }
+        ],
+        "smilAnimations": [],
+        "bindings": [],
+        "showCoordinates": false,
+        "autoFormatAfterEdit": false,
+        "showBrowserErrors": true,
+        "showBrowserEvents": false,
+        "enableJsDebugging": false,
+        "sendMsgWhenLoaded": false,
+        "noClickWhenDblClick": false,
+        "outputField": "payload",
+        "editorUrl": "//drawsvg.org/drawsvg.html",
+        "directory": "",
+        "panning": "disabled",
+        "zooming": "enabled",
+        "panOnlyWhenZoomed": false,
+        "doubleClickZoomEnabled": true,
+        "mouseWheelZoomEnabled": true,
+        "dblClickZoomPercentage": 150,
+        "cssString": "/*div.ui-svg svg{\n    color: var(--nr-dashboard-widgetColor);\n    fill: currentColor !important;\n}*/\n/*div.ui-svg path {\n    fill: inherit;\n}*/",
+        "name": "",
+        "x": 840,
+        "y": 220,
+        "wires": [
+            [
+                "c0653c2f3ba44738",
+                "4d9ba140fb4c94bd"
+            ]
+        ]
+    },
+    {
+        "id": "adf1b0829a3efa60",
+        "type": "mqtt in",
+        "z": "520e1b03eff3095c",
+        "name": "",
+        "topic": "riaps/data/111",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "1754afcaecca2a50",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 190,
+        "y": 60,
+        "wires": [
+            [
+                "6b4f9e90b8a973ba",
+                "4a290e97eb23f548"
+            ]
+        ]
+    },
+    {
+        "id": "87f8e4228ba2a421",
+        "type": "ui_chart",
+        "z": "520e1b03eff3095c",
+        "name": "",
+        "group": "b5ae5b45c7dcb908",
+        "order": 1,
+        "width": "6",
+        "height": "6",
+        "label": "DER Active Power",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "-0.1",
+        "ymax": "1",
+        "removeOlder": "2",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#fce94f",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 790,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9fbc5bb87525fced",
+        "type": "ui_chart",
+        "z": "520e1b03eff3095c",
+        "name": "",
+        "group": "b5ae5b45c7dcb908",
+        "order": 3,
+        "width": "6",
+        "height": "6",
+        "label": "DER Reactive Power",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "cubic",
+        "nodata": "",
+        "dot": false,
+        "ymin": "-0.1",
+        "ymax": "1",
+        "removeOlder": "2",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 860,
+        "y": 560,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6b4f9e90b8a973ba",
+        "type": "function",
+        "z": "520e1b03eff3095c",
+        "name": "function 3",
+        "func": "//node.warn(msg)\n\nvar new_msg = {\n    \"topic\": msg.payload.sender,\n    \"payload\": msg.payload.activePower\n}\n\nreturn new_msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 60,
+        "wires": [
+            [
+                "87f8e4228ba2a421"
+            ]
+        ]
+    },
+    {
+        "id": "c569b36074824a8f",
+        "type": "mqtt in",
+        "z": "520e1b03eff3095c",
+        "name": "",
+        "topic": "riaps/data/112",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "1754afcaecca2a50",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 190,
+        "y": 160,
+        "wires": [
+            [
+                "c4a253fedf90744e",
+                "2d120e0d1536892e"
+            ]
+        ]
+    },
+    {
+        "id": "c4a253fedf90744e",
+        "type": "function",
+        "z": "520e1b03eff3095c",
+        "name": "function 4",
+        "func": "//node.warn(msg)\n\nvar new_msg = {\n    \"topic\": msg.payload.sender,\n    \"payload\": msg.payload.activePower\n}\n\nreturn new_msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 160,
+        "wires": [
+            [
+                "87f8e4228ba2a421"
+            ]
+        ]
+    },
+    {
+        "id": "fd4ca8b7232aa77f",
+        "type": "mqtt in",
+        "z": "520e1b03eff3095c",
+        "name": "",
+        "topic": "riaps/data/201",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "1754afcaecca2a50",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 190,
+        "y": 240,
+        "wires": [
+            [
+                "df24c4b5ab144df0",
+                "c3447ef2516ee430"
+            ]
+        ]
+    },
+    {
+        "id": "df24c4b5ab144df0",
+        "type": "function",
+        "z": "520e1b03eff3095c",
+        "name": "function 5",
+        "func": "//node.warn(msg)\n\nvar new_msg = {\n    \"topic\": msg.payload.sender,\n    \"payload\": msg.payload.activePower\n}\n\nreturn new_msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 240,
+        "wires": [
+            [
+                "87f8e4228ba2a421"
+            ]
+        ]
+    },
+    {
+        "id": "713565134f336cc6",
+        "type": "mqtt in",
+        "z": "520e1b03eff3095c",
+        "name": "",
+        "topic": "riaps/data/114",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "1754afcaecca2a50",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 190,
+        "y": 380,
+        "wires": [
+            [
+                "a34489987f6d31c2",
+                "b0ff79536943711a"
+            ]
+        ]
+    },
+    {
+        "id": "a34489987f6d31c2",
+        "type": "function",
+        "z": "520e1b03eff3095c",
+        "name": "function 6",
+        "func": "//node.warn(msg)\n\nvar new_msg = {\n    \"topic\": msg.payload.sender,\n    \"payload\": msg.payload.activePower\n}\n\nreturn new_msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 380,
+        "wires": [
+            [
+                "87f8e4228ba2a421"
+            ]
+        ]
+    },
+    {
+        "id": "6ab9b98eacc544ae",
+        "type": "mqtt in",
+        "z": "520e1b03eff3095c",
+        "name": "",
+        "topic": "riaps/data/202",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "1754afcaecca2a50",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 190,
+        "y": 480,
+        "wires": [
+            [
+                "fcb30f76e0c5c923",
+                "675e928059e96aa6"
+            ]
+        ]
+    },
+    {
+        "id": "fcb30f76e0c5c923",
+        "type": "function",
+        "z": "520e1b03eff3095c",
+        "name": "function 7",
+        "func": "//node.warn(msg)\n\nvar new_msg = {\n    \"topic\": msg.payload.sender,\n    \"payload\": msg.payload.activePower\n}\n\nreturn new_msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 480,
+        "wires": [
+            [
+                "87f8e4228ba2a421"
+            ]
+        ]
+    },
+    {
+        "id": "74af74db27b03c43",
+        "type": "mqtt in",
+        "z": "520e1b03eff3095c",
+        "name": "",
+        "topic": "riaps/data/115",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "1754afcaecca2a50",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 170,
+        "y": 620,
+        "wires": [
+            [
+                "1ac2bcd96e9838f3",
+                "8b1715e2a90c755d"
+            ]
+        ]
+    },
+    {
+        "id": "1ac2bcd96e9838f3",
+        "type": "function",
+        "z": "520e1b03eff3095c",
+        "name": "function 8",
+        "func": "//node.warn(msg)\n\nvar new_msg = {\n    \"topic\": msg.payload.sender,\n    \"payload\": msg.payload.activePower\n}\n\nreturn new_msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 620,
+        "wires": [
+            [
+                "87f8e4228ba2a421"
+            ]
+        ]
+    },
+    {
+        "id": "53b6f0783f0bdb2c",
+        "type": "mqtt in",
+        "z": "520e1b03eff3095c",
+        "name": "",
+        "topic": "riaps/data/116",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "1754afcaecca2a50",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 170,
+        "y": 720,
+        "wires": [
+            [
+                "eb4627531512d13a",
+                "65c52313b343cd6d"
+            ]
+        ]
+    },
+    {
+        "id": "eb4627531512d13a",
+        "type": "function",
+        "z": "520e1b03eff3095c",
+        "name": "function 9",
+        "func": "//node.warn(msg)\n\nvar new_msg = {\n    \"topic\": msg.payload.sender,\n    \"payload\": msg.payload.activePower\n}\n\nreturn new_msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 720,
+        "wires": [
+            [
+                "87f8e4228ba2a421"
+            ]
+        ]
+    },
+    {
+        "id": "8612080d36debfb8",
+        "type": "mqtt in",
+        "z": "520e1b03eff3095c",
+        "name": "",
+        "topic": "riaps/data/203",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "1754afcaecca2a50",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 170,
+        "y": 820,
+        "wires": [
+            [
+                "cbba02de69ea050c",
+                "d6a03b115867af43"
+            ]
+        ]
+    },
+    {
+        "id": "cbba02de69ea050c",
+        "type": "function",
+        "z": "520e1b03eff3095c",
+        "name": "function 10",
+        "func": "//node.warn(msg)\n\nvar new_msg = {\n    \"topic\": msg.payload.sender,\n    \"payload\": msg.payload.activePower\n}\n\nreturn new_msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 820,
+        "wires": [
+            [
+                "87f8e4228ba2a421"
+            ]
+        ]
+    },
+    {
+        "id": "4a290e97eb23f548",
+        "type": "function",
+        "z": "520e1b03eff3095c",
+        "name": "function 11",
+        "func": "//node.warn(msg)\n\nvar new_msg = {\n    \"topic\": msg.payload.sender,\n    \"payload\": msg.payload.reactivePower\n}\n\nreturn new_msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 430,
+        "y": 100,
+        "wires": [
+            [
+                "9fbc5bb87525fced"
+            ]
+        ]
+    },
+    {
+        "id": "2d120e0d1536892e",
+        "type": "function",
+        "z": "520e1b03eff3095c",
+        "name": "function 12",
+        "func": "//node.warn(msg)\n\nvar new_msg = {\n    \"topic\": msg.payload.sender,\n    \"payload\": msg.payload.reactivePower\n}\n\nreturn new_msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 430,
+        "y": 200,
+        "wires": [
+            [
+                "9fbc5bb87525fced"
+            ]
+        ]
+    },
+    {
+        "id": "c3447ef2516ee430",
+        "type": "function",
+        "z": "520e1b03eff3095c",
+        "name": "function 13",
+        "func": "//node.warn(msg)\n\nvar new_msg = {\n    \"topic\": msg.payload.sender,\n    \"payload\": msg.payload.reactivePower\n}\n\nreturn new_msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 430,
+        "y": 280,
+        "wires": [
+            [
+                "9fbc5bb87525fced"
+            ]
+        ]
+    },
+    {
+        "id": "b0ff79536943711a",
+        "type": "function",
+        "z": "520e1b03eff3095c",
+        "name": "function 14",
+        "func": "//node.warn(msg)\n\nvar new_msg = {\n    \"topic\": msg.payload.sender,\n    \"payload\": msg.payload.reactivePower\n}\n\nreturn new_msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 430,
+        "y": 420,
+        "wires": [
+            [
+                "9fbc5bb87525fced"
+            ]
+        ]
+    },
+    {
+        "id": "675e928059e96aa6",
+        "type": "function",
+        "z": "520e1b03eff3095c",
+        "name": "function 15",
+        "func": "//node.warn(msg)\n\nvar new_msg = {\n    \"topic\": msg.payload.sender,\n    \"payload\": msg.payload.reactivePower\n}\n\nreturn new_msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 430,
+        "y": 520,
+        "wires": [
+            [
+                "9fbc5bb87525fced"
+            ]
+        ]
+    },
+    {
+        "id": "8b1715e2a90c755d",
+        "type": "function",
+        "z": "520e1b03eff3095c",
+        "name": "function 16",
+        "func": "//node.warn(msg)\n\nvar new_msg = {\n    \"topic\": msg.payload.sender,\n    \"payload\": msg.payload.reactivePower\n}\n\nreturn new_msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 660,
+        "wires": [
+            [
+                "9fbc5bb87525fced"
+            ]
+        ]
+    },
+    {
+        "id": "65c52313b343cd6d",
+        "type": "function",
+        "z": "520e1b03eff3095c",
+        "name": "function 17",
+        "func": "//node.warn(msg)\n\nvar new_msg = {\n    \"topic\": msg.payload.sender,\n    \"payload\": msg.payload.reactivePower\n}\n\nreturn new_msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 760,
+        "wires": [
+            [
+                "9fbc5bb87525fced"
+            ]
+        ]
+    },
+    {
+        "id": "d6a03b115867af43",
+        "type": "function",
+        "z": "520e1b03eff3095c",
+        "name": "function 18",
+        "func": "//node.warn(msg)\n\nvar new_msg = {\n    \"topic\": msg.payload.sender,\n    \"payload\": msg.payload.reactivePower\n}\n\nreturn new_msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 430,
+        "y": 860,
+        "wires": [
+            [
+                "9fbc5bb87525fced"
+            ]
+        ]
+    },
+    {
+        "id": "b7b64ec00a88de09",
+        "type": "ui_button",
+        "z": "e0417dabd759a418",
+        "d": true,
+        "name": "",
+        "group": "aeebcbbe7cbd5997",
+        "order": 6,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Next Scenario",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "{\"command\":\"next_scenario\"}",
+        "payloadType": "json",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 600,
+        "y": 320,
+        "wires": [
+            [
+                "a1c6f0a24fee8c03"
+            ]
+        ]
+    },
+    {
+        "id": "a1c6f0a24fee8c03",
+        "type": "mqtt out",
+        "z": "e0417dabd759a418",
+        "d": true,
+        "name": "",
+        "topic": "mg/request_scenario",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "1754afcaecca2a50",
+        "x": 860,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "1ff519706f6602d9",
+        "type": "ui_switch",
+        "z": "e0417dabd759a418",
+        "name": "",
+        "label": "Active Control",
+        "tooltip": "",
+        "group": "aeebcbbe7cbd5997",
+        "order": 3,
+        "width": 2,
+        "height": 1,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "{\"SecCtrlEnable\":1}",
+        "onvalueType": "json",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "{\"SecCtrlEnable\":0}",
+        "offvalueType": "json",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 600,
+        "y": 180,
+        "wires": [
+            [
+                "00c6c4c9aedadb2b",
+                "84490f7a1a232e75"
+            ]
+        ]
+    },
+    {
+        "id": "02e603993ee6ff9c",
+        "type": "ui_switch",
+        "z": "e0417dabd759a418",
+        "name": "",
+        "label": "Energize",
+        "tooltip": "",
+        "group": "aeebcbbe7cbd5997",
+        "order": 1,
+        "width": 2,
+        "height": 1,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "{\"StartStop\": 1}",
+        "onvalueType": "json",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "{\"StartStop\": 0}",
+        "offvalueType": "json",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 580,
+        "y": 120,
+        "wires": [
+            [
+                "00c6c4c9aedadb2b",
+                "84490f7a1a232e75"
+            ]
+        ]
+    },
+    {
+        "id": "00c6c4c9aedadb2b",
+        "type": "mqtt out",
+        "z": "e0417dabd759a418",
+        "name": "",
+        "topic": "mg/event",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "1754afcaecca2a50",
+        "x": 840,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "84490f7a1a232e75",
+        "type": "debug",
+        "z": "e0417dabd759a418",
+        "name": "debug 12",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 840,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "3d5f88f6d561c454",
+        "type": "mqtt in",
+        "z": "7eae45accf058418",
+        "name": "",
+        "topic": "riaps/data/F1PCC",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "1754afcaecca2a50",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 130,
+        "y": 40,
+        "wires": [
+            [
+                "136484cfa4135c1f",
+                "1d49498b2b4d9370",
+                "faf9d3c0c0a00c81",
+                "38816e1197d2682a",
+                "1a9f72d63be412a6"
+            ]
+        ]
+    },
+    {
+        "id": "136484cfa4135c1f",
+        "type": "ui_text",
+        "z": "7eae45accf058418",
+        "group": "f85923273feee74a",
+        "order": 2,
+        "width": 1,
+        "height": 1,
+        "name": "",
+        "label": "P",
+        "format": "{{msg.payload.activePower}}",
+        "layout": "row-left",
+        "className": "",
+        "x": 390,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "1d49498b2b4d9370",
+        "type": "ui_text",
+        "z": "7eae45accf058418",
+        "group": "f85923273feee74a",
+        "order": 3,
+        "width": 1,
+        "height": 1,
+        "name": "",
+        "label": "Q",
+        "format": "{{msg.payload.reactivePower}}",
+        "layout": "row-left",
+        "className": "",
+        "x": 530,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "38816e1197d2682a",
+        "type": "ui_text",
+        "z": "7eae45accf058418",
+        "group": "f85923273feee74a",
+        "order": 5,
+        "width": 1,
+        "height": 1,
+        "name": "",
+        "label": "df",
+        "format": "{{msg.payload.freqSlip}}",
+        "layout": "row-left",
+        "className": "",
+        "x": 870,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "faf9d3c0c0a00c81",
+        "type": "ui_text",
+        "z": "7eae45accf058418",
+        "group": "f85923273feee74a",
+        "order": 4,
+        "width": 1,
+        "height": 1,
+        "name": "",
+        "label": "dV",
+        "format": "{{msg.payload.voltDiff}}",
+        "layout": "row-left",
+        "className": "",
+        "x": 710,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "1a9f72d63be412a6",
+        "type": "ui_text",
+        "z": "7eae45accf058418",
+        "group": "f85923273feee74a",
+        "order": 6,
+        "width": 1,
+        "height": 1,
+        "name": "",
+        "label": "dA",
+        "format": "{{msg.payload.angDiff | number: 3}}",
+        "layout": "row-left",
+        "className": "",
+        "x": 1010,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "5f4d91adec321983",
+        "type": "ui_text",
+        "z": "7eae45accf058418",
+        "group": "f85923273feee74a",
+        "order": 1,
+        "width": 1,
+        "height": 1,
+        "name": "",
+        "label": "",
+        "format": "PCC1",
+        "layout": "row-spread",
+        "className": "",
+        "x": 230,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "06cf6f253cc36f39",
+        "type": "ui_text",
+        "z": "7eae45accf058418",
+        "d": true,
+        "group": "f85923273feee74a",
+        "order": 7,
+        "width": 1,
+        "height": 1,
+        "name": "",
+        "label": "",
+        "format": "PCC2",
+        "layout": "row-spread",
+        "className": "",
+        "x": 230,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "7a643fb1f8ab1e0e",
+        "type": "mqtt in",
+        "z": "7eae45accf058418",
+        "d": true,
+        "name": "",
+        "topic": "riaps/data/F2PCC",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "1754afcaecca2a50",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 130,
+        "y": 300,
+        "wires": [
+            [
+                "17df94c548fd512b",
+                "32f9fc6133b793f1",
+                "8a10332a1b6d8df0",
+                "6b067263b3179244",
+                "4ff3b492e704ea5f",
+                "b22eec0987506aee"
+            ]
+        ]
+    },
+    {
+        "id": "17df94c548fd512b",
+        "type": "ui_text",
+        "z": "7eae45accf058418",
+        "d": true,
+        "group": "f85923273feee74a",
+        "order": 8,
+        "width": 1,
+        "height": 1,
+        "name": "",
+        "label": "P",
+        "format": "{{msg.payload.activePower}}",
+        "layout": "row-left",
+        "className": "",
+        "x": 390,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "32f9fc6133b793f1",
+        "type": "ui_text",
+        "z": "7eae45accf058418",
+        "d": true,
+        "group": "f85923273feee74a",
+        "order": 9,
+        "width": 1,
+        "height": 1,
+        "name": "",
+        "label": "Q",
+        "format": "{{msg.payload.reactivePower}}",
+        "layout": "row-left",
+        "className": "",
+        "x": 530,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "6b067263b3179244",
+        "type": "ui_text",
+        "z": "7eae45accf058418",
+        "d": true,
+        "group": "f85923273feee74a",
+        "order": 11,
+        "width": 1,
+        "height": 1,
+        "name": "",
+        "label": "df",
+        "format": "{{msg.payload.freqSlip}}",
+        "layout": "row-left",
+        "className": "",
+        "x": 870,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "8a10332a1b6d8df0",
+        "type": "ui_text",
+        "z": "7eae45accf058418",
+        "d": true,
+        "group": "f85923273feee74a",
+        "order": 10,
+        "width": 1,
+        "height": 1,
+        "name": "",
+        "label": "dV",
+        "format": "{{msg.payload.voltDiff}}",
+        "layout": "row-left",
+        "className": "",
+        "x": 710,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "4ff3b492e704ea5f",
+        "type": "ui_text",
+        "z": "7eae45accf058418",
+        "d": true,
+        "group": "f85923273feee74a",
+        "order": 12,
+        "width": 1,
+        "height": 1,
+        "name": "",
+        "label": "dA",
+        "format": "{{msg.payload.angDiff | number: 3}}",
+        "layout": "row-left",
+        "className": "",
+        "x": 1030,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "4ad67cbb84075db0",
+        "type": "ui_text",
+        "z": "7eae45accf058418",
+        "d": true,
+        "group": "f85923273feee74a",
+        "order": 13,
+        "width": 1,
+        "height": 1,
+        "name": "",
+        "label": "",
+        "format": "PCC3",
+        "layout": "row-spread",
+        "className": "",
+        "x": 230,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "4050939fa54cbf72",
+        "type": "mqtt in",
+        "z": "7eae45accf058418",
+        "d": true,
+        "name": "",
+        "topic": "riaps/data/F3PCC",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "1754afcaecca2a50",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 130,
+        "y": 540,
+        "wires": [
+            [
+                "a818c7fb416424ba",
+                "e6b1a677a85fe411",
+                "de69aa57d391ce22",
+                "ee07e3a86da5a654",
+                "c898c19e56264315"
+            ]
+        ]
+    },
+    {
+        "id": "a818c7fb416424ba",
+        "type": "ui_text",
+        "z": "7eae45accf058418",
+        "d": true,
+        "group": "f85923273feee74a",
+        "order": 14,
+        "width": 1,
+        "height": 1,
+        "name": "",
+        "label": "P",
+        "format": "{{msg.payload.activePower}}",
+        "layout": "row-left",
+        "className": "",
+        "x": 390,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "e6b1a677a85fe411",
+        "type": "ui_text",
+        "z": "7eae45accf058418",
+        "d": true,
+        "group": "f85923273feee74a",
+        "order": 15,
+        "width": 1,
+        "height": 1,
+        "name": "",
+        "label": "Q",
+        "format": "{{msg.payload.reactivePower}}",
+        "layout": "row-left",
+        "className": "",
+        "x": 550,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "ee07e3a86da5a654",
+        "type": "ui_text",
+        "z": "7eae45accf058418",
+        "d": true,
+        "group": "f85923273feee74a",
+        "order": 17,
+        "width": 1,
+        "height": 1,
+        "name": "",
+        "label": "df",
+        "format": "{{msg.payload.freqSlip}}",
+        "layout": "row-left",
+        "className": "",
+        "x": 870,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "de69aa57d391ce22",
+        "type": "ui_text",
+        "z": "7eae45accf058418",
+        "d": true,
+        "group": "f85923273feee74a",
+        "order": 16,
+        "width": 1,
+        "height": 1,
+        "name": "",
+        "label": "dV",
+        "format": "{{msg.payload.voltDiff}}",
+        "layout": "row-left",
+        "className": "",
+        "x": 710,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "c898c19e56264315",
+        "type": "ui_text",
+        "z": "7eae45accf058418",
+        "d": true,
+        "group": "f85923273feee74a",
+        "order": 18,
+        "width": 1,
+        "height": 1,
+        "name": "",
+        "label": "dA",
+        "format": "{{msg.payload.angDiff | number: 3}}",
+        "layout": "row-left",
+        "className": "",
+        "x": 1030,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "1f063e71b1cf1530",
+        "type": "ui_text",
+        "z": "7eae45accf058418",
+        "d": true,
+        "group": "f85923273feee74a",
+        "order": 19,
+        "width": 1,
+        "height": 1,
+        "name": "",
+        "label": "",
+        "format": "F1108",
+        "layout": "row-spread",
+        "className": "",
+        "x": 230,
+        "y": 920,
+        "wires": []
+    },
+    {
+        "id": "fa5ef01a6158133f",
+        "type": "mqtt in",
+        "z": "7eae45accf058418",
+        "d": true,
+        "name": "",
+        "topic": "riaps/data/F1108",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "1754afcaecca2a50",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 780,
+        "wires": [
+            [
+                "2158194bbac0071e",
+                "2a45c82107b4a08b",
+                "d61ceb49e131b333",
+                "ee5d7198b111546d",
+                "1f5bfe401bfe211b"
+            ]
+        ]
+    },
+    {
+        "id": "2158194bbac0071e",
+        "type": "ui_text",
+        "z": "7eae45accf058418",
+        "d": true,
+        "group": "f85923273feee74a",
+        "order": 20,
+        "width": 1,
+        "height": 1,
+        "name": "",
+        "label": "P",
+        "format": "{{msg.payload.activePower}}",
+        "layout": "row-left",
+        "className": "",
+        "x": 390,
+        "y": 920,
+        "wires": []
+    },
+    {
+        "id": "2a45c82107b4a08b",
+        "type": "ui_text",
+        "z": "7eae45accf058418",
+        "d": true,
+        "group": "f85923273feee74a",
+        "order": 27,
+        "width": 1,
+        "height": 1,
+        "name": "",
+        "label": "Q",
+        "format": "{{msg.payload.reactivePower}}",
+        "layout": "row-left",
+        "className": "",
+        "x": 530,
+        "y": 920,
+        "wires": []
+    },
+    {
+        "id": "ee5d7198b111546d",
+        "type": "ui_text",
+        "z": "7eae45accf058418",
+        "d": true,
+        "group": "f85923273feee74a",
+        "order": 23,
+        "width": 1,
+        "height": 1,
+        "name": "",
+        "label": "df",
+        "format": "{{msg.payload.freqSlip}}",
+        "layout": "row-left",
+        "className": "",
+        "x": 870,
+        "y": 920,
+        "wires": []
+    },
+    {
+        "id": "d61ceb49e131b333",
+        "type": "ui_text",
+        "z": "7eae45accf058418",
+        "d": true,
+        "group": "f85923273feee74a",
+        "order": 22,
+        "width": 1,
+        "height": 1,
+        "name": "",
+        "label": "dV",
+        "format": "{{msg.payload.voltDiff}}",
+        "layout": "row-left",
+        "className": "",
+        "x": 710,
+        "y": 920,
+        "wires": []
+    },
+    {
+        "id": "1f5bfe401bfe211b",
+        "type": "ui_text",
+        "z": "7eae45accf058418",
+        "d": true,
+        "group": "f85923273feee74a",
+        "order": 24,
+        "width": 1,
+        "height": 1,
+        "name": "",
+        "label": "dA",
+        "format": "{{msg.payload.angDiff | number: 3}}",
+        "layout": "row-left",
+        "className": "",
+        "x": 1030,
+        "y": 920,
+        "wires": []
+    },
+    {
+        "id": "17aba6c49f36880a",
+        "type": "ui_text",
+        "z": "7eae45accf058418",
+        "d": true,
+        "group": "f85923273feee74a",
+        "order": 25,
+        "width": 1,
+        "height": 1,
+        "name": "",
+        "label": "",
+        "format": "F2217",
+        "layout": "row-spread",
+        "className": "",
+        "x": 250,
+        "y": 1180,
+        "wires": []
+    },
+    {
+        "id": "5544ad5514130331",
+        "type": "mqtt in",
+        "z": "7eae45accf058418",
+        "d": true,
+        "name": "",
+        "topic": "riaps/data/F2217",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "1754afcaecca2a50",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
+        "y": 1040,
+        "wires": [
+            [
+                "95c09a0ed5c82b49",
+                "1bdbd216401433d1",
+                "5a4d84d0e1ae93b3",
+                "f5b9c4de18322d5b",
+                "c607153dc34ec5b2"
+            ]
+        ]
+    },
+    {
+        "id": "95c09a0ed5c82b49",
+        "type": "ui_text",
+        "z": "7eae45accf058418",
+        "d": true,
+        "group": "f85923273feee74a",
+        "order": 26,
+        "width": 1,
+        "height": 1,
+        "name": "",
+        "label": "P",
+        "format": "{{msg.payload.activePower}}",
+        "layout": "row-left",
+        "className": "",
+        "x": 410,
+        "y": 1180,
+        "wires": []
+    },
+    {
+        "id": "1bdbd216401433d1",
+        "type": "ui_text",
+        "z": "7eae45accf058418",
+        "d": true,
+        "group": "f85923273feee74a",
+        "order": 21,
+        "width": 1,
+        "height": 1,
+        "name": "",
+        "label": "Q",
+        "format": "{{msg.payload.reactivePower}}",
+        "layout": "row-left",
+        "className": "",
+        "x": 550,
+        "y": 1180,
+        "wires": []
+    },
+    {
+        "id": "f5b9c4de18322d5b",
+        "type": "ui_text",
+        "z": "7eae45accf058418",
+        "d": true,
+        "group": "f85923273feee74a",
+        "order": 29,
+        "width": 1,
+        "height": 1,
+        "name": "",
+        "label": "df",
+        "format": "{{msg.payload.freqSlip}}",
+        "layout": "row-left",
+        "className": "",
+        "x": 890,
+        "y": 1180,
+        "wires": []
+    },
+    {
+        "id": "5a4d84d0e1ae93b3",
+        "type": "ui_text",
+        "z": "7eae45accf058418",
+        "d": true,
+        "group": "f85923273feee74a",
+        "order": 28,
+        "width": 1,
+        "height": 1,
+        "name": "",
+        "label": "dV",
+        "format": "{{msg.payload.voltDiff}}",
+        "layout": "row-left",
+        "className": "",
+        "x": 730,
+        "y": 1180,
+        "wires": []
+    },
+    {
+        "id": "c607153dc34ec5b2",
+        "type": "ui_text",
+        "z": "7eae45accf058418",
+        "d": true,
+        "group": "f85923273feee74a",
+        "order": 30,
+        "width": 1,
+        "height": 1,
+        "name": "",
+        "label": "dA",
+        "format": "{{msg.payload.angDiff | number: 3}}",
+        "layout": "row-left",
+        "className": "",
+        "x": 1050,
+        "y": 1180,
+        "wires": []
+    },
+    {
+        "id": "b22eec0987506aee",
+        "type": "debug",
+        "z": "7eae45accf058418",
+        "name": "debug 10",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 640,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "4de590b91737d91f",
+        "type": "ui_text",
+        "z": "1c08431c1f1ae271",
+        "group": "5275318c16cf59ec",
+        "order": 3,
+        "width": 2,
+        "height": 1,
+        "name": "",
+        "label": "Active Power",
+        "format": "{{msg.payload.active}}",
+        "layout": "col-center",
+        "className": "",
+        "x": 1090,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "f47c928bbda71d57",
+        "type": "ui_text",
+        "z": "1c08431c1f1ae271",
+        "group": "5275318c16cf59ec",
+        "order": 6,
+        "width": 2,
+        "height": 1,
+        "name": "",
+        "label": "Reactive Power",
+        "format": "{{msg.payload.reactive}}",
+        "layout": "col-center",
+        "className": "",
+        "x": 1080,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "321b63730e394bb1",
+        "type": "debug",
+        "z": "1c08431c1f1ae271",
+        "name": "debug 13",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1040,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "4bf65203b5b8f78e",
+        "type": "mqtt out",
+        "z": "1c08431c1f1ae271",
+        "name": "",
+        "topic": "mg/event",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "1754afcaecca2a50",
+        "x": 1040,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "a7aa82e6548eed20",
+        "type": "inject",
+        "z": "1c08431c1f1ae271",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "0",
+        "payloadType": "num",
+        "x": 90,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1c76d2a57d037b6a",
+        "type": "inject",
+        "z": "1c08431c1f1ae271",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "1",
+        "payloadType": "num",
+        "x": 90,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1efb2bc03af46c9f",
+        "type": "ui_text_input",
+        "z": "1c08431c1f1ae271",
+        "name": "",
+        "label": "Active Power Regulation",
+        "tooltip": "",
+        "group": "5275318c16cf59ec",
+        "order": 1,
+        "width": 3,
+        "height": 1,
+        "passthru": true,
+        "mode": "number",
+        "delay": 300,
+        "topic": "topic",
+        "sendOnBlur": true,
+        "className": "",
+        "topicType": "msg",
+        "x": 310,
+        "y": 400,
+        "wires": [
+            [
+                "54074e8d491e47e4"
+            ]
+        ]
+    },
+    {
+        "id": "fd28d5ce37beba5c",
+        "type": "ui_text_input",
+        "z": "1c08431c1f1ae271",
+        "name": "",
+        "label": "Reactive Power Regulation",
+        "tooltip": "",
+        "group": "5275318c16cf59ec",
+        "order": 4,
+        "width": 3,
+        "height": 1,
+        "passthru": true,
+        "mode": "number",
+        "delay": 300,
+        "topic": "topic:reactive",
+        "sendOnBlur": true,
+        "className": "",
+        "topicType": "msg",
+        "x": 320,
+        "y": 460,
+        "wires": [
+            [
+                "b68328714852f99f"
+            ]
+        ]
+    },
+    {
+        "id": "7dd99eb234429a4f",
+        "type": "function",
+        "z": "1c08431c1f1ae271",
+        "name": "function 19",
+        "func": "var active = context.get('active') || 0;\nvar reactive = context.get('reactive') || 0;\nvar topic = msg.topic;\nvar payload = msg.payload;\nvar msg1={};\n\nif (topic == \"active\")\n{\n    active = payload\n    context.set(\"active\", active)\n}\nif (topic == \"reactive\")\n{\n    reactive = payload\n    context.set(\"reactive\", reactive)\n}\n\nmsg1.payload = {\n    \"active\": active,\n    \"reactive\": reactive\n}\n\nreturn msg1;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 710,
+        "y": 420,
+        "wires": [
+            [
+                "dbfb0a82ca11c325"
+            ]
+        ]
+    },
+    {
+        "id": "b927761802c809a8",
+        "type": "function",
+        "z": "1c08431c1f1ae271",
+        "name": "function 20",
+        "func": "var autoregulate = context.get('autoregulate') || 0;\nvar regulationPower = flow.get('regulationPower') || 0;\n\nvar topic = msg.topic;\nvar payload = msg.payload;\nvar msg1 = {};\n\nif (topic == \"regulationPower\") {\n    regulationPower = payload\n    flow.set(\"regulationPower\", regulationPower)\n}\n\nif (topic == \"autoregulate\"){\n    autoregulate = payload\n    context.set(\"autoregulate\", autoregulate)\n}\n\nif (autoregulate == 1){\n    msg1.payload = {\n        \"active\": -1,\n        \"reactive\": -1\n    }\n}\nelse\n{\n    msg1.payload = regulationPower\n}\nreturn msg1;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 870,
+        "y": 220,
+        "wires": [
+            [
+                "321b63730e394bb1",
+                "4de590b91737d91f",
+                "f47c928bbda71d57",
+                "e49df4daa41aac8e"
+            ]
+        ]
+    },
+    {
+        "id": "54074e8d491e47e4",
+        "type": "change",
+        "z": "1c08431c1f1ae271",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "active",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 530,
+        "y": 400,
+        "wires": [
+            [
+                "7dd99eb234429a4f"
+            ]
+        ]
+    },
+    {
+        "id": "d766050e0b70cb34",
+        "type": "inject",
+        "z": "1c08431c1f1ae271",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "400",
+        "payloadType": "num",
+        "x": 90,
+        "y": 400,
+        "wires": [
+            [
+                "1efb2bc03af46c9f"
+            ]
+        ]
+    },
+    {
+        "id": "5873e12c8ea56910",
+        "type": "inject",
+        "z": "1c08431c1f1ae271",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "300",
+        "payloadType": "num",
+        "x": 90,
+        "y": 460,
+        "wires": [
+            [
+                "fd28d5ce37beba5c"
+            ]
+        ]
+    },
+    {
+        "id": "dbfb0a82ca11c325",
+        "type": "change",
+        "z": "1c08431c1f1ae271",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "regulationPower",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 790,
+        "y": 300,
+        "wires": [
+            [
+                "b927761802c809a8"
+            ]
+        ]
+    },
+    {
+        "id": "92931b9dd8fe0793",
+        "type": "change",
+        "z": "1c08431c1f1ae271",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "autoregulate",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 550,
+        "y": 220,
+        "wires": [
+            [
+                "b927761802c809a8"
+            ]
+        ]
+    },
+    {
+        "id": "b68328714852f99f",
+        "type": "change",
+        "z": "1c08431c1f1ae271",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "reactive",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 530,
+        "y": 460,
+        "wires": [
+            [
+                "7dd99eb234429a4f"
+            ]
+        ]
+    },
+    {
+        "id": "67260943c74f78fd",
+        "type": "ui_button",
+        "z": "1c08431c1f1ae271",
+        "name": "",
+        "group": "5275318c16cf59ec",
+        "order": 7,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "label": "send regulation update",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "regulation_power",
+        "payloadType": "flow",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 840,
+        "y": 540,
+        "wires": [
+            [
+                "4bf65203b5b8f78e",
+                "8248fdbae1a37fc3"
+            ]
+        ]
+    },
+    {
+        "id": "3e4cf67bf27ae987",
+        "type": "inject",
+        "z": "1c08431c1f1ae271",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 600,
+        "y": 540,
+        "wires": [
+            [
+                "67260943c74f78fd"
+            ]
+        ]
+    },
+    {
+        "id": "e49df4daa41aac8e",
+        "type": "change",
+        "z": "1c08431c1f1ae271",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "regulation_power",
+                "pt": "flow",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1070,
+        "y": 300,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8248fdbae1a37fc3",
+        "type": "debug",
+        "z": "1c08431c1f1ae271",
+        "name": "debug 14",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1080,
+        "y": 460,
+        "wires": []
+    }
+]
