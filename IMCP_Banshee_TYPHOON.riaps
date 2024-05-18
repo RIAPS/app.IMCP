@@ -99,7 +99,7 @@ app IMCP_Banshee_Typhoon{
 	}
 
 	component RELAYF1_MANAGER(path_to_device_list){
-	    timer poller 1000 msec;  // queries the relay, which triggers the relay publish, and sends commands to Open/Close the relay.
+	    timer poller 499 msec;  // queries the relay, which triggers the relay publish, and sends commands to Open/Close the relay.
 
 	    // For status updates from device (faults, errors, etc.)
 	    sub local_event_port: LocalDeviceEvent;
