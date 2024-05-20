@@ -247,7 +247,7 @@ class FSM(IMCP_FSM):
                 self.model.state == "ACTIVE_GRID-TIED"
                 and requestedRelayStatus["requested_state"] == "OPEN"
             ):
-                return "requestIsland", False
+                return "requestIsland", True
             # TODO: FOR DEMO SET TO NOT BE A COORDINATED ACTION
             # reconnecting
             elif (
