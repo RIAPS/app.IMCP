@@ -311,31 +311,69 @@ These can be installed on all target nodes simultaneously using the `riaps_fab` 
 
 ## Usage
 
-### Start the application
+### Start VM
 
-1. Start node-red
+#### Node red
+
+1. Start node-red with the desired dashboard: `node-red GUI/flows6.json`
+1. Open firefox
 2. Open two browser tabs to:
     1. `http://127.0.0.1:1880/`
     2. `http://127.0.0.1:1880/ui/`
-3. `Load` and `Execute` the microgrid from RT-Lab. Make sure that in the `ModbusComs` subsystem the two `ModbusOrSimulated` (one at the top and the other at the bottom) toggles are set to 1, otherwise the control sent from the app is not received by the model. 
-![node-red-running](README_images/banshee-matlab.PNG) 
-![node-red-running](README_images/modbusOrSimulatedHighlights.PNG) 
 
-4. Start the application
+### Start The simulation
+#### OPAL-RT
+`Load` and `Execute` the microgrid from RT-Lab. Make sure that in the `ModbusComs` subsystem the two `ModbusOrSimulated` (one at the top and the other at the bottom) toggles are set to 1, otherwise the control sent from the app is not received by the model. 
+![modbus toggle 1](README_images/banshee-matlab.PNG) 
+![modbus toggle 2](README_images/modbusOrSimulatedHighlights.PNG) 
+
+
+#### Typhoon
+1. Open the `Typhoon HIL Control Center`
+1. Click `Device Manager`
+1. Click the desired HIL device from the `Detected devices` list
+1. Click the green arrow to move the HIL device to the `Active HIL setup` list
+1. Click the connect icon to set devices in the setup to be busy for other users.
+1. Close the device manager.
+1. Click the `Schematic Editor`
+1. Open the desired tse file. E.g., `model_3dg.tse` 
+1. Click the button to compile and (re)load model in HIL SCADA
+1. Uncheck the `use_modbus` checkbox. 
+
+
+### Start Application 
+#### OPAL-RT
+1. Start the RIAPS application in the VM
     ```bash
     pytest -vs tests/test_24_app.py::test_app_with_gui
     ```
+1. Watch the node-red GUI until there are values for all expected DERs and PCCs
+
+#### Typhoon
+1. Click the green play button in HIL SCADA 
+1. Click the dropdown to close the breaker
+1. Start the RIAPS application in the VM
+    ```bash
+    pytest -vs tests/test_24_app.py::test_app_with_gui
+    ```
+1. Watch the node-red GUI until there are values for all expected DERs and PCCs
+1. Once communcations are secured, uncheck the `use_modbus` checkbox in typhoon
+
+
+### Monitor the application
 To monitor the activity of the application you can 
-  - Use `tail -f` on the log file from the node of interest, e.g., `tail -f server_logs/192.168.10.122` will tail the logs from the System Operator.
+  - Use `tail -f` on the log file from the node of interest, e.g., `tail -f server_logs/192.168.10.105` will tail the logs from the System Operator.
   - Watch the gui in the Node-Red Dashboard
   ![node-red-running](README_images/node-red-dashboard-running.PNG) 
 
 ### Interact with the application
 Once the relays, generators, and battery inverters have values displayed in the GUI the application is ready for user inputs.
-1. The first input is to click the `Energize` toggle. This sends a command to turn on the generators and inverters and will cause the values to change at the relays, generators, and battery inverters. The approximate steady state P values for each configuration are shown in the table below.
-2. The second input is to click the `SEND REGULATION UPDATE` button. This sets the target value for the power across PCC1 PCC2 and PCC3. 
-3. Click the `Active Control` toggle. This causes the app to switch to active control, and it will gradually update the values until the relays all have a P value of 400. 
-4. Click the PCC 1 relay. The small box will turn green, indicating that the target state for is to be Open. The controller will gradually reduce the power flow across the relay until it is 0, at which point the relay will open and the large box will turn green. Repeat this for PCC 2 and PCC 3. The microgrid is then in state Islanded F1/F2/F3.
+1. The first input is to click the `Energize` toggle. This sends a command to turn on the generators and inverters and will cause the values to change at the relays, generators, and battery inverters. 
+2. The second input is to click the `SEND REGULATION UPDATE` button. This sets the target value for the power across the PCCs. 
+3. Click the `Active Control` toggle. This causes the app to switch to active control, and it will gradually update the values until the relays all have the target P value. 
+4. Now, you can click a PCC relay by hovering over PCC until the cursor changes to request an islanding event. After stabilizing after islanding you may click other relays. 
+
+<!-- 4. Click the PCC 1 relay. The small box will turn green, indicating that the target state for is to be Open. The controller will gradually reduce the power flow across the relay until it is 0, at which point the relay will open and the large box will turn green. Repeat this for PCC 2 and PCC 3. The microgrid is then in state Islanded F1/F2/F3.
 5. Click the F1 108 relay. The small box will turn red, indicating that the target state for is to be Closed. The controller will gradually reduce the frequency difference across the relay until it is 0, at which point the relay will close and the large box will turn red. The microgrid is then in state Islanded F1F2/F3
 6. Repeat this for F2 217. The microgrid is then in state Islanded F1F2F3
 7. Click the F2 217 relay again, setting the desired state to Open. When the large box turns green the microgrid is in state Islanded F1F2/F3
@@ -358,7 +396,7 @@ Once the relays, generators, and battery inverters have values displayed in the 
 | C5    | -0.009  | 0.5      | 0.41      | 0.53               | 0.53             | 0.55            |
 | C6    | -0.009  | 0.5      | 0.41      | 0.53               | 0.53             | 0.55            |
 
-> Note: The 107 and 217 relays are not designed to be closed while in Grid-Tied mode. Closing them in that state may result in unexpected behavior.
+> Note: The 107 and 217 relays are not designed to be closed while in Grid-Tied mode. Closing them in that state may result in unexpected behavior. -->
 
 [//]: # (### Examples)
 
@@ -372,8 +410,19 @@ If the app is not behaving as expected here are some things to check.
 * Check the log Files in `server_logs` for these keywords:
   * **UNEXPECTED CONDITIONS** : Congratulations! You encountered an unanticipated combination of relay and fsm states that has not been handled. Please open a bug report. 
 
-**FAQ**
-* **Q**: Loading the modle gives the error 
+
+#### General
+* **Q**: Nodes are not appearing in `Known_clients` list. 
+  * **A**: Check the timestamps of all nodes with `riaps_fab time.date` if the timestamps do not match the VM time found with `date` then run `riaps_fab -r remote sys.sudo "chronyc add server <YOUR VM IP> iburst"`
+
+#### Typhoon
+* **Q**: Launching the app gives an error stating that there was no modbus response.
+  * **A**: Check if Typhoon is in Virtual HIL mode. If it is switch it to REAL Time mode, otherwise modbus does not work.
+
+
+#### OPAL-RT
+
+* **Q**: Loading the model gives the error 
 ```
 ERROR: Modbus Slave: 'opal_ctrl'-> IP address/NIC configuration is invalid!
 ERROR: The possible values are:
