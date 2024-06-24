@@ -332,12 +332,14 @@ These can be installed on all target nodes simultaneously using the `riaps_fab` 
 1. Open the `Typhoon HIL Control Center`
 1. Click `Device Manager`
 1. Click the desired HIL device from the `Detected devices` list
+1. Make sure the device is in Configuration 3. 
 1. Click the green arrow to move the HIL device to the `Active HIL setup` list
 1. Click the connect icon to set devices in the setup to be busy for other users.
 1. Close the device manager.
 1. Click the `Schematic Editor`
 1. Open the desired tse file. E.g., `model_3dg.tse` 
 1. Click the button to compile and (re)load model in HIL SCADA
+1. Load the `panel_3DG_demo.cus` panel file
 1. Uncheck the `use_modbus` checkbox. 
 
 
