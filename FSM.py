@@ -123,11 +123,11 @@ class FSM(IMCP_FSM):
             #     return None, False
             if self.model.state == "ACTIVE_PREPARE-ISLAND":
                 return (
-                    ("completePlannedIsland", False) if not connected else (None, False)
+                    ("completePlannedIsland", True) if not connected else (None, False)
                 )
             # TODO: FOR DEMO SET TO NOT BE A COORDINATED ACTION
             elif self.model.state == "ACTIVE_PREPARE-RESYNC":
-                return ("completeResync", False) if connected else (None, False)
+                return ("completeResync", True) if connected else (None, False)
                 # TODO: FOR DEMO SET TO NOT BE A COORDINATED ACTION
             elif self.model.state in [
                 "ACTIVE_PREPARE-CONNECT",
@@ -254,7 +254,7 @@ class FSM(IMCP_FSM):
                 self.model.state == "ACTIVE_ISLANDED"
                 and requestedRelayStatus["requested_state"] == "CLOSE"
             ):
-                return "requestResync", False
+                return "requestResync", True
             # TODO: FOR DEMO SET TO NOT BE A COORDINATED ACTION
 
         # Feeder Operations
