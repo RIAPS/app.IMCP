@@ -307,7 +307,7 @@ def test_app_with_gui(platform_log_server, log_server, mqtt_client):
         app_folder_path=app_folder_path,
         app_file_name=app_file_name,
         depl_file_name=depl_file_name,
-        database_type="redis",
+        database_type="dht",
         required_clients=client_list,
     )
 
